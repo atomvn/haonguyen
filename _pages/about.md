@@ -9,7 +9,7 @@ profile:
   image: pro_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>Nguyen Van Hao</p>
+    <p>         Nguyen Van Hao</p>
     <p>VietNam National University - University of Engineering and Techonology</p>
     <p>FPT Sofware</p>
 
