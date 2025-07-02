@@ -11,7 +11,7 @@ profile:
   more_info: >
     <p>         Nguyen Van Hao</p>
     <p>VietNam National University - University of Engineering and Techonology</p>
-    # <p>FPT Software</p>
+    <p></p>
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
