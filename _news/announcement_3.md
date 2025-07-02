@@ -1,8 +1,9 @@
 ---
 layout: post
-date: 2003-03-05 07:59:00-0400
+date: Someday 07:59:00-0400
 inline: true
 related_posts: false
 ---
 
-A simple inline announcement with Markdown emoji! :sparkles: :smile:
+<!-- A simple inline announcement with Markdown emoji! :sparkles: :smile: -->
+...
