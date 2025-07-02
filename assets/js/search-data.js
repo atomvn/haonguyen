@@ -441,17 +441,17 @@ ninja.data = [{
           section: "Books",handler: () => {
               window.location.href = "/haonguyen/books/the_godfather/";
             },},{id: "news-",
-          title: '...',
-          description: "",
-          section: "News",handler: () => {
-              window.location.href = "/haonguyen/news/announcement_2/";
-            },},{id: "news-",
           title: '…',
           description: "",
           section: "News",},{id: "news-",
           title: '…',
           description: "",
-          section: "News",},{id: "projects-project-1",
+          section: "News",},{id: "news-",
+          title: '...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/haonguyen/news/announcement_2/";
+            },},{id: "projects-project-1",
           title: 'project 1',
           description: "with background image",
           section: "Projects",handler: () => {
