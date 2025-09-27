@@ -32,7 +32,8 @@ I am currently completing my final semester at Vietnam National<br>
 University - University of Engineering and Technology.<br>
 I am also working as an embedded software engineer at FPT Software.<br>
 My hobby is reading books, learning new things,<br>
-travelling with my sweetie and playing LOL with my friends. Glad to see you here!
+travelling with my sweetie and playing LOL with my friends.<br>
+Glad to see you here!
 
 <!-- Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
 
