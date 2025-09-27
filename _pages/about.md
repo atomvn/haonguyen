@@ -9,8 +9,8 @@ profile:
   image: pro_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>         Nguyen Van Hao</p>
-    <p>VietNam National University - University of Engineering and Techonology</p>
+    <p>Nguyen Van Hao</p>
+    <p>:University of Engineering and Technology-VNU</p>
     <p></p>
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
