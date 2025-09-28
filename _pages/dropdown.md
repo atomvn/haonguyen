@@ -1,5 +1,4 @@
 ---
-exclude: true
 layout: page
 title: submenus
 nav: true
@@ -11,4 +10,5 @@ children:
   - title: divider
   - title: blog
     permalink: /blog/
+exclude: true
 ---
