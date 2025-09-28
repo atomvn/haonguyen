@@ -1,4 +1,5 @@
 ---
+exclude: true
 layout: profiles
 permalink: /people/
 title: people
