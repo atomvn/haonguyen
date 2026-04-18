@@ -27,7 +27,7 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 Hello! My name is Hao, I was born in Viet Nam and currently<br>
-living in Hanoi, our capital. I am completing my bachelor's<br> 
+living in Hanoi, our capital. I am a fresh graduate with the bachelor's<br> 
 degree in Control Engineering and Automation at Vietnam <br>
 National University.<br>
 <br>
