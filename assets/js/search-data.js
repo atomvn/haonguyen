@@ -9,14 +9,7 @@ ninja.data = [{
     handler: () => {
       window.location.href = "/haonguyen/";
     },
-  },{id: "nav-bookshelf",
-          title: "bookshelf",
-          description: "",
-          section: "Navigation",
-          handler: () => {
-            window.location.href = "/haonguyen/books/";
-          },
-        },{id: "nav-projects",
+  },{id: "nav-projects",
           title: "projects",
           description: "A collection of my projects.",
           section: "Navigation",
@@ -30,6 +23,13 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/repositories/";
           },
+        },{id: "nav-bookshelf",
+          title: "bookshelf",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/haonguyen/books/";
+          },
         },{id: "nav-people",
           title: "people",
           description: "members of the lab or group",
@@ -37,21 +37,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "dropdown-bookshelf",
-              title: "bookshelf",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "/haonguyen/books/";
-              },
-            },{id: "dropdown-blog",
-              title: "blog",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "/haonguyen/blog/";
-              },
-            },{id: "post-",
+        },{id: "post-",
         
           title: "...",
         
