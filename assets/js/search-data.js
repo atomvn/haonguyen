@@ -400,8 +400,13 @@ ninja.data = [{
             window.location.href = "/haonguyen/blog/2015/formatting-and-links/";
           
         },
-      },{id: "books-the-godfather",
-          title: 'The Godfather',
+      },{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/norwegian_wood/";
+            },},{id: "books-bố-già-the-godfather",
+          title: 'Bố già - The Godfather',
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/haonguyen/books/the_godfather/";
