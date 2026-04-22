@@ -431,9 +431,9 @@ ninja.data = [{
           description: "a project that redirects to another website",
           section: "Projects",handler: () => {
               window.location.href = "/haonguyen/projects/3_project/";
-            },},{id: "projects-",
-          title: '',
-          description: "",
+            },},{id: "projects-fixed-wing-flight-controller",
+          title: 'Fixed wing flight controller',
+          description: "A simple flight controller utilizing STM32F103C8T6 microncontroller with some peripherals to control flight tasks such as: auto take off, normal, balancing flight mode...",
           section: "Projects",handler: () => {
               window.location.href = "/haonguyen/projects/4_project/";
             },},{id: "projects-project-5",
