@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Fixed wing flight controller
-description: A simple flight controller utilizing STM32F103C8T6 microncontroller with some peripherals to control flight tasks such as: auto take off, normal, balancing flight mode...
+description: "A simple flight controller utilizing STM32F103C8T6 microncontroller with some peripherals to control flight tasks such as: auto take off, normal, balancing flight mode..."
 img: assets/img/projects/project4/FlightControllerSide1.jpg
 importance: 3
 category: fun
