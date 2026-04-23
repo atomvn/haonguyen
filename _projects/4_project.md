@@ -7,7 +7,7 @@ importance: 3
 category: fun
 ---
 
-Every project has a beautiful feature showcase page.
+<!-- Every project has a beautiful feature showcase page.
 It's easy to include images in a flexible 3-column grid format.
 Make your photos 1/3, 2/3, or full width.
 
@@ -18,7 +18,7 @@ To give your project a background in the portfolio page, just add the img tag to
     title: project
     description: a project with a background image
     img: /assets/img/12.jpg
-    ---
+    --- -->
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
@@ -30,17 +30,20 @@ To give your project a background in the portfolio page, just add the img tag to
     <div class="col-sm mt-3 mt-md-0">
         {% include figure.liquid loading="eager" path="assets/img/projects/project4/FlightControllerSide3.jpg" title="flight controller side 3" class="img-fluid rounded z-depth-1" %}
     </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/projects/project4/FlightControllerSide4.jpg" title="flight controller side 4" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
-    This image can also have a caption. It's like magic.
+    My flight controller components including: STM32F103C8T6 MCU, MPU6050 sensor, MCRE7_v2 receiver soldered on a perfboard. 
+</div>
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/FlightControllerBackSide.jpg" title="Flight controller backside" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+<div class="caption">
+    The back side of my flight controller is above.
 </div>
 
 You can also put regular text between your rows of images.
