@@ -393,6 +393,66 @@ ninja.data = [{
           title: 'Rừng Na Uy - Norwegian Wood',
           description: "",
           section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/AloneInTheWorld/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/BackMagician/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/BehindSuspectX/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/HowTheSteelWasTempered/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/HowToReadABook/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/HowToReadAndRemember/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/SherlockHolmesI/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/SherlockHolmesIII/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/TheFamily/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/TheLastDon/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/TheOmerta/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/haonguyen/books/TheSicilian/";
+            },},{id: "books-rừng-na-uy-norwegian-wood",
+          title: 'Rừng Na Uy - Norwegian Wood',
+          description: "",
+          section: "Books",handler: () => {
               window.location.href = "/haonguyen/books/norwegian_wood/";
             },},{id: "books-bố-già-the-godfather",
           title: 'Bố già - The Godfather',
