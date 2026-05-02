@@ -1,25 +1,22 @@
 ---
 layout: page
 title: UAV swarm system for SAR missions
-description: with background image
+description: "UAV swarm system project is developed to solve problems in SAR missions after disasters such as: typhoon, hurricane, landslide..."
 img: assets/img/projects/UAVSwarmSystem/SystemDiagram.jpg
 importance: 1
 category: work
-related_publications: true
+related_publications: false
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
-
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
-
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+# Reasons for the project's creation
+Annually there are an average of 10-12 typhoons moving into the South China Sea and 5-7 of them directly make landfall in Vietnam.  
+When those storms hit mainland, they usually cause flash floods, landslides in mountainous areas and floods in plains.  
+As a result, every year thousands of search and rescue missions which primarily rely on manual labor are conducted.  
+Given the fact that there are several critical obstacles and downsides of the conventional approacheas. This project aims to  
+address these problems of SAR missions including:  
+        1. Delays in accessing the disastrous areas.
+        2. Difficulties to cover a large area with complicated terrain.
+        3. Potential risks for rescue team.
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
