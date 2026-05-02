@@ -472,7 +472,7 @@ ninja.data = [{
               window.location.href = "/haonguyen/news/announcement_2/";
             },},{id: "projects-uav-swarm-system-for-sar-missions",
           title: 'UAV swarm system for SAR missions',
-          description: "with background image",
+          description: "UAV swarm system project is developed to solve problems in SAR missions after disasters such as: typhoon, hurricane, landslide...",
           section: "Projects",handler: () => {
               window.location.href = "/haonguyen/projects/1_project/";
             },},{id: "projects-project-2",
