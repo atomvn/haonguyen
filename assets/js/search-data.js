@@ -477,6 +477,11 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/haonguyen/books/the_godfather/";
+            },},{id: "news-project-9",
+          title: 'project 9',
+          description: "another project with an image 🎉",
+          section: "News",handler: () => {
+              window.location.href = "/haonguyen/news/9_project/";
             },},{id: "news-",
           title: '…',
           description: "",
