@@ -24,7 +24,7 @@ address following challenges of SAR missions:
     </div>
 </div>
 <div class="caption">
-    Storm paths going into South China Sea in the last 70 years.
+    Storm paths going into South China Sea in the last 70 years
 </div>
 
 ## System architecture
@@ -39,7 +39,7 @@ Overall, the system is divided into 3 layers including:
     </div>
 </div>
 <div class="caption">
-    UAV swarm system diagram.
+    UAV swarm system diagram
 </div>
 
 ## Product demo 
