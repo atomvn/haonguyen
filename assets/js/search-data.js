@@ -470,8 +470,8 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/haonguyen/news/announcement_2/";
-            },},{id: "projects-project-1",
-          title: 'project 1',
+            },},{id: "projects-uav-swarm-system-for-sar-missions",
+          title: 'UAV swarm system for SAR missions',
           description: "with background image",
           section: "Projects",handler: () => {
               window.location.href = "/haonguyen/projects/1_project/";
