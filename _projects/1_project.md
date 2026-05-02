@@ -13,10 +13,10 @@ Annually an average of 10-12 typhoons moves into the South China Sea and 5-7 of 
 When those storms hit mainland, they usually cause flash floods, landslides in mountainous areas and flooding in plains.
 As a result, every year thousands of search and rescue (SAR) missions, which primarily rely on manual labor, are conducted.
 Given the fact that there are several critical obstacles and downsides of conventional approacheas. This project aims to
-address following challenges of SAR missions:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Delays in accessing the disaster-stricken areas.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Difficulties to cover a large area with complex terrain.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Potential risks to the rescue teams.  
+address following challenges of SAR missions:
+1. Delays in accessing the disaster-stricken areas.  
+2. Difficulties to cover a large area with complex terrain.  
+3. Potential risks to the rescue teams.  
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
@@ -29,9 +29,9 @@ address following challenges of SAR missions:
 
 ## System architecture
 Overall, the system is divided into 3 layers including:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. The user interface layer is a desktop app built with PyQt framework and Leaflet open-source map.
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Task processing and algorithm layer.
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Mission control and UAV communication layer.
+1. The user interface layer is a desktop app built with PyQt framework and Leaflet open-source map.
+2. Task processing and algorithm layer.
+3. Mission control and UAV communication layer.
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
