@@ -9,14 +9,14 @@ related_publications: false
 ---
 
 # Reasons for the project's creation
-Annually there are an average of 10-12 typhoons moving into the South China Sea and 5-7 of them directly make landfall in Vietnam.  
-When those storms hit mainland, they usually cause flash floods, landslides in mountainous areas and floods in plains.  
-As a result, every year thousands of search and rescue missions which primarily rely on manual labor are conducted.  
-Given the fact that there are several critical obstacles and downsides of the conventional approacheas. This project aims to  
-address these problems of SAR missions including:  
-        1. Delays in accessing the disastrous areas.
-        2. Difficulties to cover a large area with complicated terrain.
-        3. Potential risks for rescue team.
+Annually an average of 10-12 typhoons moves into the South China Sea and 5-7 of them make landfall directly in Vietnam.
+When those storms hit mainland, they usually cause flash floods, landslides in mountainous areas and flooding in plains.
+As a result, every year thousands of search and rescue (SAR) missions, which primarily rely on manual labor, are conducted.
+Given the fact that there are several critical obstacles and downsides of conventional approacheas. This project aims to
+address following challenges of SAR missions:  
+        1. Delays in accessing the disaster-stricken areas.  
+        2. Difficulties to cover a large area with complex terrain.  
+        3. Potential risks to the rescue teams.  
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
