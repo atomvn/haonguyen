@@ -1,8 +1,8 @@
 ---
 layout: page
-title: project 1
+title: UAV swarm system for SAR missions
 description: with background image
-img: assets/img/12.jpg
+img: assets/img/projects/UAVSwarmSystem/SystemDiagram.jpg
 importance: 1
 category: work
 related_publications: true
