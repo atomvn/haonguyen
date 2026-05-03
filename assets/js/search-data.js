@@ -30,12 +30,12 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/books/";
           },
-        },{id: "nav-news",
-          title: "news",
-          description: "My life stories",
+        },{id: "nav-blog",
+          title: "blog",
+          description: "",
           section: "Navigation",
           handler: () => {
-            window.location.href = "/haonguyen/news/";
+            window.location.href = "/haonguyen/blog/";
           },
         },{id: "nav-people",
           title: "people",
