@@ -152,7 +152,7 @@ ninja.data = [{
         title: 'Facebook',
         section: 'Socials',
         handler: () => {
-          window.open("https://facebook.com/Văn Hào", "_blank");
+          window.open("https://facebook.com/van.hao.613002", "_blank");
         },
       },{
         id: 'social-github',
@@ -166,14 +166,14 @@ ninja.data = [{
         title: 'Instagram',
         section: 'Socials',
         handler: () => {
-          window.open("https://instagram.com/Van Hao", "_blank");
+          window.open("https://instagram.com/vhhao11", "_blank");
         },
       },{
         id: 'social-linkedin',
         title: 'LinkedIn',
         section: 'Socials',
         handler: () => {
-          window.open("https://www.linkedin.com/in/HAO NGUYEN", "_blank");
+          window.open("https://www.linkedin.com/in/hao-nguyen-67470a298", "_blank");
         },
       },{
       id: 'light-theme',
