@@ -48,17 +48,6 @@ ninja.data = [{
         
           title: "...",
         
-        description: "this is what included plotly.js code could look like",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/haonguyen/blog/2026/plotly/";
-          
-        },
-      },{id: "post-",
-        
-          title: "...",
-        
         description: "this is what included image galleries could look like",
         section: "Posts",
         handler: () => {
@@ -482,17 +471,6 @@ ninja.data = [{
           description: "another project with an image 🎉",
           section: "News",handler: () => {
               window.location.href = "/haonguyen/news/9_project/";
-            },},{id: "news-",
-          title: '…',
-          description: "",
-          section: "News",},{id: "news-",
-          title: '…',
-          description: "",
-          section: "News",},{id: "news-",
-          title: '...',
-          description: "",
-          section: "News",handler: () => {
-              window.location.href = "/haonguyen/news/announcement_2/";
             },},{id: "projects-uav-swarm-system-for-sar-missions",
           title: 'UAV swarm system for SAR missions',
           description: "UAV swarm system project is developed to solve problems in SAR missions after disasters such as: typhoon, hurricane, landslide...",
