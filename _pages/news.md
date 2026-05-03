@@ -3,7 +3,7 @@ layout: page
 title: news
 description: "My life stories"
 permalink: /news/
-nav: true
+nav: false
 nav_order: 5
 ---
 
