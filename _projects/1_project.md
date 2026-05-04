@@ -94,7 +94,7 @@ L.marker([51.505, -0.09]).addTo(map)
     .bindPopup('Hello World! This is a Leaflet map.')
     .openPopup();
 ```
-
+  
 ### **QtWebEngine**
 #### What is QtWebEngine?
 QtWebEngine is a specialized module within the Qt framework (used in PyQt or PySide) that allows you to embed web content into desktop applications.
@@ -146,7 +146,7 @@ window.show()
 sys.exit(app.exec_())
 ```
 
-*Step 3: Advanced features?
+*Step 3: Advanced features?*  
 **Loading Local HTML:** Instead of a URL, you can render raw strings:
 ```python
 self.browser.setHtml("<html><body><h1>Hello!</h1></body></html>")
@@ -155,12 +155,58 @@ self.browser.setHtml("<html><body><h1>Hello!</h1></body></html>")
 ```python
 self.browser.page().runJavaScript("console.log('Python called me');")
 ```
+  
+### **YOLO**
+#### What is YOLO?
+YOLO (You Only Look Once) is a state-of-the-art Deep Learning algorithm designed for Object Detection.
++ **The core difference:** Before YOLO, older algorithms usually looked at an image multiple times, dividing it into many small regions to scan. YOLO, as its name suggests, only looks once. It passes the entire image through a single neural network one time and instantly predicts both the locations and types of objects.
++ **The task:** YOLO perform two tasks simultaneously:
+  + Determining the Bounding Box around an object.
+  + Performing Classification to identify what the object is (e.g., person, car, dog, cat).
 
-### YOLO
-### Mavlink router
-### MavSDK
-### ROS and Gazebo
-### PX4 autopilot
+#### Who choose YOLO?
+YOLO has become the "king" of object detection because of the following reasons:
++ **Extreme Speed (Real-time):** This is its greatest advantage. Because it only scans the image once, YOLO can process live video (from 45 to over 150 frames per second) with almost zero lag.
++ **High Accuracy:** Despite prioritizing speed, the latest versions (such as YOLOv8, v10, or v11) offer impressive accuracy and are less likely to confuse background patches with actual objects.
++ **Global Context:** Because it processes the whole image at once, YOLO understands the relationship between objects better than methods that crop images into pieces.
++ **Versatility:** YOLO is optimized enough to run on edge devices with limited hardware, such as Raspberry Pi, Jetson Nano, or smartphones.
 
+#### How to use YOLO?
+Today, using YOLO has become incredibly simple thanks to libraries like *ultralytics*.
+
+*Step 1: Installation*
+You can install the library via your terminal/command prompt:
+```bash
+pip install ultralytics
+```
+*Step 2: Implementation with Python*
+You can use a Pre-trained model to immediately detect 80 common object types (like cars, people, chairs, etc.).
+```python
+from ultralytics import YOLO
+
+# 1. Load a YOLO model (v8n - "nano" is the fastest/lightest version)
+model = YOLO('yolov8n.pt')
+
+# 2. Run detection on an image or video
+results = model.predict('image.jpg', save=True, conf=0.5)
+
+# 3. View results
+for result in results:
+    print(result.boxes)  # Prints the coordinates of the bounding boxes
+```
+*Step 3: Training on Custom Data*
+If you want YOLO to detect specific things (e.g., product defects on a conveyor belt or specific license plates), you follow these steps:
++ **Labeling:** Use tools like LabelImg or Roboflow to draw boxes and name objects in your custom dataset.
++ **Training:** Run a simple command: model.train(data='config.yaml', epochs=100).
+  
+### **Mavlink router**
+  
+### **MavSDK**
+  
+### **ROS and Gazebo**
+  
+### **PX4 autopilot**
+  
+---
 ## IV. Product demo 
 
