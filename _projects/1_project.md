@@ -8,7 +8,8 @@ category: work
 related_publications: false
 ---
 
-## Reasons for the project's creation
+---
+## I. Reasons for the project's creation
 Annually an average of 10-12 typhoons moves into the South China Sea and 5-7 of them make landfall directly in Vietnam.
 When those storms hit mainland, they usually cause flash floods, landslides in mountainous areas and flooding in plains.
 As a result, every year thousands of search and rescue (SAR) missions, which primarily rely on manual labor, are conducted.
@@ -27,7 +28,8 @@ address following challenges of SAR missions:
     Storm paths going into South China Sea in the last 70 years
 </div>
 
-## System architecture
+---
+## II. System architecture
 Overall, the system is divided into 3 layers including:
 1. The user interface layer is a desktop app built with PyQt framework and Leaflet open-source map.
 2. Task processing and algorithm layer.
@@ -42,6 +44,64 @@ Overall, the system is divided into 3 layers including:
     UAV swarm system diagram
 </div>
 
-## Product demo 
+---
+## III. Key techs
+### Leaflet map
+#### What is Leaflet?
+Leaflet is the leading open-source JavaScript library for building interactive, mobile-friendly maps. It is designed with simplicity, performance, and usability in mind.
++ **The Core Concept:** Leaflet is not a map data provider (it doesn't own satellite imagery or road data). Instead, it acts as a "canvas" or a "view port" that displays map tiles from services like OpenStreetMap, Mapbox, or Google Maps.
++ **Size:** It is incredibly lightweight, weighing in at only about 39 KB (gzipped), which is significantly smaller than many of its competitors.
+
+#### Why choose Leaflet?
+Developers often prefer Leaflet over other alternatives because of its unique balance of power and simplicity:
++ **Mobile-Friendly:** Out of the box, it is highly optimized for mobile devices, supporting touch gestures like pinch-to-zoom and smooth dragging.
++ **Ease of Use:** Its API is well-documented and intuitive. Even with basic HTML/JavaScript knowledge, you can get a map running in minutes.
++ **Extensibility:** It has a massive ecosystem of plugins. Whether you need to create heatmaps, draw complex geometries, or animate markers, there is likely a plugin already built for it.
++ **Open Source:** It is free to use and has a vibrant community, meaning you aren't locked into expensive proprietary software or restrictive usage limits.
+
+#### How to use Leaflet?
+Getting started with Leaflet involves three straightforward steps:
+
+*Step 1: Include the library*
+Add the Leaflet CSS and JavaScript files to the <head> section of your HTML document.
+``` HTML
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Leaflet JS (Place after CSS) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+*Step 2: Create a container*
+Define a <div> element where the map will be rendered. Ensure you give it a specific id and a defined height.
+```HTML
+<div id="map" style="height: 500px; width: 100%;"></div>
+```
+
+*Step 3: Initialize the map*
+Use JavaScript to set the map's focus (coordinates) and choose a tile provider.
+```Javascript
+// 1. Initialize the map at a specific coordinate (e.g., London) with zoom level 13
+var map = L.map('map').setView([51.505, -0.09], 13);
+
+// 2. Add a Tile Layer from OpenStreetMap
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// 3. Add a Marker with a popup
+L.marker([51.505, -0.09]).addTo(map)
+    .bindPopup('Hello World! This is a Leaflet map.')
+    .openPopup();
+```
+
+### QtWebEngine
+### YOLO
+### Mavlink router
+### MavSDK
+### ROS and Gazebo
+### PX4 autopilot
+
+## IV. Product demo 
 
 ## 
