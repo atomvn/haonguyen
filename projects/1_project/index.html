@@ -65,11 +65,23 @@ git submodule update <span class="nt">--init</span> <span class="nt">--recursive
 meson setup build <span class="nb">.</span>
 ninja <span class="nt">-C</span> build
 <span class="nb">sudo </span>ninja <span class="nt">-C</span> build <span class="nb">install</span>
-</code></pre></div></div> <p><em>Step 2: Configuration (main.conf)</em> You define your inputs and outputs in a configuration file (usually located at <em>/etc/mavlink-router/main.conf</em>): ```Ini, TOML [General] TcpServerPort=5760</p> <h1 id="endpoint-1-connection-to-the-flight-controller-via-serial">Endpoint 1: Connection to the Flight Controller via Serial</h1> <p>[UartEndpoint To_FC] Device = /dev/ttyAMA0 Baud = 921600</p> <h1 id="endpoint-2-sending-data-to-ground-control-qgroundcontrol-via-wi-fi">Endpoint 2: Sending data to Ground Control (QGroundControl) via Wi-Fi</h1> <p>[UdpEndpoint To_GCS] Mode = Normal Address = 192.168.1.50 Port = 14550</p> <h1 id="endpoint-3-internal-data-for-a-python-app-running-on-the-same-pi">Endpoint 3: Internal data for a Python app running on the same Pi</h1> <p>[UdpEndpoint Internal_App] Mode = Normal Address = 127.0.0.1 Port = 14540</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-*Step 3: Execution*
-Once configured, simply run the daemon:
-```bash
-mavlink-routerd -c /etc/mavlink-router/main.conf
+</code></pre></div></div> <p><em>Step 2: Configuration (main.conf)</em> You define your inputs and outputs in a configuration file (usually located at <em>/etc/mavlink-router/main.conf</em>):</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[General]
+TcpServerPort=5760
+# Endpoint 1: Connection to the Flight Controller via Serial
+[UartEndpoint To_FC]
+Device = /dev/ttyAMA0
+Baud = 921600
+# Endpoint 2: Sending data to Ground Control (QGroundControl) via Wi-Fi
+[UdpEndpoint To_GCS]
+Mode = Normal
+Address = 192.168.1.50
+Port = 14550
+# Endpoint 3: Internal data for a Python app running on the same Pi
+[UdpEndpoint Internal_App]
+Mode = Normal
+Address = 127.0.0.1
+Port = 14540
+</code></pre></div></div> <p><em>Step 3: Execution</em> Once configured, simply run the daemon:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mavlink-routerd <span class="nt">-c</span> /etc/mavlink-router/main.conf
 </code></pre></div></div> <p>Now, any data coming from the Flight Controller (To_FC) is automatically duplicated and routed to both your GCS and your internal application.</p> <h3 id="mavsdk"><strong>MAVSDK</strong></h3> <p>If MAVLink-router is the “data dispatcher,” then MAVSDK-Python is the “virtual pilot” that allows you to command your drone using Python in a simple and modern way.</p> <h4 id="what-is-mavsdk">What is MAVSDK?</h4> <p>MAVSDK (MAVLink Software Development Kit) is a powerful set of programming tools for interacting with vehicles that use the MAVLink protocol (such as drones running PX4 or ArduPilot firmware).</p> <ul> <li> <strong>The Core Concept:</strong> It is a high-level library. Instead of manually packing complex MAVLink messages (like SET_POSITION_TARGET_LOCAL_NED), you simply call human-readable functions like goto_location().</li> <li> <strong>Architecture:</strong> MAVSDK-Python is actually a wrapper for a C++ core. It uses gRPC for communication, making data transfer extremely fast and enabling robust asynchronous processing.</li> </ul> <h4 id="why-choose-mavsdk">Why choose MAVSDK?</h4> <p>In the world of Python for drones, the biggest competitor was DroneKit. However, MAVSDK is rapidly becoming the standard because:</p> <ul> <li> <strong>Asynchronous Support (asyncio):</strong> Drones wait for no one; telemetry data (position, battery) arrives constantly. MAVSDK’s async/await structure allows your code to receive sensor data and send flight commands simultaneously without freezing.</li> <li> <strong>Simplicity:</strong> Complex tasks like taking off, landing, following mission waypoints, or setting up a geofence are wrapped into just a few lines of code.</li> <li> <strong>Reliability:</strong> Developed by Auterion and the Dronecode community, it is heavily tested and supports the latest hardware standards.</li> <li> <strong>Cross-Platform:</strong> It runs seamlessly on Linux (Raspberry Pi, Jetson), macOS, and Windows.</li> </ul> <h4 id="how-to-use-mavsdk">How to use MAVSDK?</h4> <p><em>Step 1: Installation</em> Install the library using pip:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>mavsdk
 </code></pre></div></div> <p><em>Step 2: Basic implementation</em> Everything in MAVSDK-Python typically runs within an async function. Here is a basic script to make a drone take off:</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">asyncio</span>
 <span class="kn">from</span> <span class="n">mavsdk</span> <span class="kn">import</span> <span class="n">System</span>
