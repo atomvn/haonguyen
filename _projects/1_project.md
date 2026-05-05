@@ -257,12 +257,135 @@ mavlink-routerd -c /etc/mavlink-router/main.conf
 ```
 Now, any data coming from the Flight Controller (To_FC) is automatically duplicated and routed to both your GCS and your internal application.
   
-### **MavSDK**
+### **MAVSDK**
+If MAVLink-router is the "data dispatcher," then MAVSDK-Python is the "virtual pilot" that allows you to command your drone using Python in a simple and modern way.
+#### What is MAVSDK?
+MAVSDK (MAVLink Software Development Kit) is a powerful set of programming tools for interacting with vehicles that use the MAVLink protocol (such as drones running PX4 or ArduPilot firmware).
++ **The Core Concept:** It is a high-level library. Instead of manually packing complex MAVLink messages (like SET_POSITION_TARGET_LOCAL_NED), you simply call human-readable functions like goto_location().
++ **Architecture:** MAVSDK-Python is actually a wrapper for a C++ core. It uses gRPC for communication, making data transfer extremely fast and enabling robust asynchronous processing.
   
-### **ROS and Gazebo**
+#### Why choose MAVSDK?
+In the world of Python for drones, the biggest competitor was DroneKit. However, MAVSDK is rapidly becoming the standard because:
++ **Asynchronous Support (asyncio):** Drones wait for no one; telemetry data (position, battery) arrives constantly. MAVSDK’s async/await structure allows your code to receive sensor data and send flight commands simultaneously without freezing.
++ **Simplicity:** Complex tasks like taking off, landing, following mission waypoints, or setting up a geofence are wrapped into just a few lines of code.
++ **Reliability:** Developed by Auterion and the Dronecode community, it is heavily tested and supports the latest hardware standards.
++ **Cross-Platform:** It runs seamlessly on Linux (Raspberry Pi, Jetson), macOS, and Windows.
+
+#### How to use MAVSDK?
+*Step 1: Installation*
+Install the library using pip:
+```bash
+pip install mavsdk
+```
+*Step 2: Basic implementation*
+Everything in MAVSDK-Python typically runs within an async function. Here is a basic script to make a drone take off:
+```python
+import asyncio
+from mavsdk import System
+
+async def run():
+    # 1. Connect to the drone (e.g., via UDP to a simulator)
+    drone = System()
+    await drone.connect(system_address="udp://:14540")
+
+    print("Waiting for drone to connect...")
+    async for state in drone.core.connection_state():
+        if state.is_connected:
+            print("Drone connected!")
+            break
+
+    # 2. Arm the drone
+    print("-- Arming")
+    await drone.action.arm()
+
+    # 3. Takeoff
+    print("-- Taking off")
+    await drone.action.takeoff()
+
+    await asyncio.sleep(5) # Hover for 5 seconds
+
+    # 4. Land
+    print("-- Landing")
+    await drone.action.land()
+
+if __name__ == "__main__":
+    asyncio.run(run())
+```
+
+*Step 3: Monitoring telemetry*
+You can stream data like battery levels or GPS coordinates continuously without blocking your main command loop:
+```python
+async def print_battery(drone):
+    async for battery in drone.telemetry.battery():
+        print(f"Battery: {battery.remaining_percent * 100}%")
+```
   
 ### **PX4 autopilot**
+#### What is PX4 autopilot?
+PX4 is an incredibly powerful open-source flight control software (flight stack) designed to control autonomous vehicles, including drones (multirotors), fixed-wing aircraft, VTOLs, ground rovers, and even submarines.
++ **The Ecosystem:** PX4 is a core part of the Dronecode project (under the Linux Foundation). It typically runs on dedicated flight control hardware like the Pixhawk series.
++ **Architecture:** It is built on top of the NuttX Real-Time Operating System (RTOS). PX4 is highly modular, meaning different processes (like position control, GPS handling, and battery management) run independently and communicate via the uORB messaging bus.
+
+#### Why choose PX4?
+PX4 is more than just a controller; it is an industry standard for several reasons:
++ **Maximum Flexibility:** It supports almost any vehicle configuration—from standard quadcopters and fixed-wings to complex Vertical Take-Off and Landing (VTOL) planes and underwater robots.
++ **Enterprise Reliability:** Trusted by major corporations (like Auterion) and research institutions worldwide, PX4 is known for its robust fail-safes and stability in demanding environments.
++ **Companion Computer Integration:** It is designed to work perfectly with onboard computers (Raspberry Pi, Jetson Nano) via MAVLink, enabling advanced AI, computer vision, and obstacle avoidance.
++ **Simulation Environments (SITL/HITL):** PX4 provides powerful simulation tools (Gazebo, jMAVSim). You can test your flight code for thousands of hours on a computer before ever flying a real drone, significantly reducing the risk of crashes.
+
+#### How to use PX4?
+*Step 1: Flashing firmware to hardware*
+You need a Flight Controller (FC) like a Pixhawk 6C or Orange Cube.
+1. Install QGroundControl (GCS) on your computer.
+2. Connect your Pixhawk via USB.
+3. Use QGroundControl to upload the latest PX4 firmware onto the board.
+
+*Step 2: Configuration and calibration*
+Through the QGroundControl interface, you must complete the following setups:
+1. Airframe: Select the type of drone you are using (e.g., Generic Quadcopter X).
+2. Sensors: Calibrate the accelerometer, compass, and gyroscope.
+3. Radio/ESC: Set up your remote controller and calibrate the Electronic Speed Controllers (ESCs).
+
+*Step 3: Programming and flying*
++ **Manual/Autonomous Flight:** You can plan a mission (waypoints) on the map in QGroundControl and click "Start" for the drone to fly itself.
+* **Offboard Programming:** Use MAVSDK or ROS 2 to send commands from a companion computer. For example: "If the camera detects an object, tell PX4 to move 5 meters to the left."
   
+### **ROS 2 and Gazebo** 
+#### What are ROS 2 and Gazebo?
+**ROS 2 (Robot Operating System 2)**
+Despite the name, ROS 2 is not an actual operating system like Windows or Linux. It is a Middleware—a collection of software frameworks, tools, and libraries that help different parts of a robot (sensors, motors, AI algorithms) "talk" to each other through a structured messaging system.
+**Gazebo**
+Gazebo is a powerful 3D Simulator. It allows you to create a virtual environment with realistic physics (gravity, friction, wind) to test your robots. It mimics how a robot would behave in the real world without needing the physical hardware.
+
+#### Why do we need this duo?
+The combination of ROS 2 and Gazebo solves some of the toughest challenges in robotics:
++ **Risk and Cost Reduction:** Instead of buying a physical robot worth thousands of dollars and risking a crash during code testing, you can run it in Gazebo for free and with zero physical risk.
++ **Modular Architecture (ROS 2):** You can write code for a LiDAR sensor in C++, image processing in Python, and ROS 2 will connect them seamlessly. If you change a sensor, you only replace a small "node" rather than rewriting the entire system.
++ **Scalability:** ROS 2 is designed to support multi-robot systems and real-time industrial applications, areas where the original ROS 1 struggled.
++ **Testing Any Environment:** You can simulate a robot on the moon, underwater, or in a complex warehouse maze without ever leaving your desk.
+
+#### How to use them?
+*Step 1: Installation*
+Follow [instruction] on ROS official webpage [https://wiki.ros.org/noetic/Installation/Ubuntu]
+Also, you can find Gazebo installation [guide] on their official webpage [https://classic.gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0]
+
+*Step 2: Create a Robot Model (URDF/SDF)*
+You describe the physical structure of your robot—how many wheels it has, where the joints are, and how much it weighs—using XML-based files called URDF (Unified Robot Description Format). Gazebo reads this file to render the robot in 3D space.
+
+*Step 3: Write Control Nodes in ROS 2*
+You write small programs (Nodes) to control the robot. For example:
++ Node A: Reads distance data from a virtual laser sensor in Gazebo.
+
++ Node B: Processes data from Node A and decides "Turn left if an obstacle is detected."
+
++ Node C: Sends speed commands to the robot's wheels inside Gazebo.
+
+*Step 4: Step 4: Launch the Simulation*
+Using the ros2 launch tool, you start the virtual world and your control algorithms simultaneously.
+```bash
+# Example: Launching a TurtleBot3 robot in a simulated world
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+```
 ---
 ## IV. Product demo 
 
