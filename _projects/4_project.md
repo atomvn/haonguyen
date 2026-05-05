@@ -2,6 +2,7 @@
 layout: page
 title: Fixed wing flight controller
 description: "A simple flight controller utilizing STM32F103C8T6 microncontroller with some peripherals to control flight tasks such as: auto take off, normal, balancing flight mode..."
+code: https://github.com/atomvn/FlightController
 img: assets/img/projects/FlightController/Su27.jpg
 importance: 3
 category: fun
