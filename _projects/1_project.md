@@ -107,7 +107,7 @@ Why embed a whole browser instead of using standard desktop widgets?
 + **Modern Web Standards:** Because it uses Chromium, it supports the latest web features and security protocols that standard text widgets cannot handle.
 + **Two-way Interaction:** It allows for "bridging," where Python can trigger JavaScript functions and JavaScript can send data back to your Python code.
 
-#### How to use QtWenEngine?
+#### How to use QtWebEngine?
 Because QtWebEngine is quite large, it is often packaged separately from the core PyQt library.
 
 *Step 1: Installation* 
@@ -350,7 +350,7 @@ Through the QGroundControl interface, you must complete the following setups:
 ### **ROS 2 and Gazebo** 
 #### What are ROS 2 and Gazebo?
 **ROS 2 (Robot Operating System 2)**
-Despite the name, ROS 2 is not an actual operating system like Windows or Linux. It is a Middleware—a collection of software frameworks, tools, and libraries that help different parts of a robot (sensors, motors, AI algorithms) "talk" to each other through a structured messaging system.
+Despite the name, ROS 2 is not an actual operating system like Windows or Linux. It is a Middleware—a collection of software frameworks, tools, and libraries that help different parts of a robot (sensors, motors, AI algorithms) "talk" to each other through a structured messaging system.  
 **Gazebo**
 Gazebo is a powerful 3D Simulator. It allows you to create a virtual environment with realistic physics (gravity, friction, wind) to test your robots. It mimics how a robot would behave in the real world without needing the physical hardware.
 
@@ -363,8 +363,8 @@ The combination of ROS 2 and Gazebo solves some of the toughest challenges in ro
 
 #### How to use them?
 *Step 1: Installation*
-Follow [instruction] on ROS official webpage [https://wiki.ros.org/noetic/Installation/Ubuntu]
-Also, you can find Gazebo installation [guide] on their official webpage [https://classic.gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0]
+Follow [installation guide](https://wiki.ros.org/noetic/Installation/Ubuntu) on ROS official webpage.
+Also, you can find Gazebo [installation guide](https://classic.gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0) on their official webpage.
 
 *Step 2: Create a Robot Model (URDF/SDF)*
 You describe the physical structure of your robot—how many wheels it has, where the joints are, and how much it weighs—using XML-based files called URDF (Unified Robot Description Format). Gazebo reads this file to render the robot in 3D space.
@@ -385,4 +385,5 @@ ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 ```
 ---
 ## IV. Product demo 
+Click [here](https://drive.google.com/file/d/1V7N42ICKU3VE039P5JDjl06-08R247-n/view?usp=drive_link) to see the product demo video.
 
