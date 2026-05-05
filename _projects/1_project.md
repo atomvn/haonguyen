@@ -199,7 +199,63 @@ If you want YOLO to detect specific things (e.g., product defects on a conveyor 
 + **Labeling:** Use tools like LabelImg or Roboflow to draw boxes and name objects in your custom dataset.
 + **Training:** Run a simple command: model.train(data='config.yaml', epochs=100).
   
-### **Mavlink router**
+### **MAVLink-router**
+#### What is MAVLink-router?
+MAVLink-router is a specialized middleware software designed to run on Linux-based systems (typically on a Companion Computer like a Raspberry Pi or Jetson Nano).
++ **Main function:** It acts as a "distribution hub" for MAVLink packets (the communication protocol for drones). it receives data from one source and routes it to multiple destinations.
++ Connectivity: It supports routing data across various interfaces, including:
+  +UART: Direct physical connection to a Flight Controller (e.g., Pixhawk).
+  +UDP: Wireless data transmission (Wi-Fi, 4G/5G).
+  +TCP: Reliable connections for specific applications requiring flow control.
+
+#### Why do we need MAVLink-router?
+Flight Controllers usually have a limited number of physical Serial (Telemetry) ports. MAVLink-router solves several architectural challenges:
++ **Data Sharing (Multiplexing):** You can have a single drone stream data to multiple endpoints simultaneously (e.g., to a Ground Control Station, to an onboard computer for image processing, and to a remote server via 4G).
++ **Protocol Conversion:** It bridges data from Serial/UART (hardware level) to Network/IP (UDP/TCP), allowing you to transmit drone data over long distances via the Internet.
++ **Performance & Stability:** Written in C++, it is incredibly lightweight and stable. It consumes far fewer CPU resources compared to other alternatives like MAVProxy, making it ideal for embedded systems.
++ **Message Filtering:** It can be configured to filter specific messages, ensuring that high-bandwidth data stays onboard while only essential telemetry is sent over weak radio links.
+
+#### How to use MAVLink-router
+*Step 1: Installation*
+On a Linux system, you generally build it from the source:
+```bash
+git clone https://github.com/mavlink-router/mavlink-router.git
+cd mavlink-router
+git submodule update --init --recursive
+meson setup build .
+ninja -C build
+sudo ninja -C build install
+```
+*Step 2: Configuration (main.conf)*
+You define your inputs and outputs in a configuration file (usually located at */etc/mavlink-router/main.conf*):
+```Ini, TOML
+[General]
+TcpServerPort=5760
+
+# Endpoint 1: Connection to the Flight Controller via Serial
+[UartEndpoint To_FC]
+Device = /dev/ttyAMA0
+Baud = 921600
+
+# Endpoint 2: Sending data to Ground Control (QGroundControl) via Wi-Fi
+[UdpEndpoint To_GCS]
+Mode = Normal
+Address = 192.168.1.50
+Port = 14550
+
+# Endpoint 3: Internal data for a Python app running on the same Pi
+[UdpEndpoint Internal_App]
+Mode = Normal
+Address = 127.0.0.1
+Port = 14540
+```
+
+*Step 3: Execution*
+Once configured, simply run the daemon:
+```bash
+mavlink-routerd -c /etc/mavlink-router/main.conf
+```
+Now, any data coming from the Flight Controller (To_FC) is automatically duplicated and routed to both your GCS and your internal application.
   
 ### **MavSDK**
   
