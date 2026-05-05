@@ -36,7 +36,7 @@ keeps me constantly learning and evolving both personally and professionally.
 Other interests  
 Sports: It's not only crucial for my health but also my cognitive skills.  
 Gaming: A way to unwind and connect with friends.  
-Exploring new places: To fulfill my wanderlust. 
+Exploring new places: To satisfy my wanderlust. 
 
 **I can't tell how glad I am to see you here!**
 
