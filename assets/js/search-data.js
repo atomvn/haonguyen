@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "books-rừng-na-uy-norwegian-wood",
+        },{id: "post-my-first-post",
+        
+          title: "my first post",
+        
+        description: "just a random post",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/images/";
+          
+        },
+      },{id: "books-rừng-na-uy-norwegian-wood",
           title: 'Rừng Na Uy - Norwegian Wood',
           description: "",
           section: "Books",handler: () => {
