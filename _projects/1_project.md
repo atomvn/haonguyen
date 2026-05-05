@@ -2,7 +2,7 @@
 layout: page
 title: UAV swarm system for SAR missions
 description: "UAV swarm system project is developed to solve problems in SAR missions after disasters such as: typhoon, hurricane, landslide..."
-img: assets/img/projects/UAVSwarmSystem/SystemDiagram.jpg
+img: assets/img/projects/UAVSwarmSystem/UAVSwarm.jpg
 importance: 1
 category: work
 related_publications: false
