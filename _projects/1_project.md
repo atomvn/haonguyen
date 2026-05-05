@@ -228,21 +228,18 @@ sudo ninja -C build install
 ```
 *Step 2: Configuration (main.conf)*
 You define your inputs and outputs in a configuration file (usually located at */etc/mavlink-router/main.conf*):
-```Ini, TOML
+```
 [General]
 TcpServerPort=5760
-
 # Endpoint 1: Connection to the Flight Controller via Serial
 [UartEndpoint To_FC]
 Device = /dev/ttyAMA0
 Baud = 921600
-
 # Endpoint 2: Sending data to Ground Control (QGroundControl) via Wi-Fi
 [UdpEndpoint To_GCS]
 Mode = Normal
 Address = 192.168.1.50
 Port = 14550
-
 # Endpoint 3: Internal data for a Python app running on the same Pi
 [UdpEndpoint Internal_App]
 Mode = Normal
