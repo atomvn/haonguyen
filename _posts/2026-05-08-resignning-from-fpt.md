@@ -1,7 +1,7 @@
 ---
 layout: post
 title: resigning from FPT Software 
-date: 2026-05-09 14:41:00
+date: 2026-05-08 16:00:00
 description: no des
 tags: images
 categories: sample-posts
