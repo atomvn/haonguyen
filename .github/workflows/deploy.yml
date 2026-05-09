@@ -94,6 +94,8 @@ jobs:
           pip3 install --upgrade nbconvert
           export JEKYLL_ENV=production
           bundle exec jekyll build
+        env:
+          JEKYLL_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Purge unused CSS 🧹
         run: |
           npm install -g purgecss
