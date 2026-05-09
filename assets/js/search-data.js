@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-my-first-post",
+        },{id: "post-resigning-from-fpt-software",
+        
+          title: "resigning from FPT Software",
+        
+        description: "no des",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/resignning-from-fpt/";
+          
+        },
+      },{id: "post-my-first-post",
         
           title: "my first post",
         
