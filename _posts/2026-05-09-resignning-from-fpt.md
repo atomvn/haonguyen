@@ -11,7 +11,7 @@ thumbnail: assets/img/posts/09_05_26/OutsideFV2.jpg
 A year working at FPT software (May 2025 - May 2026) was my wonderful and meaningful time. Starting my career as a  software engineer at FPT, I learned a lot of new things in terms of both knowledge and working skills from very nice colleagues here.  
 The working environment at FPT software (Konica Minolta office and production printer project) is welcoming and professional.  
 A good working place and meaningful time, I will never forget memories here!
----
+
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
         {% include figure.liquid loading="eager" path="assets/img/posts/09_05_2026/OutsideFV2.jpg" class="img-fluid rounded z-depth-1" %}
