@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-resigning-from-fpt-software",
+        },{id: "post-n-1-time-visiting-hoan-kiem-lake",
+        
+          title: "n+1 time visiting Hoan Kiem Lake",
+        
+        description: "with my friends at FPT software",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/hoan-kiem-lake/";
+          
+        },
+      },{id: "post-resigning-from-fpt-software",
         
           title: "resigning from FPT Software",
         
