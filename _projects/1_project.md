@@ -63,7 +63,7 @@ Developers often prefer Leaflet over other alternatives because of its unique ba
 #### How to use Leaflet?
 Getting started with Leaflet involves three straightforward steps:
 
-*Step 1: Include the library*
+*Step 1: Include the library*  
 Add the Leaflet CSS and JavaScript files to the <head> section of your HTML document.
 ```html
 <!-- Leaflet CSS -->
@@ -73,13 +73,13 @@ Add the Leaflet CSS and JavaScript files to the <head> section of your HTML docu
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 ```
 
-*Step 2: Create a container*
+*Step 2: Create a container*  
 Define a <div> element where the map will be rendered. Ensure you give it a specific id and a defined height.
 ```html
 <div id="map" style="height: 500px; width: 100%;"></div>
 ```
 
-*Step 3: Initialize the map*
+*Step 3: Initialize the map*  
 Use JavaScript to set the map's focus (coordinates) and choose a tile provider.
 ```javascript
 // 1. Initialize the map at a specific coordinate (e.g., London) with zoom level 13
@@ -111,14 +111,14 @@ Why embed a whole browser instead of using standard desktop widgets?
 #### How to use QtWebEngine?
 Because QtWebEngine is quite large, it is often packaged separately from the core PyQt library.
 
-*Step 1: Installation* 
+*Step 1: Installation*  
 You need to install the specific WebEngine package for your version of PyQt:
 ```bash
 pip install PyQt5-WebEngine
 # Or if you are using PyQt6
 pip install PyQt6-WebEngine
 ```
-*Step 2: Basic implementation*
+*Step 2: Basic implementation*  
 Here is a simple script to create a window that renders a website:
 ```python
 import sys
@@ -175,12 +175,12 @@ YOLO has become the "king" of object detection because of the following reasons:
 #### How to use YOLO?
 Today, using YOLO has become incredibly simple thanks to libraries like *ultralytics*.
 
-*Step 1: Installation*
+*Step 1: Installation*  
 You can install the library via your terminal/command prompt:
 ```bash
 pip install ultralytics
 ```
-*Step 2: Implementation with Python*
+*Step 2: Implementation with Python*  
 You can use a Pre-trained model to immediately detect 80 common object types (like cars, people, chairs, etc.).
 ```python
 from ultralytics import YOLO
@@ -195,7 +195,7 @@ results = model.predict('image.jpg', save=True, conf=0.5)
 for result in results:
     print(result.boxes)  # Prints the coordinates of the bounding boxes
 ```
-*Step 3: Training on Custom Data*
+*Step 3: Training on Custom Data*  
 If you want YOLO to detect specific things (e.g., product defects on a conveyor belt or specific license plates), you follow these steps:
 + **Labeling:** Use tools like LabelImg or Roboflow to draw boxes and name objects in your custom dataset.
 + **Training:** Run a simple command: model.train(data='config.yaml', epochs=100).
@@ -217,7 +217,7 @@ Flight Controllers usually have a limited number of physical Serial (Telemetry) 
 + **Message Filtering:** It can be configured to filter specific messages, ensuring that high-bandwidth data stays onboard while only essential telemetry is sent over weak radio links.
 
 #### How to use MAVLink-router
-*Step 1: Installation*
+*Step 1: Installation*  
 On a Linux system, you generally build it from the source:
 ```bash
 git clone https://github.com/mavlink-router/mavlink-router.git
@@ -227,7 +227,7 @@ meson setup build .
 ninja -C build
 sudo ninja -C build install
 ```
-*Step 2: Configuration (main.conf)*
+*Step 2: Configuration (main.conf)*  
 You define your inputs and outputs in a configuration file (usually located at */etc/mavlink-router/main.conf*):
 ```
 [General]
@@ -248,7 +248,7 @@ Address = 127.0.0.1
 Port = 14540
 ```
 
-*Step 3: Execution*
+*Step 3: Execution*  
 Once configured, simply run the daemon:
 ```bash
 mavlink-routerd -c /etc/mavlink-router/main.conf
@@ -270,12 +270,12 @@ In the world of Python for drones, the biggest competitor was DroneKit. However,
 + **Cross-Platform:** It runs seamlessly on Linux (Raspberry Pi, Jetson), macOS, and Windows.
 
 #### How to use MAVSDK?
-*Step 1: Installation*
+*Step 1: Installation*  
 Install the library using pip:
 ```bash
 pip install mavsdk
 ```
-*Step 2: Basic implementation*
+*Step 2: Basic implementation*  
 Everything in MAVSDK-Python typically runs within an async function. Here is a basic script to make a drone take off:
 ```python
 import asyncio
@@ -310,7 +310,7 @@ if __name__ == "__main__":
     asyncio.run(run())
 ```
 
-*Step 3: Monitoring telemetry*
+*Step 3: Monitoring telemetry*  
 You can stream data like battery levels or GPS coordinates continuously without blocking your main command loop:
 ```python
 async def print_battery(drone):
@@ -332,25 +332,25 @@ PX4 is more than just a controller; it is an industry standard for several reaso
 + **Simulation Environments (SITL/HITL):** PX4 provides powerful simulation tools (Gazebo, jMAVSim). You can test your flight code for thousands of hours on a computer before ever flying a real drone, significantly reducing the risk of crashes.
 
 #### How to use PX4?
-*Step 1: Flashing firmware to hardware*
+*Step 1: Flashing firmware to hardware*  
 You need a Flight Controller (FC) like a Pixhawk 6C or Orange Cube.
 1. Install QGroundControl (GCS) on your computer.
 2. Connect your Pixhawk via USB.
 3. Use QGroundControl to upload the latest PX4 firmware onto the board.
 
-*Step 2: Configuration and calibration*
+*Step 2: Configuration and calibration*  
 Through the QGroundControl interface, you must complete the following setups:
 1. Airframe: Select the type of drone you are using (e.g., Generic Quadcopter X).
 2. Sensors: Calibrate the accelerometer, compass, and gyroscope.
 3. Radio/ESC: Set up your remote controller and calibrate the Electronic Speed Controllers (ESCs).
 
-*Step 3: Programming and flying*
+*Step 3: Programming and flying*  
 + **Manual/Autonomous Flight:** You can plan a mission (waypoints) on the map in QGroundControl and click "Start" for the drone to fly itself.
 * **Offboard Programming:** Use MAVSDK or ROS 2 to send commands from a companion computer. For example: "If the camera detects an object, tell PX4 to move 5 meters to the left."
   
 ### **ROS 2 and Gazebo** 
 #### What are ROS 2 and Gazebo?
-**ROS 2 (Robot Operating System 2)**
+**ROS 2 (Robot Operating System 2)**  
 Despite the name, ROS 2 is not an actual operating system like Windows or Linux. It is a Middleware—a collection of software frameworks, tools, and libraries that help different parts of a robot (sensors, motors, AI algorithms) "talk" to each other through a structured messaging system.  
 **Gazebo**
 Gazebo is a powerful 3D Simulator. It allows you to create a virtual environment with realistic physics (gravity, friction, wind) to test your robots. It mimics how a robot would behave in the real world without needing the physical hardware.
@@ -363,14 +363,14 @@ The combination of ROS 2 and Gazebo solves some of the toughest challenges in ro
 + **Testing Any Environment:** You can simulate a robot on the moon, underwater, or in a complex warehouse maze without ever leaving your desk.
 
 #### How to use them?
-*Step 1: Installation*
+*Step 1: Installation*  
 Follow [installation guide](https://wiki.ros.org/noetic/Installation/Ubuntu) on ROS official webpage.
 Also, you can find Gazebo [installation guide](https://classic.gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0) on their official webpage.
 
-*Step 2: Create a Robot Model (URDF/SDF)*
+*Step 2: Create a Robot Model (URDF/SDF)*  
 You describe the physical structure of your robot—how many wheels it has, where the joints are, and how much it weighs—using XML-based files called URDF (Unified Robot Description Format). Gazebo reads this file to render the robot in 3D space.
 
-*Step 3: Write Control Nodes in ROS 2*
+*Step 3: Write Control Nodes in ROS 2*  
 You write small programs (Nodes) to control the robot. For example:
 + Node A: Reads distance data from a virtual laser sensor in Gazebo.
 
@@ -378,7 +378,7 @@ You write small programs (Nodes) to control the robot. For example:
 
 + Node C: Sends speed commands to the robot's wheels inside Gazebo.
 
-*Step 4: Step 4: Launch the Simulation*
+*Step 4: Step 4: Launch the Simulation*  
 Using the ros2 launch tool, you start the virtual world and your control algorithms simultaneously.
 ```bash
 # Example: Launching a TurtleBot3 robot in a simulated world
