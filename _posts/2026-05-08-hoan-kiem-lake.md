@@ -1,6 +1,6 @@
 ---
 layout: post
-title: n+1 time visiting Hoan Kiem Lake
+title: n+1th time visiting Hoan Kiem Lake
 date: 2026-05-08 20:00:00
 description: with my friends at FPT software
 tags: images
