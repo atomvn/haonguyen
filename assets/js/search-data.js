@@ -44,9 +44,9 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-n-1-time-visiting-hoan-kiem-lake",
+        },{id: "post-n-1th-time-visiting-hoan-kiem-lake",
         
-          title: "n+1 time visiting Hoan Kiem Lake",
+          title: "n+1th time visiting Hoan Kiem Lake",
         
         description: "with my friends at FPT software",
         section: "Posts",
