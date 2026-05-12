@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-n-1th-time-visiting-hoan-kiem-lake",
+        },{id: "post-my-first-post",
+        
+          title: "my first post",
+        
+        description: "just a random post",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/first-day-at-vtx/";
+          
+        },
+      },{id: "post-n-1th-time-visiting-hoan-kiem-lake",
         
           title: "n+1th time visiting Hoan Kiem Lake",
         
