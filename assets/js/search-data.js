@@ -44,9 +44,9 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-my-first-post",
+        },{id: "post-start-a-new-job",
         
-          title: "my first post",
+          title: "start a new job",
         
         description: "just a random post",
         section: "Posts",
