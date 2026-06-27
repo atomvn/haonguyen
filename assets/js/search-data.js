@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-start-a-new-job",
+        },{id: "post-sunset",
+        
+          title: "sunset",
+        
+        description: "a picture of sunset taken at my workplace",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/sunset/";
+          
+        },
+      },{id: "post-start-a-new-job",
         
           title: "start a new job",
         
