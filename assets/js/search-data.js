@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-sunset",
+        },{id: "post-how-to-use-find-command-in-linux",
+        
+          title: "How to use find command in Linux",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/find-command/";
+          
+        },
+      },{id: "post-sunset",
         
           title: "sunset",
         
