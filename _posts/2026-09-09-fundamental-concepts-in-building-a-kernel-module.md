@@ -3,7 +3,7 @@ layout: post
 title: Fundamental concepts in building a kernel module and hello world example
 date: 2026-09-09 12:00:00
 description: 
-tags: device driver
+tags: device-driver
 categories: 
 thumbnail: 
 ---
@@ -101,3 +101,5 @@ make INSTALL_MOD_PATH=/kmods` modules_install
 ```
 3. clean: xóa tất cả các file build.
 4. help: In ta 1 message 
+
+Dive deeper into source code [here](https://github.com/atomvn/Linux-Device-Driver/tree/master/)
