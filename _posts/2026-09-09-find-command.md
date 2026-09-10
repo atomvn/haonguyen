@@ -1,9 +1,9 @@
 ---
 layout: post
 title: How to use find command in Linux 
-date: 2026-09-10 12:00:00
+date: 2026-09-09 12:00:00
 description: 
-tags: knowledges
+tags: knowledge
 categories: 
 thumbnail: 
 ---
