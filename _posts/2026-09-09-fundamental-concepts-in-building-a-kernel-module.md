@@ -84,7 +84,7 @@ Nếu như chỉ dùng câu lệnh build trên thì quá là rườm rà, do v�
 Khi người dùng type make tại thư mục hiện tại, thì trong lần đọc đầu tiên:
 - Do chưa vào Kernel build system, biến KERNELRELEASE chưa được định nghĩa $\rightarrow$ make nhảy vào nhánh else.
 - Nhánh else tự động lấy đường dẫn Kernel hiện tại (KDIR) và đường dẫn thư mục làm việc (PWD), sau đó thực thi lệnh:
-$(MAKE) -C $(KDIR) M=$(PWD) modules
+MAKE -C KDIR M=$(PWD) modules
 - Câu lệnh này chuyển hướng chương trình vào thư mục của Kernel source và gọi hệ thống build của Kernel.
 
 Lần đọc thứ 2:
