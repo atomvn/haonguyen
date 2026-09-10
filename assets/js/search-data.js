@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-how-to-use-find-command-in-linux",
+        },{id: "post-fundamental-concepts-in-building-a-kernel-module-and-hello-world-example",
+        
+          title: "Fundamental concepts in building a kernel module and hello world example",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/fundamental-concepts-in-building-a-kernel-module/";
+          
+        },
+      },{id: "post-how-to-use-find-command-in-linux",
         
           title: "How to use find command in Linux",
         
