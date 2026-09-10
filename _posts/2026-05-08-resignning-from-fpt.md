@@ -5,7 +5,7 @@ date: 2026-05-08 16:00:00
 description: no des
 tags: images
 categories: sample-posts
-thumbnail: assets/img/posts/09-05-26/OutsideFV2.jpg
+thumbnail: assets/img/posts/2026-05-09/OutsideFV2.jpg
 ---
 
 A year working at FPT software (May 2025 - May 2026) was my wonderful and meaningful time. Starting my career as a  software engineer at FPT, I learned a lot of new things in terms of both knowledge and working skills from very nice colleagues here.  

@@ -5,7 +5,7 @@ date: 2026-09-09 12:00:00
 description: 
 tags: linux
 categories: 
-thumbnail: 
+thumbnail: assets/img/posts/2026-09-09/find.jpg
 ---
 
 :question:Câu lệnh find tìm kiếm trong hệ thống file, tìm kiếm các file theo yêu cầu của người dùng: tên, size, thời gian sửa đổi...

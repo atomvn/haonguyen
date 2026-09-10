@@ -5,7 +5,7 @@ date: 2026-09-09 12:00:00
 description: 
 tags: device-driver
 categories: 
-thumbnail: 
+thumbnail: assets/img/posts/2026-09-09/makefile.jpg 
 ---
 
 :question:**Compiling a module**  

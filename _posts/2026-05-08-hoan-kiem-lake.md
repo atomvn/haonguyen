@@ -5,7 +5,7 @@ date: 2026-05-08 20:00:00
 description: with my friends at FPT software
 tags: images
 categories: 
-thumbnail: assets/img/posts/08-05-26/TurtleTower.jpg
+thumbnail: assets/img/posts/2026-05-08/TurtleTower.jpg
 ---
 
 <div class="row">
