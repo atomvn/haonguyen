@@ -286,7 +286,7 @@ Các nhiệm vụ của hàm scull_write:
     - tblock & toffset: Dựa trên vị trí con trỏ file hiện tại (*f_pos), driver tính toán dữ liệu sẽ rơi vào khối thứ mấy (tblock) và độ lệch bao nhiêu byte bên trong khối đó (toffset).
     - mutex_lock_interruptible(&dev->mutex): Khóa Mutex để đảm bảo an toàn đa luồng (thread-safety), ngăn chặn hai tiến trình cùng ghi vào bộ nhớ driver gây xung đột (race condition).
 
-2. Cấp phát bộ nhớ động
+2. Cấp phát bộ nhớ động  
     ```c
     /*
     * For simplicity, we write one block each write request.
