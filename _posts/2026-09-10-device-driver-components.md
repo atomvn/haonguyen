@@ -5,7 +5,7 @@ date: 2026-09-10 15:09:00
 description: 
 tags: device-driver
 categories: 
-featured: true
+featured: false
 ---
 
 1 basic device driver sẽ trông như sau:
@@ -189,7 +189,7 @@ Major number xác định driver chịu trách nhiệm quản lý thiết bị �
 Còn về minor number thì sao:question:  
 Minor number xác định thiết bị cụ thể hoặc kệnh cụ thể do driver đó quản lý (ví dụ: 1 driver quản lý 4 cổng kết nối thì nó sẽ có 1 major và 4 minor number từ 0->3)
 
-Vậy trong src code, major và minor number được biểu diễn ra sao:question:?   
+Vậy trong src code, major và minor number được biểu diễn ra sao:question:   
 Kiểu dữ liệu dev_t được định nghĩa trong header file <linux/types.h> được sử dụng để dữ số hiệu thiết bị, major and minor number. dev_t là kiểu dữ liệu 32 bit với 12 bit được dành cho major và 20 bit được dành cho minor number. Khi muốn đọc giá trị của major hay minor number ta phải sử dụng các macros được định nghĩa trong <linux/kdev_t.h>:
 ```c
 MAJOR(dev_t dev);
@@ -226,5 +226,56 @@ Tham số:
 2. count: số lượng minor number cần trả lại, phải bằng count lúc xin
 
 ### 2. Struct file_operations 
-Struct file_operations là gì, tại sao lại cần có struct này trong device driver của ta:question:
+Struct file_operations là gì, tại sao lại cần có struct này trong device driver của ta:question:   
+Để trả lời cho câu hỏi trên, ta cùng tìm hiểu vai trò của struct file_operations:
+1. Sau khi xin cấp số hiệu thiết bị (dev_t), Kernel vẫn chưa biết khi ứng dụng gọi read(), write(), hay open() thì code nào trong driver sẽ chạy. Cấu trúc file_operations chính là tập hợp các con trỏ hàm (function pointers) đảm nhận nhiệm vụ này. Ta sẽ gán các con trỏ hàm trong struct này vào các hàm my_open, my_read, my_write...
 
+2. Cấu trúc này hoặc con trỏ trỏ tới nó thường được gọi tắt là fops.
+
+3. Giá trị NULL: Nếu driver không cài đặt một hàm nào đó, con trỏ hàm tương ứng sẽ để NULL. Khi ứng dụng gọi system call tương ứng, Kernel sẽ tự xử lý mặc định (thường là trả về lỗi hoặc bỏ qua tùy hàm).
+
+4. Chú thích __user: Xuất hiện ở các tham số con trỏ (ví dụ: char __user *buf). Đây là đánh dấu chỉ ra rằng đây là địa chỉ thuộc bộ nhớ User-space, không được phép giải con trỏ (dereference) trực tiếp trong Kernel mà phải dùng các hàm hỗ trợ như copy_to_user() hay copy_from_user().
+
+Chi tiết các trường thông tin trong struct file_operations:
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-09-10.fops_1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-09-10.fops_2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-09-10.fops_3.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+
+Ví dụ khởi tạo instance của struct file_operations cho driver scull:
+```
+struct file_operations scull_fops = {
+    .owner   = THIS_MODULE,
+    .llseek  = scull_llseek,
+    .read    = scull_read,
+    .write   = scull_write,
+    .ioctl   = scull_ioctl,
+    .open    = scull_open,
+    .release = scull_release,
+}
+```
+### 3. Struct file
+Struct file là gì:question:   
+1. Struct file này là thằng đại diện cho 1 file đang được mở, tức là mỗi khi 1 tiến trình ở user space mà gọi open() để mở 1 file (hoặc thiết bị trong /dev), thì Kernel sẽ tạo ra 1 instance của struct file trong kernel space.
+2. Cấu trúc này tồn tại từ lúc file được mở cho đến khi tất cả các bản sao của nó bị đóng hoàn toàn (close()). Khi không còn tiến trình nào dùng tới, Kernel sẽ giải phóng cấu trúc này.
+3. Trong Kernel source code, con trỏ trỏ tới struct file thường được gọi là filp (File Pointer) để tránh nhầm lẫn với chính bản thân cấu trúc file.
+
+Các trường thông tin trong struct file:
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-09-10.file_1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-09-10.file_2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/2026-09-10.file_3.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
