@@ -10,7 +10,6 @@ profile:
   image_circular: false # crops the image to make it circular
   more_info: >
     <p>              Hao Nguyen              </p>
-  # <p>University of Engineering and Technology-VNU</p>
     <p></p>
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
