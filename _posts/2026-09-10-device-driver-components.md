@@ -239,13 +239,13 @@ Struct file_operations là gì, tại sao lại cần có struct này trong devi
 Chi tiết các trường thông tin trong struct file_operations:
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-09-10.fops_1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid path="assets/img/2026-09-10/fops_1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-09-10.fops_2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid path="assets/img/2026-09-10/fops_2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-09-10.fops_3.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid path="assets/img/2026-09-10/fops_3.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 
@@ -270,12 +270,149 @@ Struct file là gì:question:
 Các trường thông tin trong struct file:
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-09-10.file_1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid path="assets/img/2026-09-10/file_1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-09-10.file_2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid path="assets/img/2026-09-10/file_2.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/2026-09-10.file_3.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.liquid path="assets/img/2026-09-10/file_3.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
+
+### 4. Struct inode 
+Struct inode là gì:question:   
+
+Struct inode (inode index) đại diện cho một tập tin thực tế trên hệ thống (file vật lý trên đĩa hoặc file thiết bị trong /dev). Mỗi file trên hệ thống chỉ có duy nhất một struct inode, bất kể có bao nhiêu chương trình đang mở nó.
+
+Các trường thông tin trong struct inode:
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/posts/2026-09-10/inode.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+
+Để viết code có khả năng tương thích cao (portable) và không bị ảnh hưởng bởi các thay đổi trong tương lai của Kernel, lập trình viên không nên đọc trực tiếp inode->i_rdev, mà phải sử dụng 2 macro được Kernel cung cấp sẵn:
+```c
+unsigned int imajor(struct inode *inode); // Trích xuất Major Number từ inode
+unsigned int iminor(struct inode *inode); // Trích xuất Minor Number từ inode
+```
+
+**Ứng dụng thực tế trong hàm open của Driver**  
+Khi ứng dụng mở file thiết bị, hàm open trong driver nhận vào tham số (struct inode *inode, struct file *filp). Bạn có thể dùng iminor(inode) để biết chính xác người dùng đang mở thiết bị phụ (Minor) nào:
+```c
+static int scull_open(struct inode *inode, struct file *filp)
+{
+    unsigned int minor = iminor(inode);
+    
+    // Kiểm tra xem người dùng đang mở /dev/scull0, /dev/scull1 hay /dev/scull2...
+    pr_info("Opening scull device with Minor number: %d\n", minor);
+
+    return 0;
+}
+```
+
+### 5. Char Device registration
+**`cdev_init`**   
+
+Kernel sử dụng cấu trúc struct cdev (định nghĩa trong <linux/cdev.h>) để quản lý các thiết bị ký tự ở bộ nhớ nội bộ. Trước khi Kernel có thể gọi bất kỳ hàm thao tác nào (read, write, open...) của driver, bạn phải khởi tạo và đăng ký cấu trúc cdev này.  
+Thông thường ta sẽ nhúng cdev vào cấu trúc dữ liệu riêng của Driver, ví dụ như trong đoạn code basic device-driver trên:
+```c
+struct my_device {
+    char *buffer;           /* Bộ đệm chứa dữ liệu */
+    size_t size;            /* Kích thước dữ liệu đang lưu */
+    struct cdev cdev;       /* Cấu trúc cdev của Kernel */
+}
+```
+
+Để khởi tạo cdev, ta dùng hàm init:
+
+```c
+cdev_init(&my_dev_ptr->cdev, &fops);
+my_dev_ptr->cdev.owner = THIS_MODULE;
+```
+
+Luôn phải gán trường owner của cdev bằng THIS_MODULE.
+
+**`cdev_add`**   
+
+Sau khi init xong, tiếp theo ta cần add để báo cho kernel biết là thiết bị chuẩn bị hoạt động.
+```c
+int cdev_add(struct cdev *dev, dev_t num, unsigned int count);
+```
+Các tham số bao gồm:
+1. dev: Con trỏ trỏ tới cấu trúc cdev đã khởi tạo.
+2. num: Số hiệu thiết bị đầu tiên (dev_t) mà thiết bị này phản hồi.
+3. count: Số lượng Minor number liên quan gắn với cdev này (thường là 1).
+
+Hàm trả về giá trị âm nếu thiết bị chưa được thêm vào hệ thống. Còn ngay khi cdev_add trả về 0, Kernel có thể lập tức gọi các hàm open, read, write của driver nếu có yêu cầu từ User-space. Do đó, chỉ gọi cdev_add khi driver và phần cứng đã được chuẩn bị hoàn toàn xong xuôi.
+
+**`cdev_del`**   
+Khi gỡ bỏ driver (trong hàm cleanup/exit), bạn cần gỡ thiết bị khỏi Kernel bằng hàm:
+```c
+void cdev_del(struct cdev *dev);
+```
+
+### 6. The open method   
+Hàm open được gọi mỗi khi một chương trình ở User-space mở file thiết bị. Trong hầu hết các driver, hàm này đảm nhận 4 nhiệm vụ cốt lõi:
+1. Kiểm tra lỗi phần cứng: Xem thiết bị có sẵn sàng không (ví dụ: máy in bị kẹt giấy, thiết bị chưa cắm...).
+2. Khởi tạo thiết bị: Nếu thiết bị được mở lần đầu tiên.
+3. Cập nhật con trỏ f_op: Thay đổi bảng thao tác hàm nếu cần (kỹ thuật method overriding).
+4. Cấp phát & gán dữ liệu vào filp->private_data: Chuẩn bị sẵn cấu trúc dữ liệu thiết bị để các hàm read, write, release sau đó tái sử dụng dễ dàng.
+
+Khai báo hàm open:
+```c
+int (*open)(struct inode *inode, struct file *filp);
+```
+Khi hàm open chạy, bạn có inode->i_cdev (con trỏ trỏ tới struct cdev). Nhưng cái driver thực sự cần lại là struct scull_dev (cấu trúc bao quanh chứa cdev đó).  
+Giải pháp: Macro container_of, được định nghĩa trong <linux/kernel.h>, macro này cho phép tìm ngược lại địa chỉ của cấu trúc cha khi chỉ biết địa chỉ của một cấu trúc con nằm bên trong nó.   
+```c
+container_of(pointer, container_type, container_field);
+```
+Tham số: 
+1. pointer: Con trỏ tới cấu trúc con đang có (ở đây là inode->i_cdev).
+2. container_type: Kiểu dữ liệu của cấu trúc cha (ở đây là struct scull_dev).
+3. container_field: Tên của biến con nằm trong cấu trúc cha (ở đây là trường cdev).
+
+Ví dụ được sử dụng trong basic device-driver trên:
+```c
+static int my_open(struct inode *inode, struct file *filp)
+{
+    struct my_device *dev;
+
+    /* Lấy cấu trúc cha chứa cdev này */
+    dev = container_of(inode->i_cdev, struct my_device, cdev);
+    filp->private_data = dev; /* Lưu lại để read/write dùng */
+
+    pr_info("%s: Device opened successfully\n", DRIVER_NAME);
+    return 0;
+}
+```
+
+### 7. The release method
+Phương thức release (trong một số driver còn được đặt tên là device_close) đóng vai trò ngược lại hoàn toàn với open. Các nhiệm vụ chính bao gồm:
+1. Giải phóng bộ nhớ: Cấp phát động nào đã thực hiện trong open (gán vào filp->private_data) thì phải dùng kfree để giải phóng tại đây.
+2. Tắt thiết bị: Thực hiện các thao tác hạ nguồn/tắt thiết bị phần cứng khi lần đóng cuối cùng diễn ra (shutdown hardware).
+
+### 8. read and write
+Khai báo của hàm read và write:
+```c
+ssize_t read(struct file *filp, char __user *buff, size_t count, loff_t *offp);
+ssize_t write(struct file *filp, const char __user *buff, size_t count, loff_t *offp);
+```
+Giải thích các tham số:
+1. filp: Con trỏ struct file đại diện cho phiên làm việc với file thiết bị.
+2. buff: Con trỏ trỏ tới vùng đệm ở User-space (nơi chứa dữ liệu cần ghi, hoặc nơi nhận dữ liệu đọc về). Chú ý từ khóa gán nhãn __user.
+3. count: Kích thước (số lượng bytes) dữ liệu mà User-space yêu cầu truyền tải offp: Con trỏ trỏ tới biến chỉ vị trí truy cập hiện tại trong file (loff_t).
+4. Giá trị trả về (ssize_t): Số byte thực tế đã đọc/ghi thành công (nguyên không âm) hoặc số âm đại diện cho mã lỗi (ví dụ: -EFAULT).
+
+**Tại sao kernel không được truy cập trực tiếp vào con trỏ user space (Ví dụ \*buff hoặc buff[i])**  
+1. Khác biệt không gian địa chỉ (Address Space Mapping): Tùy thuộc vào kiến trúc phần cứng và cấu hình Kernel, địa chỉ vùng nhớ User-space có thể hoàn toàn không hợp lệ hoặc trỏ đến một vùng nhớ ngẫu nhiên khác khi CPU đang ở Kernel mode.
+2. Nguy cơ Page Fault & Kernel Oops: Bộ nhớ User-space có thể bị đẩy ra đĩa (paged out / swapped out). Nếu Kernel truy cập trực tiếp khi trang nhớ chưa nằm trong RAM, một lỗi trang (Page Fault) sẽ xảy ra. Kernel không được phép tạo Page Fault bất ngờ theo cách này, nếu không sẽ dẫn tới lỗi sập tiến trình (Oops).
+3. Bảo mật và An toàn hệ thống: Con trỏ do chương trình User-space truyền vào có thể chứa lỗi (bug) hoặc cố tình chứa địa chỉ độc hại. Nếu Kernel giải mã mù quáng, chương trình User-space có thể đọc hoặc ghi đè lên bất kỳ vùng nhớ bảo mật nào của hệ thống.
+
+Do vậy ta cần sử dụng các hàm giúp truyền dữ liệu an toàn: copy_to_user và copy_from_user được định nghĩa trong <asm/uaccess.h>:
+```
+unsigned long copy_to_user(void __user *to, const void *from, unsigned long count);
+unsigned long copy_from_user(void *to, const void __user *from, unsigned long count);
+```
