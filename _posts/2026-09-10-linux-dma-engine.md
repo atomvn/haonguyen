@@ -182,6 +182,7 @@ desc = dmaengine_prep_slave_sg(chan, sgl, nr_sg, direction, flags);
 
 Cùng xem xét ví dụ cho từng loại API lấy descriptor giao dịch:
 - dmaengine_prep_slave_sg() — Dùng cho giao dịch truyền dữ liệu tiêu chuẩn (UART, SPI, SDIO)
+
 ```c
 #include <linux/dmaengine.h>
 #include <linux/dma-mapping.h>
@@ -226,6 +227,7 @@ int send_sg_dma(struct my_uart_dev *uart, struct scatterlist *sgl, unsigned int 
 ```
 
 - dmaengine_prep_dma_cyclic() — Dùng cho Audio Driver (ALSA / Sound)
+
 ```c
 #include <sound/pcm.h>
 #include <linux/dmaengine.h>
@@ -265,6 +267,7 @@ int start_audio_cyclic_dma(struct my_pcm_runtime *pcm)
 ```
 
 - dmaengine_prep_config_sg() — Đổi địa chỉ FIFO / Burst size trực tiếp mà không cần re-config
+
 ```c
 int send_config_sg_dma(struct my_spi_dev *spi, struct scatterlist *sgl, int sg_len)
 {
@@ -304,6 +307,7 @@ int send_config_sg_dma(struct my_spi_dev *spi, struct scatterlist *sgl, int sg_l
 ```
 
 - dmaengine_prep_peripheral_dma_vec() — Truyền bộ đệm dùng mảng dma_vec (Giao diện đơn giản hơn scatterlist)
+
 ```c
 #include <linux/dmaengine.h>
 
