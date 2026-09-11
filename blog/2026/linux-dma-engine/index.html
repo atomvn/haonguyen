@@ -1,5 +1,453 @@
 <!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> linux dma engine | Van Hao Nguyen </title> <meta name="author" content="Van Hao Nguyen"> <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. "> <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website"> <link rel="stylesheet" href="/haonguyen/assets/css/bootstrap.min.css?a4b3f509e79c54a512b890d73235ef04"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="/haonguyen/assets/css/academicons.min.css?f0b7046b84e425c55f3463ac249818f5"> <link defer rel="stylesheet" href="/haonguyen/assets/css/scholar-icons.css?62b2ac103a88034e6882a5be5f3e2772"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/haonguyen/assets/css/jekyll-pygments-themes-github.css?591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/haonguyen/assets/css/main.css?d41d8cd98f00b204e9800998ecf8427e"> <link rel="canonical" href="https://atomvn.github.io/haonguyen/blog/2026/linux-dma-engine/"> <script src="/haonguyen/assets/js/theme.js?a81d82887dd692e91686b43de4542f18"></script> <link defer rel="stylesheet" href="/haonguyen/assets/css/jekyll-pygments-themes-native.css?5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
     initTheme();
-  </script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/haonguyen/"> <span class="font-weight-bold">Van Hao</span> Nguyen </a> <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse text-right" id="navbarNav"> <ul class="navbar-nav ml-auto flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/haonguyen/">about </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/repositories/">repositories </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/books/">bookshelf </a> </li> <li class="nav-item active"> <a class="nav-link" href="/haonguyen/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/people/">people </a> </li> <li class="nav-item"> <button id="search-toggle" title="Search" onclick="openSearchModal()"> <span class="nav-link">ctrl k <i class="ti ti-search"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" title="Change theme"> <i class="ti ti-sun-moon" id="light-toggle-system"></i> <i class="ti ti-moon-filled" id="light-toggle-dark"></i> <i class="ti ti-sun-filled" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="post"> <header class="post-header"> <h1 class="post-title">linux dma engine</h1> <p class="post-meta"> Created on September 10, 2026 </p> <p class="post-tags"> <a href="/haonguyen/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a>   ·   <a href="/haonguyen/blog/tag/linux"> <i class="fa-solid fa-hashtag fa-sm"></i> linux</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <p>Ở blog này, thứ ta cùng tìm hiểu là công cụ DMA Engine của Linux.</p> <h3 id="1-tổng-quan-về-phần-cứng-của-bộ-điều-khiển-slave-dma-dma-controller">1. Tổng quan về phần cứng của bộ điều khiển Slave DMA (DMA Controller)</h3> <p>Đầu tiên ta cần nắm một số khái niệm:</p> <ol> <li>Channel: Hình dung ram như là nhà kho, còn thiết bị ngoại vi là cửa hàng bán lẻ. Yêu cầu ở đây là vận chuyển hàng từ nhà kho ra cửa hàng thì channel là công nhân thực hiện việc bốc vác.</li> <li>Request line (DRQ): Hình dung request line là 1 chuông báo đặt ở cửa hàng, khi nào hết hàng thì nhân viên chỉ cần bấm chuông này, DMA sẽ nhận được thông báo yêu cầu chuyển hàng.</li> </ol> <p>Channel và request hoạt động độc lập với nhau, 1 channel có thể phục vụ nhiều request.</p> <p>Các tham số tối thiểu cần có để config 1 DMA transfer:</p> <ol> <li> <code class="language-plaintext highlighter-rouge">Source address</code>: Con trỏ vùng nhớ nguồn: Cho DMA Controller biết dữ liệu sẽ được đọc ra từ đâu (ví dụ: Địa chỉ RAM vật lý trong bộ đệm nguồn, hoặc địa chỉ thanh ghi Data/FIFO của ngoại vi).</li> <li> <code class="language-plaintext highlighter-rouge">Destination address</code>: Con trỏ vùng nhớ đích: Cho DMA Controller biết dữ liệu sẽ được ghi vào đâu (ví dụ: Địa chỉ RAM vật lý trong bộ đệm đích, hoặc địa chỉ thanh ghi FIFO của thiết bị như UART/Audio/SPI).</li> <li> <code class="language-plaintext highlighter-rouge">Cờ tăng địa chỉ (Source / Destination Address Increment)</code>: Cho biết sau mỗi lần đọc/ghi một byte (hoặc word), con trỏ địa chỉ có tự động tăng lên $1$ bước hay giữ nguyên: <ul> <li>RAM $\rightarrow$ RAM: Cả Nguồn và Đích đều phải tăng để đọc/ghi qua các ô nhớ tiếp theo.</li> <li>RAM $\rightarrow$ Ngoại vi (ví dụ: FIFO): Địa chỉ RAM phải tăng, nhưng địa chỉ thanh ghi ngoại vi phải giữ nguyên (vì dữ liệu luôn được đẩy vào cùng một cổng FIFO, tức là FIFO ăn dữ liệu rồi đẩy ra).</li> </ul> </li> <li> <code class="language-plaintext highlighter-rouge">Kích thước Truyền Tổng (Transfer Size / Length)</code>: <ul> <li>Tổng dung lượng (số lượng Byte hoặc Word) của toàn bộ khối dữ liệu cần chuyển đi trong lần giao dịch này.</li> <li>DMA Controller sẽ dùng giá trị này làm bộ đếm ngược; mỗi lần truyền thành công sẽ giảm dần về $0$ để kết thúc lệnh hoặc kích hoạt ngắt (Interrupt).</li> </ul> </li> <li> <code class="language-plaintext highlighter-rouge">Độ rộng Đường truyền (Transfer Width / Bus Width)</code>: Kích thước của mỗi đơn vị dữ liệu được ghi/đọc trong một chu kỳ bus đơn lẻ (ví dụ: 8-bit/1 byte, 16-bit/2 bytes, 32-bit/4 bytes, hoặc 64-bit).</li> <li> <code class="language-plaintext highlighter-rouge">Kích thước Nhóm Truyền (Burst Size)</code>: <ul> <li>Số lượng giao dịch đơn lẻ (single transfers) mà DMA Controller được phép gộp lại thành một gói lớn để truy xuất bộ nhớ RAM một lần.</li> <li>Giúp tối ưu hóa băng thông Bus RAM thay vì phải gửi từng lệnh đọc/ghi nhỏ lẻ.</li> </ul> </li> <li> <code class="language-plaintext highlighter-rouge">Kênh DMA &amp; Tín hiệu Yêu cầu (DMA Channel &amp; Request Line / DRQ Signal)</code>: <ul> <li>Channel: Chọn/Chỉ định một Kênh (Channel) phần cứng rảnh rỗi sẽ thực thi việc sao chép.</li> <li>Request Line (DRQ): Chỉ định ID của đường tín hiệu phần cứng nối từ thiết bị ngoại vi tới DMA Controller, giúp DMA biết tín hiệu xin truyền dữ liệu này là của thiết bị nào (UART, SPI, hay I2S…).</li> </ul> </li> </ol> <h3 id="2-dma-engine-api-guide">2. DMA Engine API guide</h3> <p>Tổng quan thì mô hình thực thi DMA sẽ tuân theo 5 bước: \(\text{1. Xin cấp phát Channel} \longrightarrow \text{2. Cấu hình tham số} \longrightarrow \text{3. Chuẩn bị Descriptor} \longrightarrow \text{4. Submit vào Hàng chờ} \longrightarrow \text{5. Issue Pending (Bắt đầu chạy)}\)</p> </div> </article> <br> <hr> <br> <ul class="list-disc pl-8"></ul> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/device-driver-components/">Components inside a device driver</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/scull-driver/">scull device driver</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/fundamental-concepts-in-building-a-kernel-module/">Fundamental concepts in building a kernel module and hello world example</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/find-command/">How to use find command in Linux</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/images/">my first post</a> </li> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Van Hao Nguyen. </div> </footer> <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> <script src="/haonguyen/assets/js/bootstrap.bundle.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/masonry.js?a0db7e5d5c70cc3252b3138b0c91dcaf" type="text/javascript"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/zoom.js?85ddb88934d28b74e78031fd54cf8308"></script> <script src="/haonguyen/assets/js/no_defer.js?2781658a0a2b13ed609542042a859126"></script> <script defer src="/haonguyen/assets/js/common.js?e0514a05c5c95ac1a93a8dfd5249b92e"></script> <script defer src="/haonguyen/assets/js/copy_code.js?c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/haonguyen/assets/js/jupyter_new_tab.js?d9f17b6adc2311cbabd747f4538bb15f"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/haonguyen/assets/js/mathjax-setup.js?a5bb4e6a542c546dd929b24b8b236dfd"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/progress-bar.js?2f30e0e6801ea8f5036fa66e1ab0a71a" type="text/javascript"></script> <script src="/haonguyen/assets/js/vanilla-back-to-top.min.js?f40d453793ff4f64e238e420181a1d17"></script> <script>
+  </script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/haonguyen/"> <span class="font-weight-bold">Van Hao</span> Nguyen </a> <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse text-right" id="navbarNav"> <ul class="navbar-nav ml-auto flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/haonguyen/">about </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/repositories/">repositories </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/books/">bookshelf </a> </li> <li class="nav-item active"> <a class="nav-link" href="/haonguyen/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/people/">people </a> </li> <li class="nav-item"> <button id="search-toggle" title="Search" onclick="openSearchModal()"> <span class="nav-link">ctrl k <i class="ti ti-search"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" title="Change theme"> <i class="ti ti-sun-moon" id="light-toggle-system"></i> <i class="ti ti-moon-filled" id="light-toggle-dark"></i> <i class="ti ti-sun-filled" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="post"> <header class="post-header"> <h1 class="post-title">linux dma engine</h1> <p class="post-meta"> Created on September 10, 2026 </p> <p class="post-tags"> <a href="/haonguyen/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a>   ·   <a href="/haonguyen/blog/tag/linux"> <i class="fa-solid fa-hashtag fa-sm"></i> linux</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <p>Ở blog này, thứ ta cùng tìm hiểu là công cụ DMA Engine của Linux.</p> <h3 id="1-tổng-quan-về-phần-cứng-của-bộ-điều-khiển-slave-dma-dma-controller">1. Tổng quan về phần cứng của bộ điều khiển Slave DMA (DMA Controller)</h3> <p>Đầu tiên ta cần nắm một số khái niệm:</p> <ol> <li>Channel: Hình dung ram như là nhà kho, còn thiết bị ngoại vi là cửa hàng bán lẻ. Yêu cầu ở đây là vận chuyển hàng từ nhà kho ra cửa hàng thì channel là công nhân thực hiện việc bốc vác.</li> <li>Request line (DRQ): Hình dung request line là 1 chuông báo đặt ở cửa hàng, khi nào hết hàng thì nhân viên chỉ cần bấm chuông này, DMA sẽ nhận được thông báo yêu cầu chuyển hàng.</li> </ol> <p>Channel và request hoạt động độc lập với nhau, 1 channel có thể phục vụ nhiều request.</p> <p>Các tham số tối thiểu cần có để config 1 DMA transfer:</p> <ol> <li> <code class="language-plaintext highlighter-rouge">Source address</code>: Con trỏ vùng nhớ nguồn: Cho DMA Controller biết dữ liệu sẽ được đọc ra từ đâu (ví dụ: Địa chỉ RAM vật lý trong bộ đệm nguồn, hoặc địa chỉ thanh ghi Data/FIFO của ngoại vi).</li> <li> <code class="language-plaintext highlighter-rouge">Destination address</code>: Con trỏ vùng nhớ đích: Cho DMA Controller biết dữ liệu sẽ được ghi vào đâu (ví dụ: Địa chỉ RAM vật lý trong bộ đệm đích, hoặc địa chỉ thanh ghi FIFO của thiết bị như UART/Audio/SPI).</li> <li> <code class="language-plaintext highlighter-rouge">Cờ tăng địa chỉ (Source / Destination Address Increment)</code>: Cho biết sau mỗi lần đọc/ghi một byte (hoặc word), con trỏ địa chỉ có tự động tăng lên $1$ bước hay giữ nguyên: <ul> <li>RAM $\rightarrow$ RAM: Cả Nguồn và Đích đều phải tăng để đọc/ghi qua các ô nhớ tiếp theo.</li> <li>RAM $\rightarrow$ Ngoại vi (ví dụ: FIFO): Địa chỉ RAM phải tăng, nhưng địa chỉ thanh ghi ngoại vi phải giữ nguyên (vì dữ liệu luôn được đẩy vào cùng một cổng FIFO, tức là FIFO ăn dữ liệu rồi đẩy ra).</li> </ul> </li> <li> <code class="language-plaintext highlighter-rouge">Kích thước Truyền Tổng (Transfer Size / Length)</code>: <ul> <li>Tổng dung lượng (số lượng Byte hoặc Word) của toàn bộ khối dữ liệu cần chuyển đi trong lần giao dịch này.</li> <li>DMA Controller sẽ dùng giá trị này làm bộ đếm ngược; mỗi lần truyền thành công sẽ giảm dần về $0$ để kết thúc lệnh hoặc kích hoạt ngắt (Interrupt).</li> </ul> </li> <li> <code class="language-plaintext highlighter-rouge">Độ rộng Đường truyền (Transfer Width / Bus Width)</code>: Kích thước của mỗi đơn vị dữ liệu được ghi/đọc trong một chu kỳ bus đơn lẻ (ví dụ: 8-bit/1 byte, 16-bit/2 bytes, 32-bit/4 bytes, hoặc 64-bit).</li> <li> <code class="language-plaintext highlighter-rouge">Kích thước Nhóm Truyền (Burst Size)</code>: <ul> <li>Số lượng giao dịch đơn lẻ (single transfers) mà DMA Controller được phép gộp lại thành một gói lớn để truy xuất bộ nhớ RAM một lần.</li> <li>Giúp tối ưu hóa băng thông Bus RAM thay vì phải gửi từng lệnh đọc/ghi nhỏ lẻ.</li> </ul> </li> <li> <code class="language-plaintext highlighter-rouge">Kênh DMA &amp; Tín hiệu Yêu cầu (DMA Channel &amp; Request Line / DRQ Signal)</code>: <ul> <li>Channel: Chọn/Chỉ định một Kênh (Channel) phần cứng rảnh rỗi sẽ thực thi việc sao chép.</li> <li>Request Line (DRQ): Chỉ định ID của đường tín hiệu phần cứng nối từ thiết bị ngoại vi tới DMA Controller, giúp DMA biết tín hiệu xin truyền dữ liệu này là của thiết bị nào (UART, SPI, hay I2S…).</li> </ul> </li> </ol> <h3 id="2-dma-engine-api-guide">2. DMA Engine API guide</h3> <p>Tổng quan thì mô hình thực thi DMA sẽ tuân theo 5 bước: \(\text{1. Xin cấp phát Channel} \longrightarrow \text{2. Cấu hình tham số} \longrightarrow \text{3. Chuẩn bị Descriptor} \longrightarrow \text{4. Submit vào hàng chờ} \longrightarrow \text{5. Issue Pending (Bắt đầu chạy)}\)</p> <h4 id="1-cấp-phát-kênh-dma-allocate-a-dma-slave-channel">1. Cấp phát Kênh DMA (Allocate a DMA Slave channel)</h4> <p>Khác với giao tiếp RAM-to-RAM có thể dùng bất kỳ kênh nào, Slave DMA yêu cầu kênh từ một bộ điều khiển cụ thể (hoặc một kênh phần cứng nhất định nối tới ngoại vi đó).</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="nf">dma_request_chan</span><span class="p">(</span><span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">dev</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">);</span>
+</code></pre></div></div> <ul> <li> <p>Hàm sẽ dựa vào Device Tree (DT), ACPI hoặc bảng ánh xạ dma_slave_map để tìm kênh DMA tương ứng với thiết bị dev theo tên name (ví dụ: “tx” hoặc “rx”).<br> Kênh đã được cấp phát sẽ thuộc quyền sở hữu riêng của Client driver đó cho đến khi gọi hàm dma_release_channel().</p> </li> <li> <p>Lấy 1 ví dụ để hiểu cách dma_request_chan hoạt động và tương tác với device.</p> </li> <li> <p>Ví dụ ta có device tree định nghĩa 1 thiết bị uart và 1 bộ điều khiển dma như sau: ``` /* Khai báo bộ điều khiển DMA của chip */ dma0: dma-controller@40000000 { compatible = “arm,pl330”; #dma-cells = &lt;1&gt;; … };</p> </li> </ul> <p>/* Khai báo thiết bị UART0 */ uart0: serial@40001000 { compatible = “ns16550a”; reg = &lt;0x40001000 0x100&gt;;</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* 
+ * Khai báo UART0 được nối với dma0:
+ * - Kênh truyền (TX) dùng request line số 2
+ * - Kênh nhận (RX) dùng request line số 3
+ */
+dmas = &lt;&amp;dma0 2&gt;, &lt;&amp;dma0 3&gt;;
+
+/* Đặt tên định danh cho 2 kênh này */
+dma-names = "tx", "rx"; }; ```
+</code></pre></div></div> <p>và đoạn code C xin kênh DMA tên tx:</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;linux/dmaengine.h&gt;</span><span class="cp">
+</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">my_uart_probe</span><span class="p">(</span><span class="k">struct</span> <span class="n">platform_device</span> <span class="o">*</span><span class="n">pdev</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">dev</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="n">tx_chan</span><span class="p">;</span>
+
+    <span class="cm">/* 
+     * Bước 1: Gọi hàm xin cấp phát kênh DMA "tx"
+     * - dev: trỏ tới thiết bị uart0
+     * - "tx": tên kênh đã đặt trong Device Tree (dma-names = "tx")
+     */</span>
+    <span class="n">tx_chan</span> <span class="o">=</span> <span class="n">dma_request_chan</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span> <span class="s">"tx"</span><span class="p">);</span>
+
+    <span class="cm">/* Kiểm tra xem có lấy được kênh không */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">IS_ERR</span><span class="p">(</span><span class="n">tx_chan</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">dev_err</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Không thể xin kênh DMA TX! Mã lỗi: %ld</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">PTR_ERR</span><span class="p">(</span><span class="n">tx_chan</span><span class="p">));</span>
+        <span class="k">return</span> <span class="n">PTR_ERR</span><span class="p">(</span><span class="n">tx_chan</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Đã xin thành công kênh DMA TX: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">dma_chan_name</span><span class="p">(</span><span class="n">tx_chan</span><span class="p">));</span>
+
+    <span class="cm">/* Lưu lại con trỏ tx_chan để dùng cho các bước truyền dữ liệu sau này */</span>
+    <span class="n">my_uart_dev</span><span class="o">-&gt;</span><span class="n">tx_chan</span> <span class="o">=</span> <span class="n">tx_chan</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div> <h4 id="2-cấu-hình-các-tham-số-phần-cứng">2. Cấu hình các tham số phần cứng</h4> <p>Trước khi truyền, driver phải thiết lập các tham số kỹ thuật như độ rộng bus, burst size, địa chỉ FIFO ngoại vi…</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">dmaengine_slave_config</span><span class="p">(</span><span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="n">chan</span><span class="p">,</span> <span class="k">struct</span> <span class="n">dma_slave_config</span> <span class="o">*</span><span class="n">config</span><span class="p">);</span>
+</code></pre></div></div> <ul> <li>Đưa thông tin từ cấu trúc struct dma_slave_config vào kênh DMA.</li> <li>Trường direction trong dma_slave_config đang dần bị loại bỏ vì nó trùng lặp với tham số hướng truyền dữ liệu khi tạo descriptor ở Bước 3.</li> </ul> <p>Tiếp tục ví dụ ở phần 1:</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;linux/dmaengine.h&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">configure_uart_tx_dma</span><span class="p">(</span><span class="k">struct</span> <span class="n">my_uart_device</span> <span class="o">*</span><span class="n">uart_dev</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">dma_slave_config</span> <span class="n">config</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+
+    <span class="cm">/* 1. Xóa sạch bộ nhớ của struct config để tránh rác */</span>
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">config</span><span class="p">));</span>
+
+    <span class="cm">/* 2. Thiết lập địa chỉ đích (Destination - FIFO của UART) */</span>
+    <span class="cm">/* uart_dev-&gt;fifo_phy_addr là địa chỉ vật lý thanh ghi Data của UART, ví dụ 0x40001004 */</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">dst_addr</span> <span class="o">=</span> <span class="n">uart_dev</span><span class="o">-&gt;</span><span class="n">fifo_phy_addr</span><span class="p">;</span>
+
+    <span class="cm">/* 3. Thiết lập độ rộng bus truyền dữ liệu (Bus Width) */</span>
+    <span class="cm">/* Cổng UART truyền theo từng ký tự (1 byte) nên dùng 1_BYTE */</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">dst_addr_width</span> <span class="o">=</span> <span class="n">DMA_SLAVE_BUSWIDTH_1_BYTE</span><span class="p">;</span>
+
+    <span class="cm">/* 4. Thiết lập độ dài Burst (Burst Size) */</span>
+    <span class="cm">/* Mức chứa của FIFO UART trước khi cần nạp tiếp, ví dụ: truyền 1 byte mỗi lượt request */</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">dst_maxburst</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="cm">/* 
+     * Lưu ý về trường direction:
+     * Theo tài liệu, dù struct có trường config.direction nhưng API hiện đại 
+     * khuyến nghị bỏ qua hoặc không phụ thuộc vào nó nữa. Hướng truyền (RAM -&gt; DEV) 
+     * sẽ do bước 3 (Prep Descriptor) đảm nhận!
+     */</span>
+
+    <span class="cm">/* 5. Nạp cấu hình vào kênh DMA */</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">dmaengine_slave_config</span><span class="p">(</span><span class="n">uart_dev</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">config</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">dev_err</span><span class="p">(</span><span class="n">uart_dev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Cấu hình DMA Slave thất bại: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ret</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">uart_dev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Cấu hình DMA Slave cho UART TX thành công!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div> <h4 id="3-lấy-descriptor-cho-giao-dịch">3. Lấy descriptor cho giao dịch</h4> <p>Descriptor đại diện cho một giao dịch DMA. Tùy thuộc vào mô hình dữ liệu, dmaengine cung cấp nhiều loại hàm chuẩn bị (prepare APIs):</p> <ol> <li>dmaengine_prep_slave_sg(): Truyền một danh sách các vùng nhớ phân tán (Scatter-Gather list) từ/đến ngoại vi.</li> <li>dmaengine_prep_config_sg(): Tương tự như slave_sg, nhưng cho phép truyền kèm dma_slave_config để tránh phải gọi dmaengine_slave_config() mỗi khi đổi burst size hay địa chỉ FIFO.</li> <li>dmaengine_prep_peripheral_dma_vec(): Truyền danh sách bộ đệm dùng mảng cấu trúc dma_vec thay vì scatterlist.</li> <li>dmaengine_prep_dma_cyclic(): Truyền tuần hoàn (Cyclic DMA) theo vòng lặp không dừng cho tới khi bị hủy thủ công. Rất phổ biến trong Audio Subsystem (ALSA/ASoC) để phát âm thanh liên tục.</li> <li>dmaengine_prep_interleaved_dma(): Dùng cho các kiểu dữ liệu đan xen phức tạp (phù hợp cho cả Mem2Mem và Slave DMA).</li> </ol> <p>Trước khi gọi dmaengine_prep_slave_sg(), client driver bắt buộc phải map danh sách scatterlist với DMA device của kênh, việc gọi dma_map_sg() giúp:</p> <ul> <li>Chuyển đổi toàn bộ địa chỉ ảo trong danh sách scatterlist thành Địa chỉ DMA (Bus Address) để bộ điều khiển DMA có thể đọc/ghi trực tiếp.</li> <li>Kiểm tra và vô hiệu hóa/đẩy cache (Cache Flushing/Invalidation) để đảm bảo CPU và DMA không đọc nhầm dữ liệu cũ còn sót lại trong CPU Cache.</li> <li>Nếu hệ thống có IOMMU (Input-Output MMU), dma_map_sg() sẽ cấu hình IOMMU để gộp các trang RAM phân tán thành một dải địa chỉ liên tục cho DMA.</li> </ul> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">dma_dev</span> <span class="o">=</span> <span class="n">dmaengine_get_dma_device</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span>
+<span class="n">nr_sg</span> <span class="o">=</span> <span class="n">dma_map_sg</span><span class="p">(</span><span class="n">dma_dev</span><span class="p">,</span> <span class="n">sgl</span><span class="p">,</span> <span class="n">sg_len</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">nr_sg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="cm">/* Xử lý lỗi mapping */</span>
+<span class="n">desc</span> <span class="o">=</span> <span class="n">dmaengine_prep_slave_sg</span><span class="p">(</span><span class="n">chan</span><span class="p">,</span> <span class="n">sgl</span><span class="p">,</span> <span class="n">nr_sg</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
+</code></pre></div></div> <p>Cùng xem xét ví dụ cho từng loại API lấy descriptor giao dịch:</p> <ul> <li>dmaengine_prep_slave_sg() — Dùng cho giao dịch truyền dữ liệu tiêu chuẩn (UART, SPI, SDIO) ```c #include &lt;linux/dmaengine.h&gt; #include &lt;linux/dma-mapping.h&gt; #include &lt;linux/scatterlist.h&gt;</li> </ul> <p>int send_sg_dma(struct my_uart_dev *uart, struct scatterlist *sgl, unsigned int sg_len) { struct dma_chan *chan = uart-&gt;tx_chan; struct device *dma_dev = dmaengine_get_dma_device(chan); struct dma_async_tx_descriptor *desc; int nr_sg;</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* 1. MAP danh sách scatterlist sang địa chỉ Bus DMA */
+nr_sg = dma_map_sg(dma_dev, sgl, sg_len, DMA_TO_DEVICE);
+if (nr_sg == 0)
+    return -ENOMEM;
+
+/* 2. Tạo Descriptor từ danh sách đã map */
+desc = dmaengine_prep_slave_sg(
+    chan,
+    sgl,
+    nr_sg,                  /* Số lượng phần tử đã map thành công */
+    DMA_MEM_TO_DEV,         /* Hướng truyền: RAM -&gt; Ngoại vi */
+    DMA_PREP_INTERRUPT | DMA_CTRL_ACK /* Báo ngắt khi xong &amp; Tự do giải phóng desc */
+);
+
+if (!desc) {
+    dma_unmap_sg(dma_dev, sgl, sg_len, DMA_TO_DEVICE);
+    return -EINVAL;
+}
+
+/* 3. Đăng ký Callback hoàn thành */
+desc-&gt;callback = my_uart_dma_tx_callback;
+desc-&gt;callback_param = uart;
+
+/* 4. Submit và Bấm máy kích hoạt */
+dmaengine_submit(desc);
+dma_async_issue_pending(chan);
+
+return 0; } ```
+</code></pre></div></div> <ul> <li>dmaengine_prep_dma_cyclic() — Dùng cho Audio Driver (ALSA / Sound) ```c #include &lt;sound/pcm.h&gt; #include &lt;linux/dmaengine.h&gt;</li> </ul> <p>int start_audio_cyclic_dma(struct my_pcm_runtime *pcm) { struct dma_chan *chan = pcm-&gt;dma_chan; struct dma_async_tx_descriptor *desc;</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* 
+ * Khai báo Ring Buffer âm thanh:
+ * - pcm-&gt;buf_addr: Địa chỉ DMA vật lý của Ring Buffer
+ * - pcm-&gt;buf_len:  Tổng kích thước Ring Buffer (ví dụ: 64 KB)
+ * - pcm-&gt;period_len: Kích thước 1 chu kỳ bắn ngắt (ví dụ: 8 KB)
+ */
+desc = dmaengine_prep_dma_cyclic(
+    chan,
+    pcm-&gt;buf_addr,
+    pcm-&gt;buf_len,
+    pcm-&gt;period_len,
+    DMA_MEM_TO_DEV,
+    DMA_PREP_INTERRUPT
+);
+
+if (!desc)
+    return -ENOMEM;
+
+/* Callback này sẽ được gọi SAU MỖI PERIOD_LEN (mỗi khi truyền hết 8KB) */
+desc-&gt;callback = my_alsa_period_elapsed_callback;
+desc-&gt;callback_param = pcm;
+
+dmaengine_submit(desc);
+dma_async_issue_pending(chan);
+
+return 0; } ```
+</code></pre></div></div> <ul> <li>dmaengine_prep_config_sg() — Đổi địa chỉ FIFO / Burst size trực tiếp mà không cần re-config <div class="language-c highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">send_config_sg_dma</span><span class="p">(</span><span class="k">struct</span> <span class="n">my_spi_dev</span> <span class="o">*</span><span class="n">spi</span><span class="p">,</span> <span class="k">struct</span> <span class="n">scatterlist</span> <span class="o">*</span><span class="n">sgl</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sg_len</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="n">chan</span> <span class="o">=</span> <span class="n">spi</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">dma_dev</span> <span class="o">=</span> <span class="n">dmaengine_get_dma_device</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span>
+  <span class="k">struct</span> <span class="n">dma_slave_config</span> <span class="n">config</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">struct</span> <span class="n">dma_async_tx_descriptor</span> <span class="o">*</span><span class="n">desc</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">nr_sg</span><span class="p">;</span>
+
+  <span class="cm">/* Đổi cấu hình FIFO dành riêng cho gói tin này */</span>
+  <span class="n">config</span><span class="p">.</span><span class="n">dst_addr</span> <span class="o">=</span> <span class="n">spi</span><span class="o">-&gt;</span><span class="n">fifo_ch2_phys_addr</span><span class="p">;</span> <span class="cm">/* Chọn FIFO Kênh 2 */</span>
+  <span class="n">config</span><span class="p">.</span><span class="n">dst_addr_width</span> <span class="o">=</span> <span class="n">DMA_SLAVE_BUSWIDTH_2_BYTES</span><span class="p">;</span>
+  <span class="n">config</span><span class="p">.</span><span class="n">dst_maxburst</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+  <span class="n">nr_sg</span> <span class="o">=</span> <span class="n">dma_map_sg</span><span class="p">(</span><span class="n">dma_dev</span><span class="p">,</span> <span class="n">sgl</span><span class="p">,</span> <span class="n">sg_len</span><span class="p">,</span> <span class="n">DMA_TO_DEVICE</span><span class="p">);</span>
+
+  <span class="cm">/* Vừa prep Descriptor vừa đính kèm struct dma_slave_config mới */</span>
+  <span class="n">desc</span> <span class="o">=</span> <span class="n">dmaengine_prep_config_sg</span><span class="p">(</span>
+      <span class="n">chan</span><span class="p">,</span>
+      <span class="n">sgl</span><span class="p">,</span>
+      <span class="n">nr_sg</span><span class="p">,</span>
+      <span class="n">DMA_MEM_TO_DEV</span><span class="p">,</span>
+      <span class="n">DMA_PREP_INTERRUPT</span><span class="p">,</span>
+      <span class="o">&amp;</span><span class="n">config</span> <span class="cm">/* Cấu hình trực tiếp ở đây, KHÔNG cần gọi dmaengine_slave_config() */</span>
+  <span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">desc</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">dma_unmap_sg</span><span class="p">(</span><span class="n">dma_dev</span><span class="p">,</span> <span class="n">sgl</span><span class="p">,</span> <span class="n">sg_len</span><span class="p">,</span> <span class="n">DMA_TO_DEVICE</span><span class="p">);</span>
+      <span class="k">return</span> <span class="o">-</span><span class="n">EINVAL</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">dmaengine_submit</span><span class="p">(</span><span class="n">desc</span><span class="p">);</span>
+  <span class="n">dma_async_issue_pending</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div> </div> </li> <li>dmaengine_prep_peripheral_dma_vec() — Truyền bộ đệm dùng mảng dma_vec (Giao diện đơn giản hơn scatterlist) ```c #include &lt;linux/dmaengine.h&gt;</li> </ul> <p>int send_dma_vec(struct dma_chan *chan, dma_addr_t phy_addr1, dma_addr_t phy_addr2) { struct dma_async_tx_descriptor *desc;</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* Mảng 2 bộ đệm đơn giản */
+struct dma_vec vecs[2] = {
+    { .addr = phy_addr1, .len = 1024 },
+    { .addr = phy_addr2, .len = 2048 },
+};
+
+desc = dmaengine_prep_peripheral_dma_vec(
+    chan,
+    vecs,
+    2,                  /* Số lượng phần tử mảng */
+    DMA_MEM_TO_DEV,
+    DMA_PREP_INTERRUPT
+);
+
+if (!desc)
+    return -EINVAL;
+
+dmaengine_submit(desc);
+dma_async_issue_pending(chan);
+
+return 0; } ```
+</code></pre></div></div> <ul> <li>dmaengine_prep_interleaved_dma() — Truyền ma trận / Mẫu dữ liệu 2D phức tạp (Video Processing)</li> </ul> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;linux/dmaengine.h&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">send_2d_image_stripe</span><span class="p">(</span><span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="n">chan</span><span class="p">,</span> <span class="n">dma_addr_t</span> <span class="n">src_buf</span><span class="p">,</span> <span class="n">dma_addr_t</span> <span class="n">dst_fifo</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">dma_interleaved_template</span> <span class="n">xt</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="k">struct</span> <span class="n">dma_async_tx_descriptor</span> <span class="o">*</span><span class="n">desc</span><span class="p">;</span>
+
+    <span class="n">xt</span><span class="p">.</span><span class="n">src_start</span> <span class="o">=</span> <span class="n">src_buf</span><span class="p">;</span>
+    <span class="n">xt</span><span class="p">.</span><span class="n">dst_start</span> <span class="o">=</span> <span class="n">dst_fifo</span><span class="p">;</span>
+    <span class="n">xt</span><span class="p">.</span><span class="n">dir</span> <span class="o">=</span> <span class="n">DMA_MEM_TO_DEV</span><span class="p">;</span>
+    <span class="n">xt</span><span class="p">.</span><span class="n">numf</span> <span class="o">=</span> <span class="mi">1080</span><span class="p">;</span>                <span class="cm">/* Số dòng (Khung hình 1080p) */</span>
+    <span class="n">xt</span><span class="p">.</span><span class="n">frame_size</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>             <span class="cm">/* 1 khung cấu trúc bên dưới */</span>
+
+    <span class="cm">/* Cấu hình 1 dòng ảnh */</span>
+    <span class="n">xt</span><span class="p">.</span><span class="n">sgl</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span> <span class="o">=</span> <span class="mi">1920</span><span class="p">;</span>         <span class="cm">/* Đọc 1920 byte dữ liệu Pixel */</span>
+    <span class="n">xt</span><span class="p">.</span><span class="n">sgl</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">icg</span> <span class="o">=</span> <span class="mi">640</span><span class="p">;</span>           <span class="cm">/* Nhảy qua (skip) 640 byte lề (Padding) rồi mới đọc dòng tiếp theo */</span>
+
+    <span class="n">desc</span> <span class="o">=</span> <span class="n">dmaengine_prep_interleaved_dma</span><span class="p">(</span><span class="n">chan</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">xt</span><span class="p">,</span> <span class="n">DMA_PREP_INTERRUPT</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">desc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">EINVAL</span><span class="p">;</span>
+
+    <span class="n">dmaengine_submit</span><span class="p">(</span><span class="n">desc</span><span class="p">);</span>
+    <span class="n">dma_async_issue_pending</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div> <h4 id="4-submit-giao-dịch">4. Submit giao dịch</h4> <p>Sau khi khởi tạo descriptor và đăng ký hàm hoàn hoàn tất (callback), driver đưa descriptor vào hàng chờ xử lý (pending queue).</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dma_cookie_t</span> <span class="nf">dmaengine_submit</span><span class="p">(</span><span class="k">struct</span> <span class="n">dma_async_tx_descriptor</span> <span class="o">*</span><span class="n">desc</span><span class="p">);</span>
+</code></pre></div></div> <ul> <li>Trả về: Trả về một mã cookie (dùng để tra cứu tiến độ truyền nếu cần).</li> <li>Lưu ý sở hữu:Ngay sau khi gọi dmaengine_submit(), con trỏ desc thuộc về quản lý của DMA Engine. Client driver không được tự ý truy cập hay thao tác trên con trỏ desc đó nữa.</li> <li>Chưa kích hoạt: Hàm này CHƯA kích hoạt DMA chạy, nó mới chỉ đẩy công việc vào hàng chờ!</li> </ul> <h4 id="5-kích-hoạt-truyền-và-chờ-callback">5. Kích hoạt truyền và chờ Callback</h4> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">dma_async_issue_pending</span><span class="p">(</span><span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="n">chan</span><span class="p">);</span>
+</code></pre></div></div> <ul> <li>Nếu kênh DMA đang rảnh, giao dịch đầu tiên sẽ được bấm máy chạy ngay lập tức. các giao dịch sau sẽ được xếp hàng.</li> <li>Khi mỗi giao dịch hoàn thành, ngắt phần cứng bắn ra $\rightarrow$ Tasklet chạy $\rightarrow$ Gọi hàm Callback thông báo cho Client Driver $\rightarrow$ Tự động chuyển sang giao dịch tiếp theo trong queue.</li> </ul> <h3 id="3-ví-dụ-cụ-thể">3. Ví dụ cụ thể</h3> <p>Với device uart có device tree như sau:</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&amp;soc {
+    /* Bộ điều khiển DMA của SoC */
+    dma_controller: dma-controller@40000000 {
+        compatible = "arm,pl330";
+        reg = &lt;0x40000000 0x1000&gt;;
+        #dma-cells = &lt;1&gt;;
+    };
+
+    /* Node thiết bị UART sử dụng Driver trên */
+    my_uart: serial@40001000 {
+        compatible = "vendor,my-uart-dma";
+        reg = &lt;0x40001000 0x100&gt;;
+
+        /* Ánh xạ tới dma_controller, dùng Request Line 5 cho TX */
+        dmas = &lt;&amp;dma_controller 5&gt;;
+        dma-names = "tx";
+    };
+};
+</code></pre></div></div> <p>Ta có driver mẫu virutal serial (UART) slave driver để truyền dữ liệu từ RAM ra ngoài thanh ghi FIFO của ngoại vi như sau:</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;linux/module.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/init.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/kernel.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/platform_device.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/dmaengine.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/dma-mapping.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/scatterlist.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/slab.h&gt;</span><span class="cp">
+</span>
+<span class="cp">#define DRIVER_NAME "my_uart_dma"
+#define DUMMY_FIFO_PHYS_ADDR 0x40001004 </span><span class="cm">/* Địa chỉ giả lập của FIFO Data Register */</span><span class="cp">
+</span>
+<span class="cm">/* Cấu trúc dữ liệu quản lý thiết bị */</span>
+<span class="k">struct</span> <span class="n">my_uart_device</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">dev</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="n">tx_chan</span><span class="p">;</span>
+    <span class="n">dma_addr_t</span> <span class="n">fifo_phy_addr</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/* Callback được gọi trong Tasklet Context sau khi DMA truyền xong */</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">dma_tx_complete_callback</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">param</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">my_uart_device</span> <span class="o">*</span><span class="n">uart</span> <span class="o">=</span> <span class="n">param</span><span class="p">;</span>
+    
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"[Tasklet Context] DMA Complete Callback fired!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Giao dịch truyền dữ liệu ra FIFO đã hoàn thành thành công.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="cm">/* 
+     * Lưu ý quan trọng: 
+     * Nếu bạn tự alloc/map bộ nhớ động trong luồng truyền, 
+     * bạn BẮT BUỘC phải thực hiện dma_unmap_sg() / dma_unmap_single() tại đây.
+     */</span>
+<span class="p">}</span>
+
+<span class="cm">/* Hàm giả lập gửi dữ liệu qua DMA */</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">send_data_dma</span><span class="p">(</span><span class="k">struct</span> <span class="n">my_uart_device</span> <span class="o">*</span><span class="n">uart</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">dma_dev</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">scatterlist</span> <span class="n">sg</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">dma_async_tx_descriptor</span> <span class="o">*</span><span class="n">desc</span><span class="p">;</span>
+    <span class="n">dma_cookie_t</span> <span class="n">cookie</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">nr_sg</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"--- BẮT ĐẦU QUY TRÌNH TRUYỀN DỮ LIỆU DMA ---"</span><span class="p">);</span>
+
+    <span class="cm">/* =========================================================================
+     * BƯỚC 2: CẤU HÌNH THAM SỐ SLAVE &amp; CONTROLLER (dmaengine_slave_config)
+     * ========================================================================= */</span>
+    <span class="k">struct</span> <span class="n">dma_slave_config</span> <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">.</span><span class="n">dst_addr</span> <span class="o">=</span> <span class="n">uart</span><span class="o">-&gt;</span><span class="n">fifo_phy_addr</span><span class="p">,</span>          <span class="cm">/* Địa chỉ FIFO ngoại vi */</span>
+        <span class="p">.</span><span class="n">dst_addr_width</span> <span class="o">=</span> <span class="n">DMA_SLAVE_BUSWIDTH_1_BYTE</span><span class="p">,</span> <span class="cm">/* Bus rộng 1 byte (UART) */</span>
+        <span class="p">.</span><span class="n">dst_maxburst</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>                        <span class="cm">/* Đẩy 1 byte mỗi lượt request */</span>
+    <span class="p">};</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">dmaengine_slave_config</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">config</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">dev_err</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 2 Thất bại: Không thể cấu hình DMA Slave (%d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ret</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 2 OK: Đã cấu hình FIFO Addr=0x%llx, BusWidth=1Byte</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+             <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">)</span><span class="n">config</span><span class="p">.</span><span class="n">dst_addr</span><span class="p">);</span>
+
+    <span class="cm">/* =========================================================================
+     * BƯỚC 3: MAPPING BỘ NHỚ VÀ CHUẨN BỊ DESCRIPTOR (Prep Slave SG)
+     * ========================================================================= */</span>
+    <span class="cm">/* Lấy thiết bị DMA quản lý kênh truyền */</span>
+    <span class="n">dma_dev</span> <span class="o">=</span> <span class="n">dmaengine_get_dma_device</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">);</span>
+
+    <span class="cm">/* Khởi tạo danh sách Scatterlist với 1 phần tử bộ đệm */</span>
+    <span class="n">sg_init_one</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sg</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+
+    <span class="cm">/* Ánh xạ (Map) địa chỉ Virtual sang Bus DMA Address */</span>
+    <span class="n">nr_sg</span> <span class="o">=</span> <span class="n">dma_map_sg</span><span class="p">(</span><span class="n">dma_dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sg</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">DMA_TO_DEVICE</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nr_sg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">dev_err</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 3 Thất bại: Không thể map DMA scatterlist!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">ENOMEM</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* Tạo Descriptor giao dịch */</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="n">dmaengine_prep_slave_sg</span><span class="p">(</span>
+        <span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">,</span>
+        <span class="o">&amp;</span><span class="n">sg</span><span class="p">,</span>
+        <span class="n">nr_sg</span><span class="p">,</span>
+        <span class="n">DMA_MEM_TO_DEV</span><span class="p">,</span>                     <span class="cm">/* RAM -&gt; Device FIFO */</span>
+        <span class="n">DMA_PREP_INTERRUPT</span> <span class="o">|</span> <span class="n">DMA_CTRL_ACK</span>   <span class="cm">/* Báo ngắt khi xong &amp; Giải phóng desc */</span>
+    <span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">desc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">dev_err</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 3 Thất bại: Không thể tạo Descriptor!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="o">-</span><span class="n">EINVAL</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">err_unmap</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* Đăng ký Callback thông báo hoàn thành */</span>
+    <span class="n">desc</span><span class="o">-&gt;</span><span class="n">callback</span> <span class="o">=</span> <span class="n">dma_tx_complete_callback</span><span class="p">;</span>
+    <span class="n">desc</span><span class="o">-&gt;</span><span class="n">callback_param</span> <span class="o">=</span> <span class="n">uart</span><span class="p">;</span>
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 3 OK: Đã map RAM và khởi tạo Descriptor thành công</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="cm">/* =========================================================================
+     * BƯỚC 4: SUBMIT GIAO DỊCH VÀO HÀNG CHỜ (dmaengine_submit)
+     * ========================================================================= */</span>
+    <span class="n">cookie</span> <span class="o">=</span> <span class="n">dmaengine_submit</span><span class="p">(</span><span class="n">desc</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dma_submit_error</span><span class="p">(</span><span class="n">cookie</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">dev_err</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 4 Thất bại: Không thể submit Descriptor vào queue!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="o">-</span><span class="n">EIO</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">err_unmap</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 4 OK: Đã submit giao dịch (Cookie ID = %d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">cookie</span><span class="p">);</span>
+
+    <span class="cm">/* =========================================================================
+     * BƯỚC 5: PHÁT LỆNH BẮT ĐẦU TRUYỀN (dma_async_issue_pending)
+     * ========================================================================= */</span>
+    <span class="n">dma_async_issue_pending</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">);</span>
+    <span class="n">dev_info</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 5 OK: Đã kích hoạt DMA (Issue Pending)!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="nl">err_unmap:</span>
+    <span class="n">dma_unmap_sg</span><span class="p">(</span><span class="n">dma_dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sg</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">DMA_TO_DEVICE</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/* Hàm Probe của Platform Driver */</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">my_uart_probe</span><span class="p">(</span><span class="k">struct</span> <span class="n">platform_device</span> <span class="o">*</span><span class="n">pdev</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">my_uart_device</span> <span class="o">*</span><span class="n">uart</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">test_buffer</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+
+    <span class="n">dev_info</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Khởi tạo Virtual UART DMA Driver...</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="n">uart</span> <span class="o">=</span> <span class="n">devm_kzalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">uart</span><span class="p">),</span> <span class="n">GFP_KERNEL</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">uart</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">ENOMEM</span><span class="p">;</span>
+
+    <span class="n">uart</span><span class="o">-&gt;</span><span class="n">dev</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">;</span>
+    <span class="n">uart</span><span class="o">-&gt;</span><span class="n">fifo_phy_addr</span> <span class="o">=</span> <span class="n">DUMMY_FIFO_PHYS_ADDR</span><span class="p">;</span>
+
+    <span class="cm">/* =========================================================================
+     * BƯỚC 1: XIN CẤP PHÁT KÊNH DMA SLAVE (dma_request_chan)
+     * ========================================================================= */</span>
+    <span class="cm">/* Tìm kênh "tx" được mô tả trong Device Tree (dma-names = "tx") */</span>
+    <span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span> <span class="o">=</span> <span class="n">dma_request_chan</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"tx"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">IS_ERR</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">dev_err</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 1 Thất bại: Không lấy được kênh DMA 'tx'! Mã lỗi: %ld</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+                <span class="n">PTR_ERR</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">));</span>
+        <span class="k">return</span> <span class="n">PTR_ERR</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">dev_info</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Bước 1 OK: Cấp phát thành công kênh DMA '%s'</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+             <span class="n">dma_chan_name</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">));</span>
+
+    <span class="n">platform_set_drvdata</span><span class="p">(</span><span class="n">pdev</span><span class="p">,</span> <span class="n">uart</span><span class="p">);</span>
+
+    <span class="cm">/* Tạo một chuỗi dữ liệu test trong Kernel RAM */</span>
+    <span class="n">test_buffer</span> <span class="o">=</span> <span class="n">kmalloc</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">GFP_KERNEL</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">test_buffer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="o">-</span><span class="n">ENOMEM</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">err_release_chan</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">snprintf</span><span class="p">(</span><span class="n">test_buffer</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="s">"Hello DMAEngine, this is a test payload!"</span><span class="p">);</span>
+
+    <span class="cm">/* Thực thi thử nghiệm luồng truyền DMA từ Bước 2 -&gt; 5 */</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">send_data_dma</span><span class="p">(</span><span class="n">uart</span><span class="p">,</span> <span class="n">test_buffer</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">test_buffer</span><span class="p">));</span>
+    
+    <span class="n">kfree</span><span class="p">(</span><span class="n">test_buffer</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+
+<span class="nl">err_release_chan:</span>
+    <span class="n">dma_release_channel</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/* Hàm Remove khi Unload Module */</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">my_uart_remove</span><span class="p">(</span><span class="k">struct</span> <span class="n">platform_device</span> <span class="o">*</span><span class="n">pdev</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">my_uart_device</span> <span class="o">*</span><span class="n">uart</span> <span class="o">=</span> <span class="n">platform_get_drvdata</span><span class="p">(</span><span class="n">pdev</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* Dừng các giao dịch đang dở dang và giải phóng kênh DMA */</span>
+        <span class="n">dmaengine_terminate_sync</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">);</span>
+        <span class="n">dma_release_channel</span><span class="p">(</span><span class="n">uart</span><span class="o">-&gt;</span><span class="n">tx_chan</span><span class="p">);</span>
+        <span class="n">dev_info</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="s">"Đã giải phóng kênh DMA TX.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/* Ánh xạ Device Tree Compatible */</span>
+<span class="k">static</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">of_device_id</span> <span class="n">my_uart_of_match</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">{</span> <span class="p">.</span><span class="n">compatible</span> <span class="o">=</span> <span class="s">"vendor,my-uart-dma"</span><span class="p">,</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="cm">/* Sentinel */</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="n">MODULE_DEVICE_TABLE</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="n">my_uart_of_match</span><span class="p">);</span>
+
+<span class="k">static</span> <span class="k">struct</span> <span class="n">platform_driver</span> <span class="n">my_uart_driver</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">.</span><span class="n">probe</span> <span class="o">=</span> <span class="n">my_uart_probe</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">remove</span> <span class="o">=</span> <span class="n">my_uart_remove</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">driver</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">DRIVER_NAME</span><span class="p">,</span>
+        <span class="p">.</span><span class="n">of_match_table</span> <span class="o">=</span> <span class="n">my_uart_of_match</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">};</span>
+
+<span class="n">module_platform_driver</span><span class="p">(</span><span class="n">my_uart_driver</span><span class="p">);</span>
+
+<span class="n">MODULE_LICENSE</span><span class="p">(</span><span class="s">"GPL"</span><span class="p">);</span>
+<span class="n">MODULE_AUTHOR</span><span class="p">(</span><span class="s">"Embedded Linux Developer"</span><span class="p">);</span>
+<span class="n">MODULE_DESCRIPTION</span><span class="p">(</span><span class="s">"Complete 5-step Slave DMAEngine Code Example"</span><span class="p">);</span>
+</code></pre></div></div> </div> </article> <br> <hr> <br> <ul class="list-disc pl-8"></ul> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/device-driver-components/">Components inside a device driver</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/scull-driver/">scull device driver</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/fundamental-concepts-in-building-a-kernel-module/">Fundamental concepts in building a kernel module and hello world example</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/find-command/">How to use find command in Linux</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/images/">my first post</a> </li> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Van Hao Nguyen. </div> </footer> <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> <script src="/haonguyen/assets/js/bootstrap.bundle.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/masonry.js?a0db7e5d5c70cc3252b3138b0c91dcaf" type="text/javascript"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/zoom.js?85ddb88934d28b74e78031fd54cf8308"></script> <script src="/haonguyen/assets/js/no_defer.js?2781658a0a2b13ed609542042a859126"></script> <script defer src="/haonguyen/assets/js/common.js?e0514a05c5c95ac1a93a8dfd5249b92e"></script> <script defer src="/haonguyen/assets/js/copy_code.js?c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/haonguyen/assets/js/jupyter_new_tab.js?d9f17b6adc2311cbabd747f4538bb15f"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/haonguyen/assets/js/mathjax-setup.js?a5bb4e6a542c546dd929b24b8b236dfd"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/progress-bar.js?2f30e0e6801ea8f5036fa66e1ab0a71a" type="text/javascript"></script> <script src="/haonguyen/assets/js/vanilla-back-to-top.min.js?f40d453793ff4f64e238e420181a1d17"></script> <script>
     addBackToTop();
   </script> <script type="module" src="/haonguyen/assets/js/search/ninja-keys.min.js?a3446f084dcaecc5f75aa1757d087dcf"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/haonguyen/assets/js/search-setup.js?6c304f7b1992d4b60f7a07956e52f04a"></script> <script src="/haonguyen/assets/js/search-data.js"></script> <script src="/haonguyen/assets/js/shortcut-key.js?6f508d74becd347268a7f822bca7309d"></script> </body> </html>
