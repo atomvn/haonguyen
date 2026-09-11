@@ -1,9 +1,9 @@
 ---
 layout: post
 title: linux dma engine
-date: 2026-09-10 16:00:00
+date: 2026-09-10 17:00:00
 description: 
-tags: linux
+tags: device-driver
 categories: 
 featured: false
 ---
@@ -622,3 +622,47 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Embedded Linux Developer");
 MODULE_DESCRIPTION("Complete 5-step Slave DMAEngine Code Example");
 ```
+
+### 4. Further APIs
+
+**Terminate APIs**  
+Các API này được dùng để dừng ngay lập tức mọi hoạt động trên kênh DMA.
+```c
+int dmaengine_terminate_sync(struct dma_chan *chan);
+int dmaengine_terminate_async(struct dma_chan *chan);
+int dmaengine_terminate_all(struct dma_chan *chan); /* [DEPRECATED] */
+```
+
+- `dmaengine_terminate_async` không chờ DMA dừng, thực hiện callback mà nó trả về ngay.
+- `dmaengine_terminate_sync` chờ DMA dừng hẳn và callback rồi mới trả về, hàm này là hàm terminate an toàn.
+
+```c
+void dmaengine_synchronize(struct dma_chan *chan);
+```
+Đây là hàm cần được gọi sau `dmaengine_terminate_async`, và trước khi kfree() bộ nhớ.
+
+**Pause APIs**  
+Dùng cho các ứng dụng cần dừng tạm thời luồng truyền (ví dụ: bộ đệm âm thanh ALSA đầy/rỗng) mà không muốn làm mất dữ liệu.
+```c
+int dmaengine_pause(struct dma_chan *chan);
+int dmaengine_resume(struct dma_chan *chan);
+```
+- dmaengine_pause(): Tạm dừng kênh DMA hiện tại không gây mất dữ liệu (giữ nguyên vị trí FIFO/Descriptor).
+- dmaengine_resume(): Khôi phục lại kênh DMA đã paused.
+- Lưu ý: Việc gọi dmaengine_resume() trên một kênh chưa ở trạng thái Pause là một lệnh không hợp lệ (Invalid).
+
+**Check Txn complete API**   
+Dùng để kiểm tra một giao dịch DMA cụ thể (định danh bằng cookie trả về từ hàm dmaengine_submit()) đã hoàn thành hay chưa.
+```c
+enum dma_status dma_async_is_tx_complete(struct dma_chan *chan, 
+                                         dma_cookie_t cookie, 
+                                         dma_cookie_t *last, 
+                                         dma_cookie_t *used);
+```
+Giá trị trả về là các trạng thái trong enum dma_status:
+- DMA_COMPLETE: Giao dịch đã xong.
+- DMA_IN_PROGRESS: Giao dịch đang chạy.
+- DMA_PAUSED: Kênh đang tạm dừng.
+- DMA_ERROR: Giao dịch bị lỗi.
+
+:exclamation:Không phải tất cả DMA Engine Hardware Driver đều trả về thông tin đáng tin cậy khi DMA đang chạy live. Kernel khuyến nghị nên Pause hoặc Stop (dmaengine_terminate_sync()) kênh DMA trước khi gọi API kiểm tra này để lấy thông tin chính xác nhất.
