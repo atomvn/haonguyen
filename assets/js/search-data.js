@@ -44,18 +44,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-scull-device-driver",
-        
-          title: "scull device driver",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/haonguyen/blog/2026/scull-driver/";
-          
-        },
-      },{id: "post-linux-dma-engine",
+        },{id: "post-linux-dma-engine",
         
           title: "linux dma engine",
         
@@ -64,6 +53,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/haonguyen/blog/2026/linux-dma-engine/";
+          
+        },
+      },{id: "post-scull-device-driver",
+        
+          title: "scull device driver",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/scull-driver/";
           
         },
       },{id: "post-components-inside-a-device-driver",
