@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-fundamental-concepts-in-building-a-kernel-module-and-hello-world-example",
+        },{id: "post-components-inside-a-device-driver",
+        
+          title: "Components inside a device driver",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/device-driver-components/";
+          
+        },
+      },{id: "post-fundamental-concepts-in-building-a-kernel-module-and-hello-world-example",
         
           title: "Fundamental concepts in building a kernel module and hello world example",
         
