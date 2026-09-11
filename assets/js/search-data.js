@@ -3,8 +3,8 @@ const ninja = document.querySelector('ninja-keys');
 
 // add the home and posts menu items
 ninja.data = [{
-    id: "nav-",
-    title: "",
+    id: "nav-about",
+    title: "about",
     section: "Navigation",
     handler: () => {
       window.location.href = "/haonguyen/";
@@ -53,6 +53,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/haonguyen/blog/2026/scull-driver/";
+          
+        },
+      },{id: "post-linux-dma-engine",
+        
+          title: "linux dma engine",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/linux-dma-engine/";
           
         },
       },{id: "post-components-inside-a-device-driver",
