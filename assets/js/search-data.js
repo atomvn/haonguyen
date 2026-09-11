@@ -44,18 +44,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-components-inside-a-device-driver",
-        
-          title: "Components inside a device driver",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/haonguyen/blog/2026/device-driver-components/";
-          
-        },
-      },{id: "post-scull-device-driver",
+        },{id: "post-scull-device-driver",
         
           title: "scull device driver",
         
@@ -64,6 +53,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/haonguyen/blog/2026/scull-driver/";
+          
+        },
+      },{id: "post-components-inside-a-device-driver",
+        
+          title: "Components inside a device driver",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/device-driver-components/";
           
         },
       },{id: "post-fundamental-concepts-in-building-a-kernel-module-and-hello-world-example",
