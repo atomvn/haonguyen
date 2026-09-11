@@ -3,7 +3,7 @@ layout: post
 title: start a new job
 date: 2026-05-11 00:00:00
 description: just a random post
-tags: news
+tags: daily-life
 categories: sample-posts
 # thumbnail: assets/img/posts/11-05-26/VTX.jpg
 ---

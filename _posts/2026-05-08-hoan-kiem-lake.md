@@ -3,7 +3,7 @@ layout: post
 title: n+1th time visiting Hoan Kiem Lake
 date: 2026-05-08 20:00:00
 description: with my friends at FPT software
-tags: images
+tags: daily-life
 categories: 
 thumbnail: assets/img/posts/2026-05-08/TurtleTower.jpg
 ---
