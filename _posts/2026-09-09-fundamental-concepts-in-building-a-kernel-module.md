@@ -102,4 +102,4 @@ make INSTALL_MOD_PATH=/kmods` modules_install
 3. clean: xóa tất cả các file build.
 4. help: In ta 1 message 
 
-Dive deeper into source code [here](https://github.com/atomvn/Linux-Device-Driver/tree/master/)
+Dive deeper into source code [here]!(https://github.com/atomvn/Linux-Device-Driver/tree/master/)
