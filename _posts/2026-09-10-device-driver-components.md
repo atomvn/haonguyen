@@ -3,7 +3,7 @@ layout: post
 title: Components inside a device driver
 date: 2026-09-10 15:09:00
 description: 
-tags: device-driver
+tags: device-driver linux-device-driver
 categories: 
 featured: false
 ---

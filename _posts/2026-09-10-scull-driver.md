@@ -3,7 +3,7 @@ layout: post
 title: scull device driver
 date: 2026-09-10 16:00:00
 description: 
-tags: device-driver
+tags: device-driver linux-device-drivers
 categories: 
 featured: false
 ---

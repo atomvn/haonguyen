@@ -3,7 +3,7 @@ layout: post
 title: linux dma engine
 date: 2026-09-10 17:00:00
 description: 
-tags: device-driver
+tags: device-driver kernel-doc
 categories: 
 featured: false
 ---
