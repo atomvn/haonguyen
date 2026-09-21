@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-linux-dma-engine",
+        },{id: "post-how-to-create-names-in-code",
+        
+          title: "how to create names in code",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/naming-convention/";
+          
+        },
+      },{id: "post-linux-dma-engine",
         
           title: "linux dma engine",
         
