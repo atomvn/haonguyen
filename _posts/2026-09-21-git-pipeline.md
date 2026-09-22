@@ -10,8 +10,8 @@ featured: false
 
 Blog này bàn luận về git, cách dùng git cho việc quản lý 1 dự án.
 
-### 1. Các thêm SSH key cho tài khoản git
-:question: SSH key là gì?  
+### 1. Cách thêm SSH key cho tài khoản git
+:question: SSH key là gì, tại sao cần có SSH key?  
 Hình dung đơn giản, khi ta thao tác git push, git pull, máy chủ git sẽ dùng public key để mã hóa một thông điệp thử thách. Chỉ có private key tương ứng trên máy tính của ta mới giải mã được thông điệp đó, giúp máy chủ xác nhận chính ta là người sở hữu mà không cần truyền mật khẩu qua mạng.
 
 :question: Cơ chế cặp khóa?  
@@ -50,7 +50,7 @@ Nếu thành công màn hình sẽ hiển thị thông báo dạng:
 ```
 Hi ! You've successfully authenticated, but GitHub does not provide shell access.
 ```
-Sau khi đã tạo SSH key thì ta sẽ clone repo bằng SSH link là sẽ mặc định được push pull thoải mái.
+Sau khi đã tạo SSH key thì ta sẽ clone repo bằng SSH link là sẽ mặc định được push pull thoải mái mà không cần nhập mật khẩu mỗi lần push pull.
 
 ### 2. Câu lệnh khởi tạo và cấu hình git
 Các câu lệnh này thường được dùng khi ta clone repo mới, hay setup git trên 1 máy mới.  
