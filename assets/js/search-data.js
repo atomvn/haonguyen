@@ -44,15 +44,15 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-how-to-create-names-in-code",
+        },{id: "post-how-to-use-git-to-manage-a-project",
         
-          title: "how to create names in code",
+          title: "how to use git to manage a project",
         
         description: "",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/haonguyen/blog/2026/naming-convention/";
+            window.location.href = "/haonguyen/blog/2026/git-pipeline/";
           
         },
       },{id: "post-linux-dma-engine",

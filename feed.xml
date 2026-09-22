@@ -1,70 +1,97 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://atomvn.github.io/haonguyen/feed.xml" rel="self" type="application/atom+xml"/><link href="https://atomvn.github.io/haonguyen/" rel="alternate" type="text/html" hreflang="en"/><updated>2026-09-21T16:07:43+00:00</updated><id>https://atomvn.github.io/haonguyen/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. </subtitle><entry><title type="html">how to create names in code</title><link href="https://atomvn.github.io/haonguyen/blog/2026/naming-convention/" rel="alternate" type="text/html" title="how to create names in code"/><published>2026-09-21T15:09:00+00:00</published><updated>2026-09-21T15:09:00+00:00</updated><id>https://atomvn.github.io/haonguyen/blog/2026/naming-convention</id><content type="html" xml:base="https://atomvn.github.io/haonguyen/blog/2026/naming-convention/"><![CDATA[<p>This theme implements a built-in Jekyll feature, the use of Rouge, for syntax highlighting. It supports more than 100 languages. This example is in C++. All you have to do is wrap your code in markdown code tags:</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">c++
-</span><span class="n">code</span> <span class="n">code</span> <span class="n">code</span>
-<span class="p">```</span>
-</code></pre></div></div> <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="err">\</span><span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="n">string</span> <span class="n">myString</span><span class="p">;</span>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://atomvn.github.io/haonguyen/feed.xml" rel="self" type="application/atom+xml"/><link href="https://atomvn.github.io/haonguyen/" rel="alternate" type="text/html" hreflang="en"/><updated>2026-09-22T10:18:53+00:00</updated><id>https://atomvn.github.io/haonguyen/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. </subtitle><entry><title type="html">how to use git to manage a project</title><link href="https://atomvn.github.io/haonguyen/blog/2026/git-pipeline/" rel="alternate" type="text/html" title="how to use git to manage a project"/><published>2026-09-21T15:09:00+00:00</published><updated>2026-09-21T15:09:00+00:00</updated><id>https://atomvn.github.io/haonguyen/blog/2026/git-pipeline</id><content type="html" xml:base="https://atomvn.github.io/haonguyen/blog/2026/git-pipeline/"><![CDATA[<p>Blog này bàn luận về git, cách dùng git cho việc quản lý 1 dự án.</p> <h3 id="1-các-thêm-ssh-key-cho-tài-khoản-git">1. Các thêm SSH key cho tài khoản git</h3> <p>:question: SSH key là gì?<br/> Hình dung đơn giản, khi ta thao tác git push, git pull, máy chủ git sẽ dùng public key để mã hóa một thông điệp thử thách. Chỉ có private key tương ứng trên máy tính của ta mới giải mã được thông điệp đó, giúp máy chủ xác nhận chính ta là người sở hữu mà không cần truyền mật khẩu qua mạng.</p> <p>:question: Cơ chế cặp khóa?</p> <ul> <li>private key: Lưu trữ cẩn thận trên máy tính cá nhân.</li> <li>public key: Được tải và lưu trên máy chủ Git (GitHub, GitLab, Bitbucket…).</li> </ul> <hr/> <p><strong>Cách tạo SSH key trên Linux và thêm vào github, gitlab, bitbucket…</strong></p> <p>:exclamation: Cách kiểm tra SSH key đã có trên máy chưa?</p> <pre><code class="language-git">ls -al ~/.ssh
+</code></pre> <p>Nếu đã thấy xuất hiện các file như id_ed25519.pub hoặc id_rsa.pub, nghĩa là ta đã có SSH key. Nếu chưa có, ta sẽ tạo key.</p> <p>:exclamation: Các tạo key SSH mới <br/> Ta sẽ chạy lệnh tạo key với thuật toán ED25519</p> <pre><code class="language-git">ssh-keygen -t ed26619 -C "youremail"
+</code></pre> <p>Khi hệ thống hỏi thì chỉ cần Enter để by pass hết là được. Mặc định public key sẽ được lưu tại <code class="language-plaintext highlighter-rouge">~/.ssh/id_ed25519</code>.</p> <p>:exclamation: Copy nội dung SSH key thêm vòa Github/Gitlab</p> <pre><code class="language-git">cat ~/.ssh/id_ed25518.pub
+</code></pre> <p>Sau khi copy thì chỉ cần tạo mới ssh key trên setting của tài khoản trên Github/Gitlab là được.</p> <p>:exlamation: Kiểm tra kết nối</p> <pre><code class="language-git">ssh -T git@github.com
+</code></pre> <p>Nếu thành công màn hình sẽ hiển thị thông báo dạng:</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hi ! You've successfully authenticated, but GitHub does not provide shell access.
+</code></pre></div></div> <p>Sau khi đã tạo SSH key thì ta sẽ clone repo bằng SSH link là sẽ mặc định được push pull thoải mái.</p> <h3 id="2-câu-lệnh-khởi-tạo-và-cấu-hình-git">2. Câu lệnh khởi tạo và cấu hình git</h3> <p>Các câu lệnh này thường được dùng khi ta clone repo mới, hay setup git trên 1 máy mới.<br/> :exclamation: Các câu lệnh dùng để thiết lập thông tin cá nhân hoặc khởi tạo kho lưu trữ:</p> <pre><code class="language-git"># Sao chép (clone) một dự án từ Remote (GitHub/GitLab) về máy
+git clone &lt;URL_du_an&gt;
 
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"input a string: "</span><span class="p">;</span>
-    <span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">myString</span><span class="p">);</span>
-    <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">myString</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
+# Cấu hình tên và email (Bắt buộc khi mới cài Git)
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+</code></pre> <h3 id="3-câu-lệnh-quản-lý-trạng-thái-và-thay-đổi">3. Câu lệnh quản lý trạng thái và thay đổi</h3> <p>Các câu lệnh push pull sử dụng hàng ngày:</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Kiểm tra trạng thái các file (file nào mới, file nào bị sửa, file đã stage)
+git status
 
-    <span class="kt">char</span> <span class="n">charArray</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span> <span class="o">*</span> <span class="p">[</span><span class="n">length</span><span class="p">];</span>
+# Đưa file vào khu vực chuẩn bị commit (Staging Area)
+git add &lt;ten_file&gt;       # Đưa 1 file cụ thể
+git add .                # Đưa toàn bộ các file thay đổi vào Stage
 
-    <span class="n">charArray</span> <span class="o">=</span> <span class="n">myString</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">charArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
-    <span class="p">}</span>
+# Lưu lại các thay đổi đã stage vào lịch sử Git
+git commit -m "Nội dung mô tả thay đổi"
 
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div> <p>For displaying code in a list item, you have to be aware of the indentation, as stated in <a href="https://github.com/planetjekyll/quickrefs/blob/master/FAQ.md#q-how-can-i-get-backtick-fenced-code-blocks-eg--working-inside-lists-with-kramdown">this FAQ</a>. You must indent your code by <strong>(3 * bullet_indent_level)</strong> spaces. This is because kramdown (the markdown engine used by Jekyll) indentation for the code block in lists is determined by the column number of the first non-space character after the list item marker. For example:</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">1.</span> We can put fenced code blocks inside nested bullets, too.
-<span class="p">
-   1.</span> Like this:<span class="sb">
+# Xem lịch sử các commit đã tạo
+git log --oneline        # Xem dạng rút gọn 1 dòng/commit
+git log --graph          # Xem dạng sơ đồ cây trực quan
 
-      ```c
-      printf("Hello, World!");
-      ```
+# Kiểm tra các Remote URL đang kết nối
+git remote -v
 
-</span><span class="p">   2.</span> The key is to indent your fenced block in the same line as the first character of the line.
-</code></pre></div></div> <p>Which displays:</p> <ol> <li> <p>We can put fenced code blocks inside nested bullets, too.</p> <ol> <li> <p>Like this:</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">printf</span><span class="p">(</span><span class="s">"Hello, World!"</span><span class="p">);</span>
-</code></pre></div> </div> </li> <li> <p>The key is to indent your fenced block in the same line as the first character of the line.</p> </li> </ol> </li> </ol> <p>By default, it does not display line numbers. If you want to display line numbers for every code block, you can set <code class="language-plaintext highlighter-rouge">kramdown.syntax_highlighter_opts.block.line_numbers</code> to true in your <code class="language-plaintext highlighter-rouge">_config.yml</code> file.</p> <p>If you want to display line numbers for a specific code block, all you have to do is wrap your code in a liquid tag:</p> <p>{% highlight c++ linenos %} <br/> code code code <br/> {% endhighlight %}</p> <p>The keyword <code class="language-plaintext highlighter-rouge">linenos</code> triggers display of line numbers. Produces something like this:</p> <figure class="highlight"><pre><code class="language-c--" data-lang="c++"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-</pre></td><td class="code"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="err">\</span><span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-<span class="n">string</span> <span class="n">myString</span><span class="p">;</span>
+# Thêm một Remote mới
+git remote add origin &lt;URL_du_an&gt;
 
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"input a string: "</span><span class="p">;</span>
-    <span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">myString</span><span class="p">);</span>
-    <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">myString</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
+# Sau khi đã thiết lập origin cho url, set upstream cho branch thì khi ta muốn push, pull chỉ cần gọi đơn giản
+git push
+git pull
 
-    <span class="kt">char</span> <span class="n">charArray</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span> <span class="o">*</span> <span class="p">[</span><span class="n">length</span><span class="p">];</span>
+# Pull dữ liệu xuống và gộp vào nhánh hiện tại
+git pull origin &lt;ten_nhanh&gt;
 
-    <span class="n">charArray</span> <span class="o">=</span> <span class="n">myString</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">charArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
-    <span class="p">}</span>
+# Push các commit từ local lên nhánh remote cụ thể
+git push origin &lt;ten_nhanh&gt;
+git push -u origin &lt;ten_nhanh&gt;   # Lưu mặc định origin/nhanh cho các lần push sau chỉ cần gõ 'git push
+</code></pre></div></div> <h3 id="4-quản-lý-nhánh">4. Quản lý nhánh</h3> <p>Việc quản lý nhánh là cực kỳ quan trọng, bởi ta cần làm việc trên nhánh riêng khi phát triển tính năng mới nhằm không làm hỏng code chạy ổn định ở (main/master/develop).</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Liệt kê danh sách các nhánh
+git branch               # Nhánh ở local
+git branch -a            # Tất cả nhánh (bao gồm cả remote)
 
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+# Tạo nhánh mới
+git branch &lt;ten_nhanh&gt;
 
-<span class="p">}</span>
-</pre></td></tr></tbody></table></code></pre></figure>]]></content><author><name></name></author><category term="clean-code"/><summary type="html"><![CDATA[This theme implements a built-in Jekyll feature, the use of Rouge, for syntax highlighting. It supports more than 100 languages. This example is in C++. All you have to do is wrap your code in markdown code tags:]]></summary></entry><entry><title type="html">linux dma engine</title><link href="https://atomvn.github.io/haonguyen/blog/2026/linux-dma-engine/" rel="alternate" type="text/html" title="linux dma engine"/><published>2026-09-10T17:00:00+00:00</published><updated>2026-09-10T17:00:00+00:00</updated><id>https://atomvn.github.io/haonguyen/blog/2026/linux-dma-engine</id><content type="html" xml:base="https://atomvn.github.io/haonguyen/blog/2026/linux-dma-engine/"><![CDATA[<p>Ở blog này, thứ ta cùng tìm hiểu là công cụ DMA Engine của Linux.</p> <h3 id="1-tổng-quan-về-phần-cứng-của-bộ-điều-khiển-slave-dma-dma-controller">1. Tổng quan về phần cứng của bộ điều khiển Slave DMA (DMA Controller)</h3> <p>Đầu tiên ta cần nắm một số khái niệm:</p> <ol> <li>Channel: Hình dung ram như là nhà kho, còn thiết bị ngoại vi là cửa hàng bán lẻ. Yêu cầu ở đây là vận chuyển hàng từ nhà kho ra cửa hàng thì channel là công nhân thực hiện việc bốc vác.</li> <li>Request line (DRQ): Hình dung request line là 1 chuông báo đặt ở cửa hàng, khi nào hết hàng thì nhân viên chỉ cần bấm chuông này, DMA sẽ nhận được thông báo yêu cầu chuyển hàng.</li> </ol> <p>Channel và request hoạt động độc lập với nhau, 1 channel có thể phục vụ nhiều request.</p> <p>Các tham số tối thiểu cần có để config 1 DMA transfer:</p> <ol> <li><code class="language-plaintext highlighter-rouge">Source address</code>: Con trỏ vùng nhớ nguồn: Cho DMA Controller biết dữ liệu sẽ được đọc ra từ đâu (ví dụ: Địa chỉ RAM vật lý trong bộ đệm nguồn, hoặc địa chỉ thanh ghi Data/FIFO của ngoại vi).</li> <li><code class="language-plaintext highlighter-rouge">Destination address</code>: Con trỏ vùng nhớ đích: Cho DMA Controller biết dữ liệu sẽ được ghi vào đâu (ví dụ: Địa chỉ RAM vật lý trong bộ đệm đích, hoặc địa chỉ thanh ghi FIFO của thiết bị như UART/Audio/SPI).</li> <li><code class="language-plaintext highlighter-rouge">Cờ tăng địa chỉ (Source / Destination Address Increment)</code>: Cho biết sau mỗi lần đọc/ghi một byte (hoặc word), con trỏ địa chỉ có tự động tăng lên $1$ bước hay giữ nguyên: <ul> <li>RAM $\rightarrow$ RAM: Cả Nguồn và Đích đều phải tăng để đọc/ghi qua các ô nhớ tiếp theo.</li> <li>RAM $\rightarrow$ Ngoại vi (ví dụ: FIFO): Địa chỉ RAM phải tăng, nhưng địa chỉ thanh ghi ngoại vi phải giữ nguyên (vì dữ liệu luôn được đẩy vào cùng một cổng FIFO, tức là FIFO ăn dữ liệu rồi đẩy ra).</li> </ul> </li> <li><code class="language-plaintext highlighter-rouge">Kích thước Truyền Tổng (Transfer Size / Length)</code>: <ul> <li>Tổng dung lượng (số lượng Byte hoặc Word) của toàn bộ khối dữ liệu cần chuyển đi trong lần giao dịch này.</li> <li>DMA Controller sẽ dùng giá trị này làm bộ đếm ngược; mỗi lần truyền thành công sẽ giảm dần về $0$ để kết thúc lệnh hoặc kích hoạt ngắt (Interrupt).</li> </ul> </li> <li><code class="language-plaintext highlighter-rouge">Độ rộng Đường truyền (Transfer Width / Bus Width)</code>: Kích thước của mỗi đơn vị dữ liệu được ghi/đọc trong một chu kỳ bus đơn lẻ (ví dụ: 8-bit/1 byte, 16-bit/2 bytes, 32-bit/4 bytes, hoặc 64-bit).</li> <li><code class="language-plaintext highlighter-rouge">Kích thước Nhóm Truyền (Burst Size)</code>: <ul> <li>Số lượng giao dịch đơn lẻ (single transfers) mà DMA Controller được phép gộp lại thành một gói lớn để truy xuất bộ nhớ RAM một lần.</li> <li>Giúp tối ưu hóa băng thông Bus RAM thay vì phải gửi từng lệnh đọc/ghi nhỏ lẻ.</li> </ul> </li> <li><code class="language-plaintext highlighter-rouge">Kênh DMA &amp; Tín hiệu Yêu cầu (DMA Channel &amp; Request Line / DRQ Signal)</code>: <ul> <li>Channel: Chọn/Chỉ định một Kênh (Channel) phần cứng rảnh rỗi sẽ thực thi việc sao chép.</li> <li>Request Line (DRQ): Chỉ định ID của đường tín hiệu phần cứng nối từ thiết bị ngoại vi tới DMA Controller, giúp DMA biết tín hiệu xin truyền dữ liệu này là của thiết bị nào (UART, SPI, hay I2S…).</li> </ul> </li> </ol> <h3 id="2-dma-engine-api-guide">2. DMA Engine API guide</h3> <p>Tổng quan thì mô hình thực thi DMA sẽ tuân theo 5 bước: \(\text{1. Xin cấp phát Channel} \longrightarrow \text{2. Cấu hình tham số} \longrightarrow \text{3. Chuẩn bị Descriptor} \longrightarrow \text{4. Submit vào hàng chờ} \longrightarrow \text{5. Issue Pending (Bắt đầu chạy)}\)</p> <h4 id="1-cấp-phát-kênh-dma-allocate-a-dma-slave-channel">1. Cấp phát Kênh DMA (Allocate a DMA Slave channel)</h4> <p>Khác với giao tiếp RAM-to-RAM có thể dùng bất kỳ kênh nào, Slave DMA yêu cầu kênh từ một bộ điều khiển cụ thể (hoặc một kênh phần cứng nhất định nối tới ngoại vi đó).</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="nf">dma_request_chan</span><span class="p">(</span><span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">dev</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">);</span>
+# Chuyển sang nhánh khác
+git checkout &lt;ten_nhanh&gt;
+git switch &lt;ten_nhanh&gt;   # Lệnh mới, dễ nhớ hơn checkout
+
+# Tạo nhánh mới và chuyển sang nhánh đó ngay lập tức
+git checkout -b &lt;ten_nhanh_moi&gt;
+git switch -c &lt;ten_nhanh_moi&gt;
+
+# Gộp (Merge) code từ nhánh khác vào nhánh hiện tại
+git merge &lt;ten_nhanh_can_gop&gt;
+
+# Xóa nhánh
+git branch -d &lt;ten_nhanh&gt;        # Xóa an toàn (đã merge)
+git branch -D &lt;ten_nhanh&gt;        # Xóa ép buộc (chưa merge)
+</code></pre></div></div> <h3 id="5-hủy-bỏ-khôi-phục-thay-đổi">5. Hủy bỏ, khôi phục thay đổi</h3> <pre><code class="language-Git"># Bỏ các thay đổi chưa commit của một file (khôi phục về trạng thái commit gần nhất)
+git checkout -- &lt;ten_file&gt;
+git restore &lt;ten_file&gt;
+
+# Đưa file ra khỏi Staging Area (bỏ 'git add')
+git restore --staged &lt;ten_file&gt;
+
+# Sửa lại message của commit gần nhất (hoặc thêm file quên commit)
+git commit --amend -m "Message moi"
+
+# Huỷ bỏ commit nhưng GIỮ LẠI code thay đổi ở file
+git reset HEAD~1
+
+# Huỷ bỏ commit và XÓA SẠCH mọi thay đổi (Cẩn thận khi dùng!)
+git reset --hard HEAD~1
+
+# Tạo một commit mới đảo ngược lại toàn bộ thay đổi của một commit cũ
+git revert &lt;commit_hash&gt;
+</code></pre> <h3 id="6-các-thao-tác-để-lưu-lại-phiên-làm-việc-hiện-tại-quay-lại-1-thời-điểm-trong-quá-khứ-và-trở-về-hiện-tại-1-cách-an-toàn">6. Các thao tác để lưu lại phiên làm việc hiện tại, quay lại 1 thời điểm trong quá khứ và trở về hiện tại 1 cách an toàn</h3> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Cất tạm thời các thay đổi dở dang để chuyển nhánh gấp
+git stash                # Lưu các thay đổi hiện tại vào bộ nhớ tạm
+git stash pop            # Lấy lại thay đổi gần nhất và xóa khỏi stash
+git stash list           # Xem danh sách các lần stash
+
+# Tái cấu trúc lịch sử commit (Giúp cây commit thẳng và sạch đẹp)
+git rebase &lt;ten_nhanh_goc&gt;
+
+# Lấy 1 commit cụ thể từ nhánh khác đắp vào nhánh hiện tại
+git cherry-pick &lt;commit_hash&gt;
+
+# Xem nhật ký mọi thao tác đối với HEAD (Dùng để cứu code khi lỡ xóa nhầm/reset hard)
+git reflog
+</code></pre></div></div>]]></content><author><name></name></author><category term="git"/><summary type="html"><![CDATA[Blog này bàn luận về git, cách dùng git cho việc quản lý 1 dự án.]]></summary></entry><entry><title type="html">linux dma engine</title><link href="https://atomvn.github.io/haonguyen/blog/2026/linux-dma-engine/" rel="alternate" type="text/html" title="linux dma engine"/><published>2026-09-10T17:00:00+00:00</published><updated>2026-09-10T17:00:00+00:00</updated><id>https://atomvn.github.io/haonguyen/blog/2026/linux-dma-engine</id><content type="html" xml:base="https://atomvn.github.io/haonguyen/blog/2026/linux-dma-engine/"><![CDATA[<p>Ở blog này, thứ ta cùng tìm hiểu là công cụ DMA Engine của Linux.</p> <h3 id="1-tổng-quan-về-phần-cứng-của-bộ-điều-khiển-slave-dma-dma-controller">1. Tổng quan về phần cứng của bộ điều khiển Slave DMA (DMA Controller)</h3> <p>Đầu tiên ta cần nắm một số khái niệm:</p> <ol> <li>Channel: Hình dung ram như là nhà kho, còn thiết bị ngoại vi là cửa hàng bán lẻ. Yêu cầu ở đây là vận chuyển hàng từ nhà kho ra cửa hàng thì channel là công nhân thực hiện việc bốc vác.</li> <li>Request line (DRQ): Hình dung request line là 1 chuông báo đặt ở cửa hàng, khi nào hết hàng thì nhân viên chỉ cần bấm chuông này, DMA sẽ nhận được thông báo yêu cầu chuyển hàng.</li> </ol> <p>Channel và request hoạt động độc lập với nhau, 1 channel có thể phục vụ nhiều request.</p> <p>Các tham số tối thiểu cần có để config 1 DMA transfer:</p> <ol> <li><code class="language-plaintext highlighter-rouge">Source address</code>: Con trỏ vùng nhớ nguồn: Cho DMA Controller biết dữ liệu sẽ được đọc ra từ đâu (ví dụ: Địa chỉ RAM vật lý trong bộ đệm nguồn, hoặc địa chỉ thanh ghi Data/FIFO của ngoại vi).</li> <li><code class="language-plaintext highlighter-rouge">Destination address</code>: Con trỏ vùng nhớ đích: Cho DMA Controller biết dữ liệu sẽ được ghi vào đâu (ví dụ: Địa chỉ RAM vật lý trong bộ đệm đích, hoặc địa chỉ thanh ghi FIFO của thiết bị như UART/Audio/SPI).</li> <li><code class="language-plaintext highlighter-rouge">Cờ tăng địa chỉ (Source / Destination Address Increment)</code>: Cho biết sau mỗi lần đọc/ghi một byte (hoặc word), con trỏ địa chỉ có tự động tăng lên $1$ bước hay giữ nguyên: <ul> <li>RAM $\rightarrow$ RAM: Cả Nguồn và Đích đều phải tăng để đọc/ghi qua các ô nhớ tiếp theo.</li> <li>RAM $\rightarrow$ Ngoại vi (ví dụ: FIFO): Địa chỉ RAM phải tăng, nhưng địa chỉ thanh ghi ngoại vi phải giữ nguyên (vì dữ liệu luôn được đẩy vào cùng một cổng FIFO, tức là FIFO ăn dữ liệu rồi đẩy ra).</li> </ul> </li> <li><code class="language-plaintext highlighter-rouge">Kích thước Truyền Tổng (Transfer Size / Length)</code>: <ul> <li>Tổng dung lượng (số lượng Byte hoặc Word) của toàn bộ khối dữ liệu cần chuyển đi trong lần giao dịch này.</li> <li>DMA Controller sẽ dùng giá trị này làm bộ đếm ngược; mỗi lần truyền thành công sẽ giảm dần về $0$ để kết thúc lệnh hoặc kích hoạt ngắt (Interrupt).</li> </ul> </li> <li><code class="language-plaintext highlighter-rouge">Độ rộng Đường truyền (Transfer Width / Bus Width)</code>: Kích thước của mỗi đơn vị dữ liệu được ghi/đọc trong một chu kỳ bus đơn lẻ (ví dụ: 8-bit/1 byte, 16-bit/2 bytes, 32-bit/4 bytes, hoặc 64-bit).</li> <li><code class="language-plaintext highlighter-rouge">Kích thước Nhóm Truyền (Burst Size)</code>: <ul> <li>Số lượng giao dịch đơn lẻ (single transfers) mà DMA Controller được phép gộp lại thành một gói lớn để truy xuất bộ nhớ RAM một lần.</li> <li>Giúp tối ưu hóa băng thông Bus RAM thay vì phải gửi từng lệnh đọc/ghi nhỏ lẻ.</li> </ul> </li> <li><code class="language-plaintext highlighter-rouge">Kênh DMA &amp; Tín hiệu Yêu cầu (DMA Channel &amp; Request Line / DRQ Signal)</code>: <ul> <li>Channel: Chọn/Chỉ định một Kênh (Channel) phần cứng rảnh rỗi sẽ thực thi việc sao chép.</li> <li>Request Line (DRQ): Chỉ định ID của đường tín hiệu phần cứng nối từ thiết bị ngoại vi tới DMA Controller, giúp DMA biết tín hiệu xin truyền dữ liệu này là của thiết bị nào (UART, SPI, hay I2S…).</li> </ul> </li> </ol> <h3 id="2-dma-engine-api-guide">2. DMA Engine API guide</h3> <p>Tổng quan thì mô hình thực thi DMA sẽ tuân theo 5 bước: \(\text{1. Xin cấp phát Channel} \longrightarrow \text{2. Cấu hình tham số} \longrightarrow \text{3. Chuẩn bị Descriptor} \longrightarrow \text{4. Submit vào hàng chờ} \longrightarrow \text{5. Issue Pending (Bắt đầu chạy)}\)</p> <h4 id="1-cấp-phát-kênh-dma-allocate-a-dma-slave-channel">1. Cấp phát Kênh DMA (Allocate a DMA Slave channel)</h4> <p>Khác với giao tiếp RAM-to-RAM có thể dùng bất kỳ kênh nào, Slave DMA yêu cầu kênh từ một bộ điều khiển cụ thể (hoặc một kênh phần cứng nhất định nối tới ngoại vi đó).</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">dma_chan</span> <span class="o">*</span><span class="nf">dma_request_chan</span><span class="p">(</span><span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">dev</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">);</span>
 </code></pre></div></div> <ul> <li> <p>Hàm sẽ dựa vào Device Tree (DT), ACPI hoặc bảng ánh xạ dma_slave_map để tìm kênh DMA tương ứng với thiết bị dev theo tên name (ví dụ: “tx” hoặc “rx”).<br/> Kênh đã được cấp phát sẽ thuộc quyền sở hữu riêng của Client driver đó cho đến khi gọi hàm dma_release_channel().</p> </li> <li> <p>Lấy 1 ví dụ để hiểu cách dma_request_chan hoạt động và tương tác với device.</p> </li> <li> <p>Ví dụ ta có device tree định nghĩa 1 thiết bị uart và 1 bộ điều khiển dma như sau: ``` /* Khai báo bộ điều khiển DMA của chip */ dma0: dma-controller@40000000 { compatible = “arm,pl330”; #dma-cells = &lt;1&gt;; … };</p> </li> </ul> <p>/* Khai báo thiết bị UART0 */ uart0: serial@40001000 { compatible = “ns16550a”; reg = &lt;0x40001000 0x100&gt;;</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* 
  * Khai báo UART0 được nối với dma0:
  * - Kênh truyền (TX) dùng request line số 2

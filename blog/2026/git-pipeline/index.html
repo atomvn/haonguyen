@@ -1,0 +1,98 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> how to use git to manage a project | Van Hao Nguyen </title> <meta name="author" content="Van Hao Nguyen"> <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. "> <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website"> <link rel="stylesheet" href="/haonguyen/assets/css/bootstrap.min.css?a4b3f509e79c54a512b890d73235ef04"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="/haonguyen/assets/css/academicons.min.css?f0b7046b84e425c55f3463ac249818f5"> <link defer rel="stylesheet" href="/haonguyen/assets/css/scholar-icons.css?62b2ac103a88034e6882a5be5f3e2772"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/haonguyen/assets/css/jekyll-pygments-themes-github.css?591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/haonguyen/assets/css/main.css?d41d8cd98f00b204e9800998ecf8427e"> <link rel="canonical" href="https://atomvn.github.io/haonguyen/blog/2026/git-pipeline/"> <script src="/haonguyen/assets/js/theme.js?a81d82887dd692e91686b43de4542f18"></script> <link defer rel="stylesheet" href="/haonguyen/assets/css/jekyll-pygments-themes-native.css?5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
+    initTheme();
+  </script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/haonguyen/"> <span class="font-weight-bold">Van Hao</span> Nguyen </a> <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse text-right" id="navbarNav"> <ul class="navbar-nav ml-auto flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/haonguyen/">about </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/repositories/">repositories </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/books/">bookshelf </a> </li> <li class="nav-item active"> <a class="nav-link" href="/haonguyen/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/haonguyen/people/">people </a> </li> <li class="nav-item"> <button id="search-toggle" title="Search" onclick="openSearchModal()"> <span class="nav-link">ctrl k <i class="ti ti-search"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" title="Change theme"> <i class="ti ti-sun-moon" id="light-toggle-system"></i> <i class="ti ti-moon-filled" id="light-toggle-dark"></i> <i class="ti ti-sun-filled" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="post"> <header class="post-header"> <h1 class="post-title">how to use git to manage a project</h1> <p class="post-meta"> Created on September 21, 2026 </p> <p class="post-tags"> <a href="/haonguyen/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a>   ·   <a href="/haonguyen/blog/tag/git"> <i class="fa-solid fa-hashtag fa-sm"></i> git</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <p>Blog này bàn luận về git, cách dùng git cho việc quản lý 1 dự án.</p> <h3 id="1-các-thêm-ssh-key-cho-tài-khoản-git">1. Các thêm SSH key cho tài khoản git</h3> <p><img class="emoji" title=":question:" alt=":question:" src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png" height="20" width="20"> SSH key là gì?<br> Hình dung đơn giản, khi ta thao tác git push, git pull, máy chủ git sẽ dùng public key để mã hóa một thông điệp thử thách. Chỉ có private key tương ứng trên máy tính của ta mới giải mã được thông điệp đó, giúp máy chủ xác nhận chính ta là người sở hữu mà không cần truyền mật khẩu qua mạng.</p> <p><img class="emoji" title=":question:" alt=":question:" src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png" height="20" width="20"> Cơ chế cặp khóa?</p> <ul> <li>private key: Lưu trữ cẩn thận trên máy tính cá nhân.</li> <li>public key: Được tải và lưu trên máy chủ Git (GitHub, GitLab, Bitbucket…).</li> </ul> <hr> <p><strong>Cách tạo SSH key trên Linux và thêm vào github, gitlab, bitbucket…</strong></p> <p><img class="emoji" title=":exclamation:" alt=":exclamation:" src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png" height="20" width="20"> Cách kiểm tra SSH key đã có trên máy chưa?</p> <pre><code class="language-git">ls -al ~/.ssh
+</code></pre> <p>Nếu đã thấy xuất hiện các file như id_ed25519.pub hoặc id_rsa.pub, nghĩa là ta đã có SSH key. Nếu chưa có, ta sẽ tạo key.</p> <p><img class="emoji" title=":exclamation:" alt=":exclamation:" src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png" height="20" width="20"> Các tạo key SSH mới <br> Ta sẽ chạy lệnh tạo key với thuật toán ED25519</p> <pre><code class="language-git">ssh-keygen -t ed26619 -C "youremail"
+</code></pre> <p>Khi hệ thống hỏi thì chỉ cần Enter để by pass hết là được. Mặc định public key sẽ được lưu tại <code class="language-plaintext highlighter-rouge">~/.ssh/id_ed25519</code>.</p> <p><img class="emoji" title=":exclamation:" alt=":exclamation:" src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png" height="20" width="20"> Copy nội dung SSH key thêm vòa Github/Gitlab</p> <pre><code class="language-git">cat ~/.ssh/id_ed25518.pub
+</code></pre> <p>Sau khi copy thì chỉ cần tạo mới ssh key trên setting của tài khoản trên Github/Gitlab là được.</p> <p>:exlamation: Kiểm tra kết nối</p> <pre><code class="language-git">ssh -T git@github.com
+</code></pre> <p>Nếu thành công màn hình sẽ hiển thị thông báo dạng:</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hi ! You've successfully authenticated, but GitHub does not provide shell access.
+</code></pre></div></div> <p>Sau khi đã tạo SSH key thì ta sẽ clone repo bằng SSH link là sẽ mặc định được push pull thoải mái.</p> <h3 id="2-câu-lệnh-khởi-tạo-và-cấu-hình-git">2. Câu lệnh khởi tạo và cấu hình git</h3> <p>Các câu lệnh này thường được dùng khi ta clone repo mới, hay setup git trên 1 máy mới.<br> <img class="emoji" title=":exclamation:" alt=":exclamation:" src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png" height="20" width="20"> Các câu lệnh dùng để thiết lập thông tin cá nhân hoặc khởi tạo kho lưu trữ:</p> <pre><code class="language-git"># Sao chép (clone) một dự án từ Remote (GitHub/GitLab) về máy
+git clone &lt;URL_du_an&gt;
+
+# Cấu hình tên và email (Bắt buộc khi mới cài Git)
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+</code></pre> <h3 id="3-câu-lệnh-quản-lý-trạng-thái-và-thay-đổi">3. Câu lệnh quản lý trạng thái và thay đổi</h3> <p>Các câu lệnh push pull sử dụng hàng ngày:</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Kiểm tra trạng thái các file (file nào mới, file nào bị sửa, file đã stage)
+git status
+
+# Đưa file vào khu vực chuẩn bị commit (Staging Area)
+git add &lt;ten_file&gt;       # Đưa 1 file cụ thể
+git add .                # Đưa toàn bộ các file thay đổi vào Stage
+
+# Lưu lại các thay đổi đã stage vào lịch sử Git
+git commit -m "Nội dung mô tả thay đổi"
+
+# Xem lịch sử các commit đã tạo
+git log --oneline        # Xem dạng rút gọn 1 dòng/commit
+git log --graph          # Xem dạng sơ đồ cây trực quan
+
+# Kiểm tra các Remote URL đang kết nối
+git remote -v
+
+# Thêm một Remote mới
+git remote add origin &lt;URL_du_an&gt;
+
+# Sau khi đã thiết lập origin cho url, set upstream cho branch thì khi ta muốn push, pull chỉ cần gọi đơn giản
+git push
+git pull
+
+# Pull dữ liệu xuống và gộp vào nhánh hiện tại
+git pull origin &lt;ten_nhanh&gt;
+
+# Push các commit từ local lên nhánh remote cụ thể
+git push origin &lt;ten_nhanh&gt;
+git push -u origin &lt;ten_nhanh&gt;   # Lưu mặc định origin/nhanh cho các lần push sau chỉ cần gõ 'git push
+</code></pre></div></div> <h3 id="4-quản-lý-nhánh">4. Quản lý nhánh</h3> <p>Việc quản lý nhánh là cực kỳ quan trọng, bởi ta cần làm việc trên nhánh riêng khi phát triển tính năng mới nhằm không làm hỏng code chạy ổn định ở (main/master/develop).</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Liệt kê danh sách các nhánh
+git branch               # Nhánh ở local
+git branch -a            # Tất cả nhánh (bao gồm cả remote)
+
+# Tạo nhánh mới
+git branch &lt;ten_nhanh&gt;
+
+# Chuyển sang nhánh khác
+git checkout &lt;ten_nhanh&gt;
+git switch &lt;ten_nhanh&gt;   # Lệnh mới, dễ nhớ hơn checkout
+
+# Tạo nhánh mới và chuyển sang nhánh đó ngay lập tức
+git checkout -b &lt;ten_nhanh_moi&gt;
+git switch -c &lt;ten_nhanh_moi&gt;
+
+# Gộp (Merge) code từ nhánh khác vào nhánh hiện tại
+git merge &lt;ten_nhanh_can_gop&gt;
+
+# Xóa nhánh
+git branch -d &lt;ten_nhanh&gt;        # Xóa an toàn (đã merge)
+git branch -D &lt;ten_nhanh&gt;        # Xóa ép buộc (chưa merge)
+</code></pre></div></div> <h3 id="5-hủy-bỏ-khôi-phục-thay-đổi">5. Hủy bỏ, khôi phục thay đổi</h3> <pre><code class="language-Git"># Bỏ các thay đổi chưa commit của một file (khôi phục về trạng thái commit gần nhất)
+git checkout -- &lt;ten_file&gt;
+git restore &lt;ten_file&gt;
+
+# Đưa file ra khỏi Staging Area (bỏ 'git add')
+git restore --staged &lt;ten_file&gt;
+
+# Sửa lại message của commit gần nhất (hoặc thêm file quên commit)
+git commit --amend -m "Message moi"
+
+# Huỷ bỏ commit nhưng GIỮ LẠI code thay đổi ở file
+git reset HEAD~1
+
+# Huỷ bỏ commit và XÓA SẠCH mọi thay đổi (Cẩn thận khi dùng!)
+git reset --hard HEAD~1
+
+# Tạo một commit mới đảo ngược lại toàn bộ thay đổi của một commit cũ
+git revert &lt;commit_hash&gt;
+</code></pre> <h3 id="6-các-thao-tác-để-lưu-lại-phiên-làm-việc-hiện-tại-quay-lại-1-thời-điểm-trong-quá-khứ-và-trở-về-hiện-tại-1-cách-an-toàn">6. Các thao tác để lưu lại phiên làm việc hiện tại, quay lại 1 thời điểm trong quá khứ và trở về hiện tại 1 cách an toàn</h3> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Cất tạm thời các thay đổi dở dang để chuyển nhánh gấp
+git stash                # Lưu các thay đổi hiện tại vào bộ nhớ tạm
+git stash pop            # Lấy lại thay đổi gần nhất và xóa khỏi stash
+git stash list           # Xem danh sách các lần stash
+
+# Tái cấu trúc lịch sử commit (Giúp cây commit thẳng và sạch đẹp)
+git rebase &lt;ten_nhanh_goc&gt;
+
+# Lấy 1 commit cụ thể từ nhánh khác đắp vào nhánh hiện tại
+git cherry-pick &lt;commit_hash&gt;
+
+# Xem nhật ký mọi thao tác đối với HEAD (Dùng để cứu code khi lỡ xóa nhầm/reset hard)
+git reflog
+</code></pre></div></div> </div> </article> <br> <hr> <br> <ul class="list-disc pl-8"></ul> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/device-driver-components/">Components inside a device driver</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/linux-dma-engine/">linux dma engine</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/scull-driver/">scull device driver</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/fundamental-concepts-in-building-a-kernel-module/">Fundamental concepts in building a kernel module and hello world example</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/find-command/">How to use find command in Linux</a> </li> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Van Hao Nguyen. </div> </footer> <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> <script src="/haonguyen/assets/js/bootstrap.bundle.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/masonry.js?a0db7e5d5c70cc3252b3138b0c91dcaf" type="text/javascript"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/zoom.js?85ddb88934d28b74e78031fd54cf8308"></script> <script src="/haonguyen/assets/js/no_defer.js?2781658a0a2b13ed609542042a859126"></script> <script defer src="/haonguyen/assets/js/common.js?e0514a05c5c95ac1a93a8dfd5249b92e"></script> <script defer src="/haonguyen/assets/js/copy_code.js?c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/haonguyen/assets/js/jupyter_new_tab.js?d9f17b6adc2311cbabd747f4538bb15f"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/haonguyen/assets/js/mathjax-setup.js?a5bb4e6a542c546dd929b24b8b236dfd"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/progress-bar.js?2f30e0e6801ea8f5036fa66e1ab0a71a" type="text/javascript"></script> <script src="/haonguyen/assets/js/vanilla-back-to-top.min.js?f40d453793ff4f64e238e420181a1d17"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/haonguyen/assets/js/search/ninja-keys.min.js?a3446f084dcaecc5f75aa1757d087dcf"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/haonguyen/assets/js/search-setup.js?6c304f7b1992d4b60f7a07956e52f04a"></script> <script src="/haonguyen/assets/js/search-data.js"></script> <script src="/haonguyen/assets/js/shortcut-key.js?6f508d74becd347268a7f822bca7309d"></script> </body> </html>
