@@ -5,6 +5,7 @@ date: 2026-09-10 17:00:00
 description: 
 tags: device-driver kernel-doc
 categories: 
+thumbnail: assets/img/posts/2026-09-10/dma.png
 featured: false
 ---
 

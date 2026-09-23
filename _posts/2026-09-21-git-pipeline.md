@@ -5,6 +5,7 @@ date: 2026-09-21 15:09:00
 description: 
 tags: git
 categories: 
+thumbnail: assets/img/posts/2026-09-21/git.jpg
 featured: false
 ---
 

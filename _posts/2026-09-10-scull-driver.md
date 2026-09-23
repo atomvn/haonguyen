@@ -5,6 +5,7 @@ date: 2026-09-10 16:00:00
 description: 
 tags: device-driver linux-device-drivers
 categories: 
+thumbnail: assets/img/posts/2026-09-10/scull_layout.png
 featured: false
 ---
 

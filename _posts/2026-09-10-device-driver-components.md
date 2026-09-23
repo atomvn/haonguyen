@@ -5,6 +5,7 @@ date: 2026-09-10 15:09:00
 description: 
 tags: device-driver linux-device-driver
 categories: 
+thumbnail: assets/img/posts/2026-09-10/device-driver.png
 featured: false
 ---
 
