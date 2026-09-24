@@ -55,6 +55,17 @@ ninja.data = [{
             window.location.href = "/haonguyen/blog/2026/meaningful-names/";
           
         },
+      },{id: "post-how-to-write-a-function",
+        
+          title: "how to write a function",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/how-to-write-functions/";
+          
+        },
       },{id: "post-how-to-use-git-to-manage-a-project",
         
           title: "how to use git to manage a project",
