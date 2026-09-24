@@ -68,7 +68,7 @@ git config --global user.email "your.email@example.com"
 
 ### 3. Câu lệnh quản lý trạng thái và thay đổi
 Các câu lệnh push pull sử dụng hàng ngày:
-```
+```git
 # Kiểm tra trạng thái các file (file nào mới, file nào bị sửa, file đã stage)
 git status
 
@@ -103,7 +103,7 @@ git push -u origin <ten_nhanh>   # Lưu mặc định origin/nhanh cho các lầ
 
 ### 4. Quản lý nhánh
 Việc quản lý nhánh là cực kỳ quan trọng, bởi ta cần làm việc trên nhánh riêng khi phát triển tính năng mới nhằm không làm hỏng code chạy ổn định ở (main/master/develop).
-```
+```git
 # Liệt kê danh sách các nhánh
 git branch               # Nhánh ở local
 git branch -a            # Tất cả nhánh (bao gồm cả remote)
@@ -128,7 +128,7 @@ git branch -D <ten_nhanh>        # Xóa ép buộc (chưa merge)
 ```
 
 ### 5. Hủy bỏ, khôi phục thay đổi
-```Git
+```git
 # Bỏ các thay đổi chưa commit của một file (khôi phục về trạng thái commit gần nhất)
 git checkout -- <ten_file>
 git restore <ten_file>
@@ -150,7 +150,7 @@ git revert <commit_hash>
 ```
 
 ### 6. Các thao tác để lưu lại phiên làm việc hiện tại, quay lại 1 thời điểm trong quá khứ và trở về hiện tại 1 cách an toàn
-```
+```git
 # Cất tạm thời các thay đổi dở dang để chuyển nhánh gấp
 git stash                # Lưu các thay đổi hiện tại vào bộ nhớ tạm
 git stash pop            # Lấy lại thay đổi gần nhất và xóa khỏi stash
