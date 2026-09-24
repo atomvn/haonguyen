@@ -44,18 +44,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-meaningful-names-in-coding",
-        
-          title: "meaningful names in coding",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/haonguyen/blog/2026/meaningful-names/";
-          
-        },
-      },{id: "post-how-to-write-a-function",
+        },{id: "post-how-to-write-a-function",
         
           title: "how to write a function",
         
@@ -64,6 +53,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/haonguyen/blog/2026/how-to-write-functions/";
+          
+        },
+      },{id: "post-meaningful-names-in-coding",
+        
+          title: "meaningful names in coding",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/meaningful-names/";
           
         },
       },{id: "post-how-to-use-git-to-manage-a-project",

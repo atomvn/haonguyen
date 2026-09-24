@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://atomvn.github.io/haonguyen/feed.xml" rel="self" type="application/atom+xml"/><link href="https://atomvn.github.io/haonguyen/" rel="alternate" type="text/html" hreflang="en"/><updated>2026-09-24T15:30:25+00:00</updated><id>https://atomvn.github.io/haonguyen/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. </subtitle><entry><title type="html">how to write a function</title><link href="https://atomvn.github.io/haonguyen/blog/2026/how-to-write-functions/" rel="alternate" type="text/html" title="how to write a function"/><published>2026-09-23T15:09:00+00:00</published><updated>2026-09-23T15:09:00+00:00</updated><id>https://atomvn.github.io/haonguyen/blog/2026/how-to-write-functions</id><content type="html" xml:base="https://atomvn.github.io/haonguyen/blog/2026/how-to-write-functions/"><![CDATA[<p>Function là thứ cốt yêu của code, vì vậy bạn phải biết cách tạo ra các function clean, dễ maintain và dễ mở rộng.</p> <h3 id="1-keep-functions-small">1. Keep functions small</h3> <p>Hàm phải cực kì nhỏ, chỉ nên dài từ 3 tới 5 dòng và hiếm khi vượt quá 20 dòng. Mức độ indentation chỉ nên từ 1 đến 2 cấp. Khi hàm nhỏ, chương trình sẽ dễ đọc, dễ hiểu, dễ viết Unit Test và dễ bảo trì.</p> <p>Ví dụ:</p> <ul> <li>Các khối lệnh if, else, while, for nên chỉ dài 1 dòng và dòng đó là 1 lời gọi hàm.</li> <li>Đặt tên cho hàm được gọi bên trong các khối lệnh thật rõ ràng để làm tăng giá trị giải thích cho code.</li> </ul> <h3 id="2-do-one-thing">2. Do one thing</h3> <p>Một hàm chỉ nên thực hiện duy nhất một chức năng, bởi vì làm nhiều việc sẽ khiến hàm bị phồng to, khó đặt tên, chứa nhiều mức độ trừu tượng rất khó maintain và dễ phát sinh lỗi khi sửa đổi. :question: Vậy làm sao để biết hàm đó đang chỉ làm đúng 1 việc?</p> <ul> <li>Nếu hàm chỉ gồm các bước thực hiện nằm ngay dưới 1 cấp trừu tượng so với tên hàm thì hàm đó đang làm 1 việc.</li> <li>Nếu ta có thể tách một đoạn code trong hàm ra thành 1 hàm mới với lời gọi hàm không chỉ đơn thuần mô tả lại cách cài đặt của nó, thì nên tách ngay.</li> <li>Nếu hàm bị chia thành nhiều phần như Declarations, Initializations, Processing thì hàm đó đang làm nhiều việc.</li> </ul> <p>Ví dụ: Giả sử ta cần viết một hàm xử lý quy trình thanh toán đơn hàng processOrder, code xấu sẽ trông như sau:</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ HÀM LÀM QUÁ NHIỀU VIỆC</span>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://atomvn.github.io/haonguyen/feed.xml" rel="self" type="application/atom+xml"/><link href="https://atomvn.github.io/haonguyen/" rel="alternate" type="text/html" hreflang="en"/><updated>2026-09-24T16:26:08+00:00</updated><id>https://atomvn.github.io/haonguyen/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. </subtitle><entry><title type="html">how to write a function</title><link href="https://atomvn.github.io/haonguyen/blog/2026/how-to-write-functions/" rel="alternate" type="text/html" title="how to write a function"/><published>2026-09-24T15:09:00+00:00</published><updated>2026-09-24T15:09:00+00:00</updated><id>https://atomvn.github.io/haonguyen/blog/2026/how-to-write-functions</id><content type="html" xml:base="https://atomvn.github.io/haonguyen/blog/2026/how-to-write-functions/"><![CDATA[<p>Function là thứ cốt yêu của code, vì vậy bạn phải biết cách tạo ra các function clean, dễ maintain và dễ mở rộng.</p> <h3 id="1-keep-functions-small">1. Keep functions small</h3> <p>Hàm phải cực kì nhỏ, chỉ nên dài từ 3 tới 5 dòng và hiếm khi vượt quá 20 dòng. Mức độ indentation chỉ nên từ 1 đến 2 cấp. Khi hàm nhỏ, chương trình sẽ dễ đọc, dễ hiểu, dễ viết Unit Test và dễ bảo trì.</p> <p>Ví dụ:</p> <ul> <li>Các khối lệnh if, else, while, for nên chỉ dài 1 dòng và dòng đó là 1 lời gọi hàm.</li> <li>Đặt tên cho hàm được gọi bên trong các khối lệnh thật rõ ràng để làm tăng giá trị giải thích cho code.</li> </ul> <h3 id="2-do-one-thing">2. Do one thing</h3> <p>Một hàm chỉ nên thực hiện duy nhất một chức năng, bởi vì làm nhiều việc sẽ khiến hàm bị phồng to, khó đặt tên, chứa nhiều mức độ trừu tượng rất khó maintain và dễ phát sinh lỗi khi sửa đổi.<br/> :question: Vậy làm sao để biết hàm đó đang chỉ làm đúng 1 việc?</p> <ul> <li>Nếu hàm chỉ gồm các bước thực hiện nằm ngay dưới 1 cấp trừu tượng so với tên hàm thì hàm đó đang làm 1 việc.</li> <li>Nếu ta có thể tách một đoạn code trong hàm ra thành 1 hàm mới với lời gọi hàm không chỉ đơn thuần mô tả lại cách cài đặt của nó, thì nên tách ngay.</li> <li>Nếu hàm bị chia thành nhiều phần như Declarations, Initializations, Processing thì hàm đó đang làm nhiều việc.</li> </ul> <p>Ví dụ: Giả sử ta cần viết một hàm xử lý quy trình thanh toán đơn hàng processOrder, code xấu sẽ trông như sau:</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ HÀM LÀM QUÁ NHIỀU VIỆC</span>
 <span class="kt">void</span> <span class="nf">processOrder</span><span class="p">(</span><span class="n">Order</span><span class="o">&amp;</span> <span class="n">order</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">userEmail</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// Đoạn 1: Declarations &amp; Initializations (Khai báo &amp; Khởi tạo)</span>
     <span class="kt">double</span> <span class="n">totalAmount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
@@ -80,6 +80,194 @@
 
     <span class="k">if</span> <span class="p">(</span><span class="n">executePayment</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">userEmail</span><span class="p">))</span> <span class="p">{</span>
         <span class="n">sendOrderConfirmationEmail</span><span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">order</span><span class="p">.</span><span class="n">totalAmount</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div> <h3 id="3-one-level-of-abstraction-per-function">3. One level of abstraction per function</h3> <p>Khi viết hàm ta chia thành 3 cấp độ trừu tượng:</p> <ol> <li>Cấp cao: <code class="language-plaintext highlighter-rouge">getHtml()</code></li> <li>Cấp trung: <code class="language-plaintext highlighter-rouge">PathParser.render(pagePath)</code></li> <li>Cấp thấp: <code class="language-plaintext highlighter-rouge">append("\n")</code></li> </ol> <p>Quy tắc flow từ trên xuống: Mỗi hàm nên được nối tiếp bởi các hàm ở cấp độ trừu tượng ngay bên dưới nó (Để làm A, ta làm B, để làm B, ta …)</p> <p>Ví dụ:</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ TRỘN LẪN NHIỀU CẤP ĐỘ TRỪU TƯỢNG</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="nf">renderRadarReport</span><span class="p">(</span><span class="n">RadarData</span><span class="o">&amp;</span> <span class="n">radarData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">html</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+    
+    <span class="c1">// Cấp cao: Lấy HTML cơ bản của báo cáo</span>
+    <span class="n">html</span> <span class="o">+=</span> <span class="n">radarData</span><span class="p">.</span><span class="n">getBaseHtml</span><span class="p">();</span> 
+
+    <span class="c1">// Cấp trung: Thao tác parse đường dẫn và lấy tên file cấu hình</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">configPath</span> <span class="o">=</span> <span class="s">"/etc/radar/config.xml"</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">configName</span> <span class="o">=</span> <span class="n">PathParser</span><span class="o">::</span><span class="n">render</span><span class="p">(</span><span class="n">configPath</span><span class="p">);</span>
+    <span class="n">html</span> <span class="o">+=</span> <span class="s">"&lt;div class='config'&gt;"</span> <span class="o">+</span> <span class="n">configName</span> <span class="o">+</span> <span class="s">"&lt;/div&gt;"</span><span class="p">;</span>
+
+    <span class="c1">// Cấp thấp (Chi tiết cài đặt tỉ mỉ): Thao tác xử lý chuỗi trực tiếp, định dạng thẻ HTML và ký tự xuống dòng</span>
+    <span class="n">html</span> <span class="o">+=</span> <span class="s">"&lt;table border='1'&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">target</span> <span class="o">:</span> <span class="n">radarData</span><span class="p">.</span><span class="n">getTargets</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">html</span> <span class="o">+=</span> <span class="s">"  &lt;tr&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="n">html</span> <span class="o">+=</span> <span class="s">"    &lt;td&gt;Target ID: "</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">id</span><span class="p">)</span> <span class="o">+</span> <span class="s">"&lt;/td&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="n">html</span> <span class="o">+=</span> <span class="s">"    &lt;td&gt;Distance: "</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">distance</span><span class="p">)</span> <span class="o">+</span> <span class="s">"m&lt;/td&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="n">html</span> <span class="o">+=</span> <span class="s">"  &lt;/tr&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">html</span> <span class="o">+=</span> <span class="s">"&lt;/table&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">html</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="c1">// Thao tác cộng ký tự xuống dòng rất cấp thấp</span>
+
+    <span class="k">return</span> <span class="n">html</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div> <p>Chúng ta tách hàm sao cho mỗi hàm chỉ chứa các câu lệnh ở cùng một cấp độ trừu tượng, đồng thời sắp xếp code theo luồng đọc từ trên xuống dưới (đọc giống các đoạn văn TO / ĐỂ…).</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// =================================================================</span>
+<span class="c1">// CẤP ĐỘ 0 (Cao nhất): Ý đồ tổng thể</span>
+<span class="c1">// TO renderRadarReport... (ĐỂ tạo báo cáo radar)</span>
+<span class="c1">// =================================================================</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="nf">renderRadarReport</span><span class="p">(</span><span class="n">RadarData</span><span class="o">&amp;</span> <span class="n">radarData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">html</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+    <span class="n">html</span> <span class="o">+=</span> <span class="n">renderHeader</span><span class="p">(</span><span class="n">radarData</span><span class="p">);</span>
+    <span class="n">html</span> <span class="o">+=</span> <span class="n">renderConfigSection</span><span class="p">();</span>
+    <span class="n">html</span> <span class="o">+=</span> <span class="n">renderTargetsTable</span><span class="p">(</span><span class="n">radarData</span><span class="p">.</span><span class="n">getTargets</span><span class="p">());</span>
+    <span class="k">return</span> <span class="n">html</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// =================================================================</span>
+<span class="c1">// CẤP ĐỘ 1: Các thành phần của báo cáo (Một cấp dưới Cấp 0)</span>
+<span class="c1">// TO renderHeader... (ĐỂ tạo phần đầu trang)</span>
+<span class="c1">// =================================================================</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="nf">renderHeader</span><span class="p">(</span><span class="n">RadarData</span><span class="o">&amp;</span> <span class="n">radarData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">radarData</span><span class="p">.</span><span class="n">getBaseHtml</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// TO renderConfigSection... (ĐỂ tạo phần cấu hình)</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="nf">renderConfigSection</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">configName</span> <span class="o">=</span> <span class="n">PathParser</span><span class="o">::</span><span class="n">render</span><span class="p">(</span><span class="s">"/etc/radar/config.xml"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="s">"&lt;div class='config'&gt;"</span> <span class="o">+</span> <span class="n">configName</span> <span class="o">+</span> <span class="s">"&lt;/div&gt;"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// TO renderTargetsTable... (ĐỂ tạo bảng danh sách mục tiêu)</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="nf">renderTargetsTable</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Target</span><span class="o">&gt;&amp;</span> <span class="n">targets</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">tableHtml</span> <span class="o">=</span> <span class="s">"&lt;table border='1'&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">target</span> <span class="o">:</span> <span class="n">targets</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">tableHtml</span> <span class="o">+=</span> <span class="n">renderTargetRow</span><span class="p">(</span><span class="n">target</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">tableHtml</span> <span class="o">+=</span> <span class="s">"&lt;/table&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">tableHtml</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// =================================================================</span>
+<span class="c1">// CẤP ĐỘ 2 (Thấp nhất): Chi tiết cài đặt từng dòng</span>
+<span class="c1">// TO renderTargetRow... (ĐỂ tạo từng dòng dữ liệu trong bảng)</span>
+<span class="c1">// =================================================================</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="nf">renderTargetRow</span><span class="p">(</span><span class="k">const</span> <span class="n">Target</span><span class="o">&amp;</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">row</span> <span class="o">=</span> <span class="s">"  &lt;tr&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">row</span> <span class="o">+=</span> <span class="s">"    &lt;td&gt;Target ID: "</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">id</span><span class="p">)</span> <span class="o">+</span> <span class="s">"&lt;/td&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">row</span> <span class="o">+=</span> <span class="s">"    &lt;td&gt;Distance: "</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">distance</span><span class="p">)</span> <span class="o">+</span> <span class="s">"m&lt;/td&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">row</span> <span class="o">+=</span> <span class="s">"  &lt;/tr&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">row</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div> <h3 id="4-bọc-cấu-trúc-switch--if-else-phức-tạp">4. Bọc cấu trúc Switch / If-else phức tạp</h3> <p>Cấu trúc switch (hoặc chuỗi if/else dài) bản chất là làm $N$ việc. Cần ẩn switch xuống tầng thấp nhất và không lặp lại nó. switch vi phạm nguyên tắc SRP (Single Responsibility) và OCP (Open/Closed) vì mỗi khi thêm kiểu dữ liệu mới, bạn phải sửa lại switch ở khắp nơi trong hệ thống.</p> <p>Ví dụ: Giả sử bạn có nhiều hình thức thanh toán: Thẻ tín dụng (Credit Card), Ví Momo, và PayPal. Đoạn code sau xấu vì rải khác if-else, switch ở nhiều nơi.</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">enum</span> <span class="n">class</span> <span class="n">PaymentMethod</span> <span class="p">{</span>
+    <span class="n">CREDIT_CARD</span><span class="p">,</span>
+    <span class="n">MOMO</span><span class="p">,</span>
+    <span class="n">PAYPAL</span>
+<span class="p">};</span>
+
+<span class="c1">// ❌ SWITCH VI PHẠM SRP VÀ OCP</span>
+<span class="n">class</span> <span class="n">PaymentProcessor</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="c1">// Hàm 1: Tính phí giao dịch</span>
+    <span class="kt">double</span> <span class="n">calculateFee</span><span class="p">(</span><span class="n">PaymentMethod</span> <span class="n">method</span><span class="p">,</span> <span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">CREDIT_CARD</span><span class="o">:</span>
+                <span class="k">return</span> <span class="n">amount</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mo">02</span><span class="p">;</span> <span class="c1">// Phí 2%</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">MOMO</span><span class="o">:</span>
+                <span class="k">return</span> <span class="n">amount</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mo">01</span><span class="p">;</span> <span class="c1">// Phí 1%</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">PAYPAL</span><span class="o">:</span>
+                <span class="k">return</span> <span class="n">amount</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mo">03</span> <span class="o">+</span> <span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">;</span> <span class="c1">// Phí 3% + $0.3</span>
+            <span class="nl">default:</span>
+                <span class="n">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">invalid_argument</span><span class="p">(</span><span class="s">"Phương thức không hợp lệ"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Hàm 2: Xử lý trừ tiền</span>
+    <span class="n">bool</span> <span class="n">processPayment</span><span class="p">(</span><span class="n">PaymentMethod</span> <span class="n">method</span><span class="p">,</span> <span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">CREDIT_CARD</span><span class="o">:</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Kết nối Cổng thanh toán Thẻ Tín Dụng...</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+                <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">MOMO</span><span class="o">:</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Tạo mã QR và gọi API Momo...</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+                <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">PAYPAL</span><span class="o">:</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Chuyển hướng sang Gateway PayPal...</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+                <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+            <span class="nl">default:</span>
+                <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Nếu tương lai có thêm hàm refund(), generateInvoice()... lại phải thêm switch!</span>
+<span class="p">};</span>
+</code></pre></div></div> <p>Để giải quyết vấn đề trên:</p> <ol> <li>Tạo Interface IPaymentStrategy định nghĩa các hành vi thanh toán. 2 Dùng Tính đa hình (Polymorphism) cho từng hình thức thanh toán.</li> <li>Bọc câu lệnh switch duy nhất vào một Factory.</li> </ol> <p>Bước 1: Định nghĩa Interface và các Class cụ thể (Polymorphism)</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Interface chung cho tất cả hình thức thanh toán</span>
+<span class="n">class</span> <span class="n">IPaymentStrategy</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IPaymentStrategy</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">calculateFee</span><span class="p">(</span><span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">bool</span> <span class="n">process</span><span class="p">(</span><span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// 1. Thanh toán Thẻ Tín Dụng</span>
+<span class="n">class</span> <span class="n">CreditCardPayment</span> <span class="o">:</span> <span class="n">public</span> <span class="n">IPaymentStrategy</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">double</span> <span class="n">calculateFee</span><span class="p">(</span><span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="k">const</span> <span class="n">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">amount</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mo">02</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">bool</span> <span class="n">process</span><span class="p">(</span><span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="n">override</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Kết nối Cổng thanh toán Thẻ Tín Dụng để trừ $"</span> <span class="o">&lt;&lt;</span> <span class="n">amount</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 2. Thanh toán Ví Momo</span>
+<span class="n">class</span> <span class="n">MomoPayment</span> <span class="o">:</span> <span class="n">public</span> <span class="n">IPaymentStrategy</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">double</span> <span class="n">calculateFee</span><span class="p">(</span><span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="k">const</span> <span class="n">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">amount</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mo">01</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">bool</span> <span class="n">process</span><span class="p">(</span><span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="n">override</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Tạo mã QR và gọi API Momo để trừ $"</span> <span class="o">&lt;&lt;</span> <span class="n">amount</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// 3. Thanh toán PayPal</span>
+<span class="n">class</span> <span class="n">PaypalPayment</span> <span class="o">:</span> <span class="n">public</span> <span class="n">IPaymentStrategy</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">double</span> <span class="n">calculateFee</span><span class="p">(</span><span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="k">const</span> <span class="n">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">amount</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mo">03</span> <span class="o">+</span> <span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">bool</span> <span class="n">process</span><span class="p">(</span><span class="kt">double</span> <span class="n">amount</span><span class="p">)</span> <span class="n">override</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Chuyển hướng sang Gateway PayPal để trừ $"</span> <span class="o">&lt;&lt;</span> <span class="n">amount</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div> <p>Bước 2: Khởi tạo duy nhất qua Abstract Factory (Ẩn switch xuống tầng thấp)</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Lớp Factory chứa câu lệnh switch DUY NHẤT của toàn hệ thống</span>
+<span class="n">class</span> <span class="n">PaymentFactory</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IPaymentStrategy</span><span class="o">&gt;</span> <span class="n">createPayment</span><span class="p">(</span><span class="n">PaymentMethod</span> <span class="n">method</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">CREDIT_CARD</span><span class="o">:</span>
+                <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CreditCardPayment</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">MOMO</span><span class="o">:</span>
+                <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">MomoPayment</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="k">case</span> <span class="n">PaymentMethod</span><span class="p">:</span><span class="o">:</span><span class="n">PAYPAL</span><span class="o">:</span>
+                <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">PaypalPayment</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="nl">default:</span>
+                <span class="n">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">invalid_argument</span><span class="p">(</span><span class="s">"Phương thức thanh toán không được hỗ trợ"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div> <p>Bước 3: Client Code xử lý giao dịch (Sạch sẽ, hoàn toàn KHÔNG còn switch)</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Hàm thanh toán ở cấp độ ứng dụng</span>
+<span class="kt">void</span> <span class="nf">checkout</span><span class="p">(</span><span class="n">PaymentMethod</span> <span class="n">method</span><span class="p">,</span> <span class="kt">double</span> <span class="n">orderAmount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 1. Tạo đối tượng thích hợp qua Factory (Switch chỉ chạy 1 lần ẩn ở đây)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IPaymentStrategy</span><span class="o">&gt;</span> <span class="n">payment</span> <span class="o">=</span> <span class="n">PaymentFactory</span><span class="o">::</span><span class="n">createPayment</span><span class="p">(</span><span class="n">method</span><span class="p">);</span>
+
+    <span class="c1">// 2. Tính phí và thực hiện giao dịch hoàn toàn bằng Đa hình</span>
+    <span class="kt">double</span> <span class="n">fee</span> <span class="o">=</span> <span class="n">payment</span><span class="o">-&gt;</span><span class="n">calculateFee</span><span class="p">(</span><span class="n">orderAmount</span><span class="p">);</span>
+    <span class="kt">double</span> <span class="n">total</span> <span class="o">=</span> <span class="n">orderAmount</span> <span class="o">+</span> <span class="n">fee</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Tổng tiền thanh toán (bao gồm phí $"</span> <span class="o">&lt;&lt;</span> <span class="n">fee</span> <span class="o">&lt;&lt;</span> <span class="s">"): $"</span> <span class="o">&lt;&lt;</span> <span class="n">total</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">payment</span><span class="o">-&gt;</span><span class="n">process</span><span class="p">(</span><span class="n">total</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Giao dịch thành công!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>]]></content><author><name></name></author><category term="clean-code"/><summary type="html"><![CDATA[Function là thứ cốt yêu của code, vì vậy bạn phải biết cách tạo ra các function clean, dễ maintain và dễ mở rộng.]]></summary></entry><entry><title type="html">meaningful names in coding</title><link href="https://atomvn.github.io/haonguyen/blog/2026/meaningful-names/" rel="alternate" type="text/html" title="meaningful names in coding"/><published>2026-09-23T15:09:00+00:00</published><updated>2026-09-23T15:09:00+00:00</updated><id>https://atomvn.github.io/haonguyen/blog/2026/meaningful-names</id><content type="html" xml:base="https://atomvn.github.io/haonguyen/blog/2026/meaningful-names/"><![CDATA[<p>Blog này bàn luận về cách đặt tên khi code.</p> <h3 id="1-use-intention-revealing-names">1. Use intention-revealing names</h3> <p>Tên của biến, hàm, hoặc lớp phải trả lời được các câu hỏi sau:</p> <ol> <li>Tại sao nó tồn tại?</li> <li>Nó làm gì?</li> <li>Nó được sử dụng thế nào?</li> </ol> <p><strong>Ví dụ:</strong> Thay vì đặt tên biến mà phải comment</p> <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">d</span> <span class="c1">// elapsed time in days</span>
