@@ -353,3 +353,148 @@ void checkout(PaymentMethod method, double orderAmount) {
     }
 }
 ```
+
+### 5. Functions argument
+Số lượng tham số lý tưởng là 0 (niladic), sau đó là 1 (monadic) và 2 (dyadic). Tránh dùng 3 tham số và hạn chế tối đa nhiều hơn 3 tham số.   
+Lí do phải hạn chế tham số là bởi vì tham số tăng làm tăng chi phí tư duy khi đọc code và làm công việc viết Unit Test trở nên khó khăn (Vì phải test nhiều trường hợp).
+
+Các phương pháp giúp giảm số lượng tham số:
+1. Tránh flag arguments (Biến bool)  
+Khi 1 hàm có biến bool truyền vào thì hàm đo chắc chắn là đam làm 2 việc. Ví dụ:
+   ```c
+    // Hàm này làm 2 việc khác nhau tùy thuộc vào biến isAdmin
+    void createUser(const std::string& username, const std::string& email, bool isAdmin) {
+        User user(username, email);
+        
+        if (isAdmin) {
+            user.setRole("ADMIN");
+            user.grantFullPrivileges();
+            Database::saveAdmin(user);
+        } else {
+            user.setRole("STANDARD");
+            Database::saveUser(user);
+        }
+    }
+
+    // Khi gọi hàm, lời gọi trông rất tối nghĩa (true là gì? false là gì?):
+    createUser("john_doe", "john@gmail.com", true);
+   ```
+
+    Refactor lại:
+
+    ```c
+    // 1. Hàm tạo user bình thường
+    void createStandardUser(const std::string& username, const std::string& email) {
+        User user(username, email);
+        user.setRole("STANDARD");
+        Database::saveUser(user);
+    }
+
+    // 2. Hàm tạo admin
+    void createAdminUser(const std::string& username, const std::string& email) {
+        User user(username, email);
+        user.setRole("ADMIN");
+        user.grantFullPrivileges();
+        Database::saveAdmin(user);
+    }
+
+    // Lời gọi hàm bây giờ cực kỳ rõ nghĩa:
+    createAdminUser("john_doe", "john@gmail.com");
+    ```
+
+2. Khi ta thấy một nhóm (2-3 tham số) luôn xuất hiện cùng nhau trong nhiều hàm, tức là chúng thuộc về một khái niệm đối tượng duy nhất chưa được tạo ra.
+
+    ```c
+    // Hàm tìm kiếm khách sạn nhận tới 5 tham số -> Khó đọc, thứ tự dễ bị truyền nhầm
+    std::vector<Hotel> searchHotels(
+        const std::string& city, 
+        const std::string& checkInDate, 
+        const std::string& checkOutDate, 
+        int adults, 
+        int children
+    ) {
+        // Logic tìm kiếm...
+    }
+
+    // Gọi hàm (Dễ nhầm lẫn giữa ngày check-in/check-out hoặc người lớn/trẻ em)
+    searchHotels("Hanoi", "2026-10-01", "2026-10-05", 2, 1);
+    ```
+
+    Refactor lại:
+
+    ```c
+    // Gom nhóm các tham số logic lại thành một khái niệm: Tiêu chí tìm kiếm (SearchCriteria)
+    struct HotelSearchCriteria {
+        std::string city;
+        std::string checkInDate;
+        std::string checkOutDate;
+        int adults;
+        int children;
+    };
+
+    // Hàm bây giờ trở thành Monadic (Chỉ có 1 tham số)
+    std::vector<Hotel> searchHotels(const HotelSearchCriteria& criteria) {
+        // Logic tìm kiếm...
+    }
+
+    // Khi gọi hàm:
+    HotelSearchCriteria criteria = {"Hanoi", "2026-10-01", "2026-10-05", 2, 1};
+    searchHotels(criteria); 
+    // Hạn chế hoàn toàn việc truyền nhầm thứ tự tham số!
+
+    ```
+
+3. Chuyển Dyad (2 tham số) thành Monad (1 tham số)
+
+    Hai tham số không hẳn là xấu, nhưng nó phức tạp hơn 1 tham số. Có thể giảm số lượng bằng cách biến tham số thành thuộc tính của Lớp (Class Field) hoặc di chuyển phương thức.
+
+    Code xấu:
+    ```c
+    class ReportExporter {
+    public:
+        // Cần 2 tham số: báo cáo cần ghi và luồng file để ghi ra
+        void writeHtml(const Report& report, OutputStream& stream) {
+            stream.write("<html>" + report.getTitle() + "</html>");
+        }
+    };
+
+    // Gọi hàm:
+    ReportExporter exporter;
+    exporter.writeHtml(myReport, fileStream);
+    ```
+
+    Để refactor lại ta có một số cách:
+    1. Biến tham số thành thuộc tính của lớp: Nếu OutputStream là công cụ chính của class này, hãy đưa nó vào Constructor để trở thành trạng thái nội tại (state) của Object.
+    ```c
+    class ReportExporter {
+    private:
+        OutputStream& stream; // Lưu dưới dạng thuộc tính
+    public:
+        ReportExporter(OutputStream& outputStream) : stream(outputStream) {}
+
+        // Hàm chỉ còn 1 tham số
+        void writeHtml(const Report& report) {
+            stream.write("<html>" + report.getTitle() + "</html>");
+        }
+    };
+
+    // Gọi hàm:
+    ReportExporter exporter(fileStream);
+    exporter.writeHtml(myReport);
+    ```
+
+    2. Đẩy hàm vào bên trong đối tượng: Đưa logic ghi file vào chính class Report. Khi đó, đối tượng Report (bản thân nó) sẽ được dùng làm ngữ cảnh (thay cho tham số thứ nhất).
+
+    ```c
+    class Report {
+    public:
+        // ...
+        // Hàm 1 tham số
+        void exportTo(OutputStream& stream) const {
+            stream.write("<html>" + this->getTitle() + "</html>");
+        }
+    };
+
+    // Gọi hàm (đọc tự nhiên như 1 câu tiếng Anh: "Báo cáo ơi, hãy xuất ra luồng này"):
+    myReport.exportTo(fileStream);
+    ```
