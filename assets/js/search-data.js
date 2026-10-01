@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-how-to-write-a-function",
+        },{id: "post-object-oriented-mindset",
+        
+          title: "object oriented mindset",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/object-orientation/";
+          
+        },
+      },{id: "post-how-to-write-a-function",
         
           title: "how to write a function",
         
