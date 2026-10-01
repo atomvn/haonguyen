@@ -1,0 +1,152 @@
+---
+layout: post
+title: object oriented mindset
+date: 2026-10-01 00:00:00
+description: 
+tags: clean-code
+categories: 
+thumbnail: assets/img/posts/2026-09-23/meaningful-names.png
+featured: false
+---
+
+### 1. Keep classes small 
+Class cần phải ngắn gọn và làm 1 việc duy nhất. Nếu số dòng code của class lớn hơn 50 ta cần phải đặt ra câu hỏi liệu class này có đang làm nhiều việc không?
+
+### 2. Single responsibility principle (SRP)
+Mỗi đơn vị phần mềm như class, hàm nên chỉ chịu trách nhiệm cho 1 việc duy nhất. Điều này giúp đơn vị đó dễ hiểu và dễ test.    
+:question: Làm sao để biết class có đang làm nhiều việc hay không?   
+Khi ta sửa đổi hay thêm mới 1 tính năng không liên quan tới class hiện tại mà class lại cần phải thay đổi, tức là class của ta đang làm nhiều hơn 1 việc.
+
+### 3. Open-closed principle (OCP)
+
+Nguyên tắc này chỉ ra rằng, mỗi đơn vị phần mềm (class, function...) nên được open cho extension và close cho modification. 
+
+### 4. Liskov substitution principle
+- Nguyên lý Liskov phát biểu rằng mọi đối tượng của lớp con (Derived class) phải có thể thay thế hoàn toàn cho đối tượng của lớp cha (Base class) mà không làm thay đổi tính đúng đắn của chương trình.
+- Quan hệ kế thừa không chỉ đơn thuần là "A là một B" (IS-A) theo nghĩa ngôn ngữ hay toán học, mà phải là "A có thể thay thế hoàn toàn cho B" (IS-SUBSTITUTABLE-FOR) về mặt hành vi.
+
+:question: Tại sao cần tuân thủ quy tắc LSP?
+- Lập trình viên sử dụng lớp cha kỳ vọng các hành vi tiêu chuẩn. Nếu lớp con ghi đè làm thay đổi hoặc "xóa bỏ" hành vi đó (ví dụ: ném ra lỗi IllegalOperation), người dùng thư viện sẽ bị ngạc nhiên và khó kiểm soát code.
+- Tuân thủ LSP đảm bảo bạn có thể thêm các lớp con mới mà không cần chỉnh sửa client code hay sử dụng các kỹ thuật ép kiểu/kiểm tra kiểu dữ liệu ở Runtime (như RTTI hay dynamic_cast).
+
+Ví dụ vi phạm:
+```c
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+
+// Lớp cha: Hình chữ nhật
+class Rectangle {
+public:
+    Rectangle(unsigned int w, unsigned int h) : width(w), height(h) {}
+    virtual ~Rectangle() = default;
+
+    virtual void setWidth(unsigned int w) { width = w; }
+    virtual void setHeight(unsigned int h) { height = h; }
+
+    unsigned int getWidth() const { return width; }
+    unsigned int getHeight() const { return height; }
+    unsigned long long getArea() const { return static_cast<unsigned long long>(width) * height; }
+
+protected:
+    unsigned int width;
+    unsigned int height;
+};
+
+// Lớp con: Hình vuông cố gắng kế thừa Hình chữ nhật
+class Square : public Rectangle {
+public:
+    Square(unsigned int size) : Rectangle(size, size) {}
+
+    // Cố gắng ghi đè để đảm bảo width == height
+    void setWidth(unsigned int w) override {
+        width = w;
+        height = w; // Tự động đổi cả height
+    }
+
+    void setHeight(unsigned int h) override {
+        width = h; // Tự động đổi cả width
+        height = h;
+    }
+};
+
+// Client code xử lý thông qua con trỏ Lớp cha Rectangle
+void processRectangle(Rectangle& r) {
+    r.setWidth(10);
+    r.setHeight(5);
+
+    // KỲ VỌNG: Diện tích phải là 10 * 5 = 50
+    std::cout << "Expected Area: 50, Actual Area: " << r.getArea() << std::endl;
+}
+
+int main() {
+    Rectangle rect(2, 3);
+    processRectangle(rect); // Output: Expected Area: 50, Actual Area: 50 (Đúng)
+
+    Square sq(5);
+    processRectangle(sq);   // Output: Expected Area: 50, Actual Area: 25 ❌ (SAI!)
+    // Bị lỗi vì setHeight(5) đã âm thầm đổi luôn width thành 5!
+    return 0;
+}
+```
+
+Refactor đoạn code trên để tuân thủ LSP:
+```c
+#include <iostream>
+#include <memory>
+#include <vector>
+
+// Interface chung ở cấp độ trừu tượng cao hơn
+class Shape {
+public:
+    virtual ~Shape() = default;
+    virtual unsigned long long getArea() const = 0;
+};
+
+// Lớp Hình chữ nhật độc lập
+class Rectangle : public Shape {
+public:
+    Rectangle(unsigned int w, unsigned int h) : width(w), height(h) {}
+
+    void setWidth(unsigned int w) { width = w; }
+    void setHeight(unsigned int h) { height = h; }
+
+    unsigned long long getArea() const override {
+        return static_cast<unsigned long long>(width) * height;
+    }
+
+private:
+    unsigned int width;
+    unsigned int height;
+};
+
+// Lớp Hình vuông độc lập
+class Square : public Shape {
+public:
+    Square(unsigned int side) : sideLength(side) {}
+
+    void setSide(unsigned int side) { sideLength = side; }
+
+    unsigned long long getArea() const override {
+        return static_cast<unsigned long long>(sideLength) * sideLength;
+    }
+
+private:
+    unsigned int sideLength;
+};
+
+// Client code hoạt động dựa trên Interface Shape
+void printArea(const Shape& shape) {
+    std::cout << "Area: " << shape.getArea() << std::endl;
+}
+
+int main() {
+    Rectangle rect(10, 5);
+    Square sq(5);
+
+    printArea(rect); // Output: Area: 50 (Hoạt động hoàn hảo)
+    printArea(sq);   // Output: Area: 25 (Hoạt động hoàn hảo)
+
+    return 0;
+}
+```
