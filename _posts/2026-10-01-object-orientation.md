@@ -150,3 +150,99 @@ int main() {
     return 0;
 }
 ```
+
+### 5. Favor composition over inheritance
+Tức là vẫn với ví dụ Square và Rectangle, nếu như Square ở đây cần một số implimentation của Rectangle thì ta sẽ ưu tiên việc Square sẽ kế thừa trực tiếp từ Shape tuy nhiên sẽ tạo 1 instance của Rectangle để lấy các implementation của Rectangle trong square, đảm bảo nguyên tắc DRY.   
+
+Ở đây người ta nói có 2 cách để tái sử dụng code, 1 là kế thừa (white box reuse), 2 là composition hoặc delegation, tức là tạo instance trong class và gọi các implementation của nó (block box reuse).
+
+Hình ảnh mô tả:
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/posts/2026-10-01/composition-over-inheritance.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+
+Đoạn code ví dụ biểu chưng cho nguyên tắc trên:
+```c
+class Square : public Shape {
+public:
+    Square() {
+        impl.setEdges(5, 5);
+    }
+    explicit Square(const unsigned int edgeLength) {
+        impl.setEdges(edgeLength, edgeLength);
+    }
+    void setEdge (const unsigned int length) {
+        impl.setEdges(length, length);
+    }
+    virtual void moveTo(const Point& newCenterPoint) override {
+        impl.moveTo(newCenterPoint);
+    }
+    virtual void show() override {
+        impl.show();
+    }
+    virtual void hide() override {
+        impl.hide();
+    }
+    unsigned lomg longgetArea() const {
+        return impl.getArea();
+    }
+private:
+    Rectangle impl;
+};
+```
+
+### 6. Interface segregation principle (ISP)
+Ở đây người ta nói về việc cần tách nhỏ interface ra, tránh interface too "fat".
+
+Ví dụ thay vì để 1 interface như này:
+```c
+class Bird {
+public:
+    virtual ~Bird() = default;
+    virtual void fly() = 0;
+    virtual void eat() = 0;
+    virtual void run() = 0;
+    virtual void tweet() = 0;
+};
+```
+Nếu có class penguin kế thừa interface trên thì gây ra confusion vì penguin không thể override lại method fly().
+```c
+class Penguin : public Bird {
+    public:
+    virtual void fly() override {
+    // ???
+    }
+    //...
+};
+```
+
+Do đó, khi refactor lại ta cần tách chúng ra thành 3 interfaces:
+```c
+class Lifeform {
+public:
+    virtual void eat() = 0;
+    virtual void move() = 0;
+};
+
+class Flyable {
+public:
+    virtual void fly() = 0;
+};
+
+class Audible {
+public:
+    virtual void makeSound() = 0;
+};
+```
+Và cho class kế thừa nhiều interface:
+
+```c
+class Sparrow : public Lifeform, public Flyable, public Audible {
+//...
+};
+class Penguin : public Lifeform, public Audible {
+//...
+};
+```
