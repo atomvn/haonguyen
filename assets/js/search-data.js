@@ -44,9 +44,9 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-object-oriented-mindset",
+        },{id: "post-class-object-oriented-mindset",
         
-          title: "object oriented mindset",
+          title: "class - object oriented mindset",
         
         description: "",
         section: "Posts",
