@@ -1,6 +1,6 @@
 ---
 layout: post
-title: object oriented mindset
+title: class - object oriented mindset
 date: 2026-10-01 00:00:00
 description: 
 tags: clean-code
@@ -246,3 +246,32 @@ class Penguin : public Lifeform, public Audible {
 //...
 };
 ```
+
+### 7. Acyclic dependency principle
+:exclamation: Nguyên tắc này nói về việc ta nên tránh circular dependency, tránh viết các đoạn code như bên dưới. Cụ thể phương pháp tránh circular dependency thế nào xem các principle sau sẽ thấy.
+
+```c
+#ifndef CUSTOMER_H_
+#define CUSTOMER_H_
+#include "Account.h"
+class Customer {
+// ...
+private:
+    Account customerAccount;
+};
+#endif
+
+#ifndef ACCOUNT_H_
+#define ACCOUNT_H_
+#include "Customer.h"
+class Account {
+private:
+    Customer owner;
+};
+#endif
+```
+
+### 8. Dependency inversion principle (DIP)
+Nguyên tắc để tránh circular dependency. Về cơ bản ở đây ta sẽ tạo ra 1 lớp interface là Owner và cho thằng Account kế thừa nó, và thằng Cusomer sẽ khởi tạo instance của Account.
+
+### 9. Dont talk to strangers
