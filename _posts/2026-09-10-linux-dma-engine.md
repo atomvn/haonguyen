@@ -7,6 +7,7 @@ tags: device-driver kernel-doc
 categories: 
 thumbnail: assets/img/posts/2026-09-10/dma.png
 featured: false
+pretty_table: true
 ---
 
 Ở blog này, thứ ta cùng tìm hiểu là công cụ DMA Engine của Linux.
@@ -161,7 +162,27 @@ int configure_uart_tx_dma(struct my_uart_device *uart_dev)
 ```
 
 #### 3. Lấy descriptor cho giao dịch 
-Descriptor đại diện cho một giao dịch DMA. Tùy thuộc vào mô hình dữ liệu, dmaengine cung cấp nhiều loại hàm chuẩn bị (prepare APIs):
+:question: Đầu tiên cần hiểu 1 descriptor giao dịch là gì?   
+Descriptor là một data structure. Khi cấu hình ở chế độ SG, AXI DMA dùng các descriptor để lấy thông tin về frame truyền, thay vì ghi trực tiếp địa chỉ vào các thanh ghi phần cứng.
+So sánh cách vận hành của 2 chế độ Simple và Scatter Gather DMA:  
+
+| Đặc điểm          | Simple DMA | Right aligned |
+| :-----------      | :------------: | ------------: |
+| Cách truyền       |    CPU phải can thiệp ghi địa chỉ RAM và độ dài trực tiếp vào thanh ghi phần cứng (MM2S_SA / S2MM_DA, LENGTH) cho từng gói dữ liệu một.    |       CPU chỉ cần tạo sẵn một chuỗi Descriptor trong RAM và đưa địa chỉ của Descriptor đầu tiên cho DMA. DMA sẽ tự dò đọc từng Descriptor để truyền nối tiếp liên tục. |
+| Yêu cầu vùng nhớ  |    Bắt buộc vùng nhớ RAM cấp phát phải là một khối liên tục vật lý (Contiguous Physical Memory).    |       Vùng nhớ RAM có thể phân mảnh (Non-contiguous). Các buffer dữ liệu nằm rải rác khắp nơi trong RAM vẫn được gom lại truyền liên tục nhờ chuỗi Descriptor. |
+| CPU overhead      |    Rất cao khi truyền gói nhỏ hoặc tần số cao: CPU phải chịu ngắt (Interrupt) và ghi thanh ghi liên tục sau mỗi gói.    |       Rất thấp: CPU chỉ khởi tạo chuỗi Descriptor một lần, DMA tự chạy hết danh sách Descriptor mới quay lại bắn ngắt báo CPU |
+
+
+Mỗi descriptor đóng vai trò là thẻ mô tả chỉ dẫn cho DMA biết:
+
+- Dữ liệu cần lấy từ đâu hoặc ghi vào đâu trong RAM (Địa chỉ Buffer).
+- Dung lượng dữ liệu của lượt truyền/nhận đó là bao nhiêu (Buffer Length).
+- Địa chỉ của Descriptor tiếp theo trong chuỗi là gì (Next Descriptor Pointer).
+- rạng thái và cờ điều khiển của phiên truyền đó (Control & Status).
+
+Để quản lý truyền dữ liệu hai chiều độc lập, phần cứng yêu cầu 2 chuỗi Descriptor riêng biệt: một chuỗi cho kênh truyền MM2S (Transmit) và một chuỗi cho kênh nhận S2MM (Receive).
+
+Tùy thuộc vào mô hình dữ liệu, dmaengine cung cấp nhiều loại hàm chuẩn bị (prepare APIs):
 1. dmaengine_prep_slave_sg(): Truyền một danh sách các vùng nhớ phân tán (Scatter-Gather list) từ/đến ngoại vi.
 2. dmaengine_prep_config_sg(): Tương tự như slave_sg, nhưng cho phép truyền kèm dma_slave_config để tránh phải gọi dmaengine_slave_config() mỗi khi đổi burst size hay địa chỉ FIFO.
 3. dmaengine_prep_peripheral_dma_vec(): Truyền danh sách bộ đệm dùng mảng cấu trúc dma_vec thay vì scatterlist.
