@@ -81,9 +81,15 @@ git reset --hard HEAD~1
 # Tạo một commit mới đảo ngược lại toàn bộ thay đổi của một commit cũ
 git revert &lt;commit_hash&gt;
 </code></pre> <h3 id="6-các-thao-tác-để-lưu-lại-phiên-làm-việc-hiện-tại-quay-lại-1-thời-điểm-trong-quá-khứ-và-trở-về-hiện-tại-1-cách-an-toàn">6. Các thao tác để lưu lại phiên làm việc hiện tại, quay lại 1 thời điểm trong quá khứ và trở về hiện tại 1 cách an toàn</h3> <pre><code class="language-git"># Cất tạm thời các thay đổi dở dang để chuyển nhánh gấp
-git stash                # Lưu các thay đổi hiện tại vào bộ nhớ tạm
-git stash pop            # Lấy lại thay đổi gần nhất và xóa khỏi stash
-git stash list           # Xem danh sách các lần stash
+git stash push -m stash_message stash_file_or_folder                # Lưu các thay đổi hiện tại vào bộ nhớ tạm
+git stash -u                                                        # Lưu cả các file chưa được track vào stash
+git stash -p                                                        # Giống như git add -p
+git stash pop                                                       # Lấy lại thay đổi gần nhất và xóa khỏi stash
+git stash apply stash@{0}                                           # Lấy lại thay đổi gần nhất trong dánh sách nhưng không xóa khỏi danh sách
+git stash list                                                      # Xem danh sách các lần stash
+git stash show -p stash@{0}                                         # Giống như git show, xem những thay đổi của stash đó                    
+git stash drop stash@{0}                                            # Xóa 1 stash cụ thể
+git stash clear                                                     # Xóa toàn bộ danh sách stash
 
 # Tái cấu trúc lịch sử commit (Giúp cây commit thẳng và sạch đẹp)
 git rebase &lt;ten_nhanh_goc&gt;
