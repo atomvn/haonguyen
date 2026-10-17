@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/haonguyen/people/";
           },
-        },{id: "post-class-object-oriented-mindset",
+        },{id: "post-google-c-coding-convention",
+        
+          title: "google C++ coding convention",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/haonguyen/blog/2026/google-C++-coding-convention/";
+          
+        },
+      },{id: "post-class-object-oriented-mindset",
         
           title: "class - object oriented mindset",
         
