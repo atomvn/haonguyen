@@ -748,3 +748,104 @@ tl::expected<ProcessingResult, std::string> ProcessData(
     return res;
 }
 ```
+
+#### 4.2. Write short functions
+Một hàm nên được thiết kế để làm một việc duy nhất và làm thật tốt (Single Responsibility Principle).   
+Google không áp đặt một con số cứng nhắc (vì đôi khi có những đoạn code cần dài tự nhiên), nhưng đưa ra một ngưỡng tham khảo là khoảng 40 dòng. Nếu một hàm vượt quá con số này, bạn nên dừng lại và suy nghĩ xem có thể tách nhỏ nó ra hay không mà không làm ảnh hưởng đến cấu trúc tổng thể.
+
+Ví dụ về hàm chưa tốt:
+```c++
+#include <iostream>
+#include <string>
+
+// ❌ SAI: Hàm quá dài, làm quá nhiều việc cùng một lúc
+bool ProcessUserData(const std::string& username, int age, const std::string& email) {
+    // 1. Kiểm tra tính hợp lệ dữ liệu
+    if (username.empty() || username.length() > 50) {
+        std::cerr << "Error: Invalid username length!" << std::endl;
+        return false;
+    }
+    if (age < 0 || age > 150) {
+        std::cerr << "Error: Invalid age!" << std::endl;
+        return false;
+    }
+    if (email.find('@') == std::string::npos) {
+        std::cerr << "Error: Invalid email format!" << std::endl;
+        return false;
+    }
+
+    // 2. Xử lý logic nghiệp vụ phức tạp (giả lập)
+    std::string formatted_name = username;
+    formatted_name[0] = toupper(formatted_name[0]);
+
+    // 3. Thực hiện ghi log hệ thống
+    std::cout << "[LOG] Processing user: " << formatted_name << ", Age: " << age << std::endl;
+
+    // 4. Lưu xuống cơ sở dữ liệu (giả lập)
+    std::cout << "[DB] Saving user to database..." << std::endl;
+    
+    return true;
+}
+```
+
+Refactor lại:
+
+```c++
+#include <iostream>
+#include <string>
+
+// ✅ ĐÚNG: Mỗi hàm chỉ làm một việc duy nhất và cực kỳ ngắn gọn
+
+bool IsValidUsername(const std::string& username) {
+    return !username.empty() && username.length() <= 50;
+}
+
+bool IsValidAge(int age) {
+    return age >= 0 && age <= 150;
+}
+
+bool IsValidEmail(const std::string& email) {
+    return email.find('@') != std::string::npos;
+}
+
+bool ValidateUser(const std::string& username, int age, const std::string& email) {
+    if (!IsValidUsername(username)) {
+        std::cerr << "Error: Invalid username length!\n";
+        return false;
+    }
+    if (!IsValidAge(age)) {
+        std::cerr << "Error: Invalid age!\n";
+        return false;
+    }
+    if (!IsValidEmail(email)) {
+        std::cerr << "Error: Invalid email format!\n";
+        return false;
+    }
+    return true;
+}
+
+std::string FormatUsername(const std::string& username) {
+    std::string result = username;
+    if (!result.empty()) {
+        result[0] = static_cast<char>(toupper(result[0]));
+    }
+    return result;
+}
+
+void SaveUserToDatabase(const std::string& formatted_name, int age) {
+    std::cout << "[LOG] Processing user: " << formatted_name << ", Age: " << age << std::endl;
+    std::cout << "[DB] Saving user to database...\n";
+}
+
+// Hàm chính điều phối gọn gàng, dễ đọc tổng quan logic
+bool ProcessUserData(const std::string& username, int age, const std::string& email) {
+    if (!ValidateUser(username, age, email)) {
+        return false;
+    }
+
+    std::string formatted_name = FormatUsername(username);
+    SaveUserToDatabase(formatted_name, age);
+    
+    return true;
+}
+```
