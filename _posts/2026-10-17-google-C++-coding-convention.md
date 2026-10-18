@@ -589,3 +589,162 @@ int main() {
     return 0;
 }
 ```
+
+#### 3.2. Implicit conversions
+
+#### 3.3. Copyable and movable types
+
+#### 3.4. Structs vs classes
+
+#### 3.5. Structs vs Pairs and Tuples
+
+#### 3.6. Inheritance
+
+#### 3.7. Operator overloading
+
+#### 3.8. Access control
+
+#### 3.9. Declaration order
+1 class thường bắt đầu với public: section, theo sau đó là protected: và private: ở cuối.
+
+Trong mỗi section, thứ tự declare như sau:
+1. Types và Type Aliases: typedef, using, enum, các nested struct/class, và friend types.
+2. Non-static data members (Tùy chọn, thường chỉ dùng cho struct đơn giản).
+3. Static constants: Các hằng số tĩnh (ví dụ: static constexpr int kMaxLimit = 100;).
+4. Factory functions: Các hàm tĩnh chuyên dùng để khởi tạo đối tượng (ví dụ: Create()).
+5. Constructors và Assignment operators: Hàm tạo, toán tử gán (copy/move assignment).
+6. Destructor: Hàm hủy.
+7. All other functions: Các hàm thành viên khác (cả static và non-static), hàm friend.
+8. All other data members: Các biến thành viên thông thường (non-static data members cho class) và biến tĩnh khác (static data members).
+
+Bên cạnh đó, quy chuẩn cũng nhấn mạnh: Không viết các phương thức dài dòng trực tiếp bên trong lớp (inline). Chỉ những phương thức cực kỳ ngắn, tầm thường (trivial) hoặc mang tính tối ưu hiệu năng cao mới được phép định nghĩa inline ngay trong class.
+
+```c++
+#include <cstdint>
+#include <string>
+#include <memory>
+#include <vector>
+
+class NetworkPacket {
+public:
+    // --- 1. Types và Type Aliases ---
+    using PacketIdType = uint64_t;
+    
+    enum class Status {
+        kSuccess,
+        kTimeout,
+        kCorrupted
+    };
+
+    struct Metadata {
+        int priority;
+        uint32_t timestamp;
+    };
+
+    // --- 4. Factory Functions ---
+    // (Factory tạo đối tượng an toàn thay vì nhồi nhét logic phức tạp vào constructor)
+    static std::unique_ptr<NetworkPacket> Create(PacketIdType id, const std::string& payload);
+
+    // --- 5. Constructors và Assignment Operators ---
+    NetworkPacket(PacketIdType id, const std::string& payload);
+    ~NetworkPacket(); // --- 6. Destructor ---
+
+    // Xóa bỏ copy constructor nếu không muốn đối tượng bị sao chép bừa bãi
+    NetworkPacket(const NetworkPacket&) = delete;
+    NetworkPacket& operator=(const NetworkPacket&) = delete;
+
+    // --- 7. All other functions (Hàm ngắn, trivial được phép inline ngay trong class) ---
+    PacketIdType GetId() const { return id_; } 
+    Status GetStatus() const { return status_; }
+
+    // Các hàm dài hơn hoặc logic phức tạp sẽ khai báo prototype ở đây 
+    // và viết code chi tiết ở file .cc tương ứng:
+    bool ParsePayload();
+
+private:
+    // --- 3. Static Constants ---
+    static constexpr size_t kMaxPayloadSize = 1024;
+
+    // --- 7. All other functions (private) ---
+    void InternalValidate();
+
+    // --- 8. All other data members (Biến thành viên đặt ở dưới cùng của section) ---
+    PacketIdType id_;
+    std::string payload_;
+    Status status_;
+    Metadata metadata_;
+};
+```
+
+### 4. Functions
+#### 4.1. Inputs and outputs
+:exclamation: Quy tắc về giá trị trả về   
+- Ưu tiên dùng giá trị trả về thay vì tham số đầu ra (Output Parameters): Hãy để hàm trả kết quả trực tiếp qua lệnh return. Điều này giúp code dễ đọc hơn rất nhiều và nhờ công nghệ tối ưu hóa hiện đại (như RVO - Return Value Optimization), hiệu năng của nó hoàn toàn tương đương hoặc thậm chí tốt hơn việc dùng tham số đầu ra.
+- Quy chuẩn cách trả về: Ưu tiên trả về bằng giá trị (by value) hoặc tham chiếu (by reference) nếu cần, Tránh trả về con trỏ thô (raw pointer) trừ khi đối tượng đó được phép có giá trị nullptr (vắng mặt).
+
+:exclamation: Quy chuẩn về tham số hàm   
+Tham số trong hàm được chia thành 3 loại: Đầu vào (input), Đầu ra (output), hoặc Cả hai (in/out). Cách truyền tham số chuẩn xác bao gồm:
+- Tham số đầu vào (Inputs):
+    - Không bắt buộc (optional): Dùng std::optional (truyền theo giá trị).
+    - Bắt buộc (non-optional): Dùng giá trị (value) (cho kiểu dữ liệu nhỏ) hoặc const reference (cho kiểu dữ liệu lớn).
+    - Nếu dùng con trỏ thay vì reference cho tham số bắt buộc, hãy dùng const pointer.
+
+- Tham số đầu ra hoặc In/Out (Outputs & In/Out):
+    - Không bắt buộc (optional): Dùng con trỏ không hằng (non-const pointer).
+    - Bắt buộc (non-optional): Dùng tham chiếu không hằng (non-const reference) vì tham chiếu không thể bị nullptr.
+
+Tránh ràng buộc thời gian sống (Lifetime issues): Không thiết kế hàm yêu cầu tham số dạng tham chiếu phải sống lâu hơn lời gọi hàm (tránh lỗi treo con trỏ lửng lơ / lifetime bugs). Nếu cần, hãy truyền bằng giá trị (copy) hoặc truyền bằng con trỏ kèm tài liệu ghi chú rõ ràng.
+
+:exclamation: Thứ tự sắp xếp tham số    
+- Luôn đặt tất cả các tham số đầu vào (input-only) đứng trước bất kỳ tham số đầu ra nào (output).
+- Không được tiện tay nhét tham số mới vào cuối hàm chỉ vì nó mới sinh ra; hãy tuân thủ nguyên tắc đặt input trước output để người đọc dễ hình dung hướng đi của dữ liệu.
+
+Ví dụ về trường hợp sai:
+```c++
+#include <string>
+
+// ❌ SAI: Dùng output parameter (std::string* out_result) thay vì return value.
+// ❌ SAI: Sắp xếp tham số lộn xộn (output đứng trước input).
+bool CalculateData(std::string* out_result, int input_id, double* in_out_factor) {
+    if (!out_result || !in_out_factor) return false;
+    
+    // ... tính toán phức tạp ...
+    *out_result = "Result data";
+    *in_out_factor *= 2.0;
+    return true;
+}
+```
+
+Sửa lại cho đúng:
+```c++
+#include <string>
+#include "tl/expected.hpp" // Hoặc absl::StatusOr
+
+struct ProcessingResult {
+    std::string data;
+    double updated_factor;
+};
+
+// ✅ ĐÚNG:
+// 1. Dùng giá trị trả về (thông qua expected) thay vì output parameter.
+// 2. Sắp xếp: Input-only (input_id) đứng TRƯỚC In/Out (in_out_factor).
+// 3. In/Out bắt buộc dùng non-const reference.
+tl::expected<ProcessingResult, std::string> ProcessData(
+    int input_id,                  // 1. Tham số đầu vào (Input-only)
+    double& in_out_factor          // 2. Tham số vừa vào vừa ra (In/Out)
+) {
+    if (input_id < 0) {
+        return tl::make_unexpected("Invalid input ID!");
+    }
+
+    // Thay đổi giá trị in/out trực tiếp
+    in_out_factor *= 2.0;
+
+    // Trả kết quả trực tiếp qua giá trị về
+    ProcessingResult res;
+    res.data = "Processed data for ID: " + std::to_string(input_id);
+    res.updated_factor = in_out_factor;
+    
+    return res;
+}
+```
