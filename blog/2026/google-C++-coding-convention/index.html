@@ -322,6 +322,102 @@
 
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+</code></pre></div></div> <h4 id="32-implicit-conversions">3.2. Implicit conversions</h4> <h4 id="33-copyable-and-movable-types">3.3. Copyable and movable types</h4> <h4 id="34-structs-vs-classes">3.4. Structs vs classes</h4> <h4 id="35-structs-vs-pairs-and-tuples">3.5. Structs vs Pairs and Tuples</h4> <h4 id="36-inheritance">3.6. Inheritance</h4> <h4 id="37-operator-overloading">3.7. Operator overloading</h4> <h4 id="38-access-control">3.8. Access control</h4> <h4 id="39-declaration-order">3.9. Declaration order</h4> <p>1 class thường bắt đầu với public: section, theo sau đó là protected: và private: ở cuối.</p> <p>Trong mỗi section, thứ tự declare như sau:</p> <ol> <li>Types và Type Aliases: typedef, using, enum, các nested struct/class, và friend types.</li> <li>Non-static data members (Tùy chọn, thường chỉ dùng cho struct đơn giản).</li> <li>Static constants: Các hằng số tĩnh (ví dụ: static constexpr int kMaxLimit = 100;).</li> <li>Factory functions: Các hàm tĩnh chuyên dùng để khởi tạo đối tượng (ví dụ: Create()).</li> <li>Constructors và Assignment operators: Hàm tạo, toán tử gán (copy/move assignment).</li> <li>Destructor: Hàm hủy.</li> <li>All other functions: Các hàm thành viên khác (cả static và non-static), hàm friend.</li> <li>All other data members: Các biến thành viên thông thường (non-static data members cho class) và biến tĩnh khác (static data members).</li> </ol> <p>Bên cạnh đó, quy chuẩn cũng nhấn mạnh: Không viết các phương thức dài dòng trực tiếp bên trong lớp (inline). Chỉ những phương thức cực kỳ ngắn, tầm thường (trivial) hoặc mang tính tối ưu hiệu năng cao mới được phép định nghĩa inline ngay trong class.</p> <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;cstdint&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">NetworkPacket</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="c1">// --- 1. Types và Type Aliases ---</span>
+    <span class="k">using</span> <span class="n">PacketIdType</span> <span class="o">=</span> <span class="kt">uint64_t</span><span class="p">;</span>
+    
+    <span class="k">enum</span> <span class="k">class</span> <span class="nc">Status</span> <span class="p">{</span>
+        <span class="n">kSuccess</span><span class="p">,</span>
+        <span class="n">kTimeout</span><span class="p">,</span>
+        <span class="n">kCorrupted</span>
+    <span class="p">};</span>
+
+    <span class="k">struct</span> <span class="nc">Metadata</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">priority</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">timestamp</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="c1">// --- 4. Factory Functions ---</span>
+    <span class="c1">// (Factory tạo đối tượng an toàn thay vì nhồi nhét logic phức tạp vào constructor)</span>
+    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">NetworkPacket</span><span class="o">&gt;</span> <span class="n">Create</span><span class="p">(</span><span class="n">PacketIdType</span> <span class="n">id</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">payload</span><span class="p">);</span>
+
+    <span class="c1">// --- 5. Constructors và Assignment Operators ---</span>
+    <span class="n">NetworkPacket</span><span class="p">(</span><span class="n">PacketIdType</span> <span class="n">id</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">payload</span><span class="p">);</span>
+    <span class="o">~</span><span class="n">NetworkPacket</span><span class="p">();</span> <span class="c1">// --- 6. Destructor ---</span>
+
+    <span class="c1">// Xóa bỏ copy constructor nếu không muốn đối tượng bị sao chép bừa bãi</span>
+    <span class="n">NetworkPacket</span><span class="p">(</span><span class="k">const</span> <span class="n">NetworkPacket</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+    <span class="n">NetworkPacket</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">NetworkPacket</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+
+    <span class="c1">// --- 7. All other functions (Hàm ngắn, trivial được phép inline ngay trong class) ---</span>
+    <span class="n">PacketIdType</span> <span class="n">GetId</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span> 
+    <span class="n">Status</span> <span class="n">GetStatus</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">status_</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">// Các hàm dài hơn hoặc logic phức tạp sẽ khai báo prototype ở đây </span>
+    <span class="c1">// và viết code chi tiết ở file .cc tương ứng:</span>
+    <span class="kt">bool</span> <span class="nf">ParsePayload</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="c1">// --- 3. Static Constants ---</span>
+    <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">size_t</span> <span class="n">kMaxPayloadSize</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">;</span>
+
+    <span class="c1">// --- 7. All other functions (private) ---</span>
+    <span class="kt">void</span> <span class="nf">InternalValidate</span><span class="p">();</span>
+
+    <span class="c1">// --- 8. All other data members (Biến thành viên đặt ở dưới cùng của section) ---</span>
+    <span class="n">PacketIdType</span> <span class="n">id_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">payload_</span><span class="p">;</span>
+    <span class="n">Status</span> <span class="n">status_</span><span class="p">;</span>
+    <span class="n">Metadata</span> <span class="n">metadata_</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div> <h3 id="4-functions">4. Functions</h3> <h4 id="41-inputs-and-outputs">4.1. Inputs and outputs</h4> <p><img class="emoji" title=":exclamation:" alt=":exclamation:" src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png" height="20" width="20"> Quy tắc về giá trị trả về</p> <ul> <li>Ưu tiên dùng giá trị trả về thay vì tham số đầu ra (Output Parameters): Hãy để hàm trả kết quả trực tiếp qua lệnh return. Điều này giúp code dễ đọc hơn rất nhiều và nhờ công nghệ tối ưu hóa hiện đại (như RVO - Return Value Optimization), hiệu năng của nó hoàn toàn tương đương hoặc thậm chí tốt hơn việc dùng tham số đầu ra.</li> <li>Quy chuẩn cách trả về: Ưu tiên trả về bằng giá trị (by value) hoặc tham chiếu (by reference) nếu cần, Tránh trả về con trỏ thô (raw pointer) trừ khi đối tượng đó được phép có giá trị nullptr (vắng mặt).</li> </ul> <p><img class="emoji" title=":exclamation:" alt=":exclamation:" src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png" height="20" width="20"> Quy chuẩn về tham số hàm <br> Tham số trong hàm được chia thành 3 loại: Đầu vào (input), Đầu ra (output), hoặc Cả hai (in/out). Cách truyền tham số chuẩn xác bao gồm:</p> <ul> <li>Tham số đầu vào (Inputs): <ul> <li>Không bắt buộc (optional): Dùng std::optional (truyền theo giá trị).</li> <li>Bắt buộc (non-optional): Dùng giá trị (value) (cho kiểu dữ liệu nhỏ) hoặc const reference (cho kiểu dữ liệu lớn).</li> <li>Nếu dùng con trỏ thay vì reference cho tham số bắt buộc, hãy dùng const pointer.</li> </ul> </li> <li>Tham số đầu ra hoặc In/Out (Outputs &amp; In/Out): <ul> <li>Không bắt buộc (optional): Dùng con trỏ không hằng (non-const pointer).</li> <li>Bắt buộc (non-optional): Dùng tham chiếu không hằng (non-const reference) vì tham chiếu không thể bị nullptr.</li> </ul> </li> </ul> <p>Tránh ràng buộc thời gian sống (Lifetime issues): Không thiết kế hàm yêu cầu tham số dạng tham chiếu phải sống lâu hơn lời gọi hàm (tránh lỗi treo con trỏ lửng lơ / lifetime bugs). Nếu cần, hãy truyền bằng giá trị (copy) hoặc truyền bằng con trỏ kèm tài liệu ghi chú rõ ràng.</p> <p><img class="emoji" title=":exclamation:" alt=":exclamation:" src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png" height="20" width="20"> Thứ tự sắp xếp tham số</p> <ul> <li>Luôn đặt tất cả các tham số đầu vào (input-only) đứng trước bất kỳ tham số đầu ra nào (output).</li> <li>Không được tiện tay nhét tham số mới vào cuối hàm chỉ vì nó mới sinh ra; hãy tuân thủ nguyên tắc đặt input trước output để người đọc dễ hình dung hướng đi của dữ liệu.</li> </ul> <p>Ví dụ về trường hợp sai:</p> <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span>
+<span class="c1">// ❌ SAI: Dùng output parameter (std::string* out_result) thay vì return value.</span>
+<span class="c1">// ❌ SAI: Sắp xếp tham số lộn xộn (output đứng trước input).</span>
+<span class="kt">bool</span> <span class="nf">CalculateData</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">out_result</span><span class="p">,</span> <span class="kt">int</span> <span class="n">input_id</span><span class="p">,</span> <span class="kt">double</span><span class="o">*</span> <span class="n">in_out_factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">out_result</span> <span class="o">||</span> <span class="o">!</span><span class="n">in_out_factor</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    
+    <span class="c1">// ... tính toán phức tạp ...</span>
+    <span class="o">*</span><span class="n">out_result</span> <span class="o">=</span> <span class="s">"Result data"</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">in_out_factor</span> <span class="o">*=</span> <span class="mf">2.0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div> <p>Sửa lại cho đúng:</p> <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">"tl/expected.hpp"</span><span class="c1"> // Hoặc absl::StatusOr</span><span class="cp">
+</span>
+<span class="k">struct</span> <span class="nc">ProcessingResult</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">updated_factor</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// ✅ ĐÚNG:</span>
+<span class="c1">// 1. Dùng giá trị trả về (thông qua expected) thay vì output parameter.</span>
+<span class="c1">// 2. Sắp xếp: Input-only (input_id) đứng TRƯỚC In/Out (in_out_factor).</span>
+<span class="c1">// 3. In/Out bắt buộc dùng non-const reference.</span>
+<span class="n">tl</span><span class="o">::</span><span class="n">expected</span><span class="o">&lt;</span><span class="n">ProcessingResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ProcessData</span><span class="p">(</span>
+    <span class="kt">int</span> <span class="n">input_id</span><span class="p">,</span>                  <span class="c1">// 1. Tham số đầu vào (Input-only)</span>
+    <span class="kt">double</span><span class="o">&amp;</span> <span class="n">in_out_factor</span>          <span class="c1">// 2. Tham số vừa vào vừa ra (In/Out)</span>
+<span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">input_id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">tl</span><span class="o">::</span><span class="n">make_unexpected</span><span class="p">(</span><span class="s">"Invalid input ID!"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Thay đổi giá trị in/out trực tiếp</span>
+    <span class="n">in_out_factor</span> <span class="o">*=</span> <span class="mf">2.0</span><span class="p">;</span>
+
+    <span class="c1">// Trả kết quả trực tiếp qua giá trị về</span>
+    <span class="n">ProcessingResult</span> <span class="n">res</span><span class="p">;</span>
+    <span class="n">res</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="s">"Processed data for ID: "</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">input_id</span><span class="p">);</span>
+    <span class="n">res</span><span class="p">.</span><span class="n">updated_factor</span> <span class="o">=</span> <span class="n">in_out_factor</span><span class="p">;</span>
+    
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div> </div> </article> <br> <hr> <br> <ul class="list-disc pl-8"></ul> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/device-driver-components/">Components inside a device driver</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/linux-dma-engine/">linux dma engine</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/how-to-write-functions/">how to write a function</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/scull-driver/">scull device driver</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/haonguyen/blog/2026/object-orientation/">class - object oriented mindset</a> </li> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Van Hao Nguyen. </div> </footer> <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> <script src="/haonguyen/assets/js/bootstrap.bundle.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/masonry.js?a0db7e5d5c70cc3252b3138b0c91dcaf" type="text/javascript"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/zoom.js?85ddb88934d28b74e78031fd54cf8308"></script> <script src="/haonguyen/assets/js/no_defer.js?2781658a0a2b13ed609542042a859126"></script> <script defer src="/haonguyen/assets/js/common.js?e0514a05c5c95ac1a93a8dfd5249b92e"></script> <script defer src="/haonguyen/assets/js/copy_code.js?c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/haonguyen/assets/js/jupyter_new_tab.js?d9f17b6adc2311cbabd747f4538bb15f"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/haonguyen/assets/js/mathjax-setup.js?a5bb4e6a542c546dd929b24b8b236dfd"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6" crossorigin="anonymous"></script> <script defer src="/haonguyen/assets/js/progress-bar.js?2f30e0e6801ea8f5036fa66e1ab0a71a" type="text/javascript"></script> <script src="/haonguyen/assets/js/vanilla-back-to-top.min.js?f40d453793ff4f64e238e420181a1d17"></script> <script>
     addBackToTop();
   </script> <script type="module" src="/haonguyen/assets/js/search/ninja-keys.min.js?a3446f084dcaecc5f75aa1757d087dcf"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/haonguyen/assets/js/search-setup.js?6c304f7b1992d4b60f7a07956e52f04a"></script> <script src="/haonguyen/assets/js/search-data.js"></script> <script src="/haonguyen/assets/js/shortcut-key.js?6f508d74becd347268a7f822bca7309d"></script> </body> </html>
