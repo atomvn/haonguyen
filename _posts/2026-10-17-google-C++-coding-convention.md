@@ -272,3 +272,202 @@ Dưới đây là một ví dụ tổng hợp cách sắp xếp các câu lệnh
 // 5. Thư viện bên thứ ba (Third-party libraries)
 #include "third_party/absl/flags/flag.h"
 ```
+
+### 2. Scoping
+#### 2.1. Namespaces
+Trừ 1 số trường hợp ngoại lệ, hãy sử dụng namespace bởi vì nó giúp chia global scope của ta thành các thành phần nhỏ hơn, tránh việc name collisions ở phạm vi global scope. Namespace phải có unique name, và có thể đi kèm theo path của nó. Không nên dùng using namespace ..., không nên dùng inline namespace.
+
+Các quy tắc cụ thể khi sử dụng namespace:
+- Hãy đặt tên namespace theo quy tắc ở phần Namespace Names.
+- Namespace sẽ bao trùm toàn bộ mã nguồn của file, nhưng đặt sau các câu lệnh #include, định nghĩa/khai báo gflags, và các câu lệnh khai báo trước (forward declarations) từ namespace khác.
+- Các khai báo bên trong namespace không bị thụt lề (không lùi vào trong một tab).
+- Các namespace nhiều dòng phải có dòng chú thích ở dấu ngoặc nhọn đóng để dễ nhận biết.
+    Ví dụ:
+    ```c++
+    // --- Trong file .h ---
+    #ifndef MY_CLASS_H
+    #define MY_CLASS_H
+
+    #include <string>
+
+    namespace mynamespace {
+
+    // Không thụt lề bên trong namespace scope
+    class MyClass {
+    public:
+    void Foo();
+    };
+
+    }  // namespace mynamespace  <-- Chú thích kết thúc bắt buộc
+
+    #endif
+    ```
+    ```c++
+    // --- Trong file .cc ---
+    #include "my_class.h"
+    #include <iostream>
+
+    // Các gflags hoặc include đặt ở ngoài namespace
+    ABSL_FLAG(bool, someflag, false, "a flag");
+
+    namespace mynamespace {
+
+    // Sử dụng using-declaration (được phép)
+    using ::foo::Bar;
+
+    void MyClass::Foo() {
+        // Code bên trong giữ sát lề trái
+        std::cout << "Foo executed!" << std::endl;
+    }
+
+    }  // namespace mynamespace
+    ```
+- Tuyệt đối không được khai báo bất cứ thứ gì bên trong không gian tên std (kể cả forward declaration các lớp thư viện chuẩn). Hành vi này là undefined behavior (không xác định và không di Port được). Hãy dùng cách #include thư viện tương ứng.
+- Cấm dùng using-directive toàn cục (using namespace foo;): Không được dùng lệnh using namespace ... để lôi toàn bộ tên ra ngoài vì nó làm ô nhiễm namespace. Chỉ được dùng using-declaration cho từng tên cụ thể (using ::foo::Bar).   
+    Ví dụ:
+    ```c++
+    #include <iostream>
+
+    namespace math_lib {
+        int add(int a, int b) { return a + b; }
+        int multiply(int a, int b) { return a * b; }
+    }
+
+    // ✅ ĐÚNG: Chỉ kéo duy nhất hàm multiply ra, các thứ khác vẫn được giữ an toàn trong namespace của nó
+    using math_lib::multiply; 
+
+    int add(int a, int b) { 
+        return a + b; // Không sợ xung đột với math_lib::add vì ta không lôi nó ra
+    }
+
+    int main() {
+        std::cout << multiply(2, 3) << std::endl; // Dùng thoải mái
+        return 0;
+    }
+    ```
+- Trong file Header (.h): Không được sử dụng alias ở phạm vi namespace trong file header, vì nó sẽ bị xuất khẩu ra ngoài thành phần của Public API. Ngoại trừ các namespace được đánh dấu nội bộ rõ ràng (internal) hoặc khai báo cục bộ bên trong hàm/inline function.
+- Trong file Code (.cc): Thoải mái dùng alias để rút gọn các tên dài.
+    ```c++
+    // --- Trong file .h (Đúng cách dùng ẩn trong internal hoặc local) ---
+    namespace librarian {
+    namespace internal {  // Nội bộ, không phải public API
+        namespace sidetable = ::pipeline_diagnostics::sidetable;
+    }
+
+    inline void my_inline_function() {
+        namespace baz = ::foo::bar::baz;  // Cục bộ trong hàm
+    }
+    }  // namespace librarian
+
+    // --- Trong file .cc (Rút gọn tên cho dễ nhìn) ---
+    namespace sidetable = ::pipeline_diagnostics::sidetable;
+    ```
+- Không dùng Inline Namespaces: Quy chuẩn yêu cầu tránh hoàn toàn việc sử dụng inline namespaces.
+- Dùng từ khóa internal để ẩn chi tiết cài đặt: Đặt tên namespace có chứa chữ internal để cảnh báo người dùng không được sử dụng trực tiếp các thành phần bên trong đó.
+- Tránh xung đột tên nội bộ: Mỗi thư viện nên gắn thêm tên file của mình vào namespace internal (ví dụ: gshoe::internal_widget thay vì chỉ dùng gshoe::internal).
+    ```c++
+    // Gắn tên file/thư viện vào internal để tránh va chạm giữa các module
+    namespace gshoe {
+    namespace internal_widget {
+        void SecretImplementationDetails(); // Người dùng API không nên gọi hàm này
+    }
+    }  // namespace gshoe::internal_widget
+    ```
+- Trong các mã nguồn viết mới, cú pháp lồng nhau dạng một dòng được ưu tiên sử dụng vì sự gọn gàng:
+    ```c++
+    // Cú pháp gọn gàng được khuyến nghị cho code mới
+    namespace my_project::my_component {
+
+    void ProcessData() {
+        // ...
+    }
+
+    }  // namespace my_project::my_component
+    ```
+
+#### 2.2. Internal linkage
+Việc sử dụng internal linkage (Tức là đưa các definitions vào trong 1 unnamed namespace hoặc declare chúng là static) được khuyến kích cho tất cả các code không cần refer ra ngoài. Không sử dụng internal linkage trong file .h.
+
+```c++
+namespace {
+...
+}  // namespace
+```
+
+#### 2.3. Local variables
+3 điều cần nhớ với local variables:
+- Phạm vi hẹp nhất (Narrowest Scope): Đặt biến ở phạm vi nhỏ nhất có thể, tránh để biến sống sót rộng hơn mức cần thiết.
+- Khởi tạo ngay khi khai báo (Initialize at Declaration): Luôn khởi tạo giá trị cho biến ngay tại thời điểm khai báo, tuyệt đối tránh việc khai báo một dòng rồi gán giá trị ở dòng sau.
+- Khai báo sát thời điểm sử dụng: Khai báo biến càng gần với lần sử dụng đầu tiên càng tốt để người đọc dễ dàng nhận biết kiểu dữ liệu và giá trị ban đầu của nó.
+
+Quy tắc chi tiết và ví dụ:
+1. Khởi tạo ngay khi khai báo (Thay vì tách rời)  
+    Sai: Khai báo trước, gọi hàm gán giá trị sau.
+
+    ```c++
+    int i;
+    i = f();  // ❌ Không tốt: Tách biệt giữa khai báo và khởi tạo
+    ```
+
+    Đúng: Đi kèm khởi tạo luôn
+
+    ```c++
+    int i = f();  // ✅ Tốt: Khai báo có khởi tạo rõ ràng
+    ```
+2. Khai báo sát vị trí sử dụng  
+    Sai: Khai báo biến từ rất sớm, cách xa đoạn code sử dụng nó.
+
+    ```c++
+    int jobs = NumJobs();
+    // ... (hàng loạt đoạn code dài khác chưa dùng đến biến jobs) ...
+    f(jobs);  // ❌ Không tốt: Khai báo quá xa chỗ dùng
+    ```
+    Đúng: Khai báo ngay trước dòng sử dụng nó.
+    ```c++
+    // ... code khác ...
+    int jobs = NumJobs();
+    f(jobs);  // ✅ Tốt: Khai báo ngay lập tức (hoặc sát) thời điểm sử dụng
+    ```
+
+3. Khởi tạo danh sách cho Container (std::vector)
+
+    Thay vì tạo vector trống rồi dùng push_back nhiều lần, hãy dùng cú pháp khởi tạo trực tiếp:
+    ```c++
+    // ❌ Không tối ưu cho việc gán nhiều dòng
+    std::vector<int> v;
+    v.push_back(1);
+    v.push_back(2);
+
+    // ✅ Tốt: Khởi tạo gọn gàng ngay từ đầu
+    std::vector<int> v = {1, 2};
+    ```
+4. Khai báo biến bên trong if, while, for
+
+    Các biến chỉ phục vụ cho vòng lặp hoặc điều kiện nên được giới hạn phạm vi sống ngay bên trong câu lệnh đó:
+
+    ```c++
+    // Biến p chỉ tồn tại và có giá trị trong phạm vi vòng lặp while
+    while (const char* p = strchr(str, '/')) {
+        str = p + 1;
+    }
+    ```
+
+5. Khai báo đối tượng ngoài vòng lặp
+
+    Nếu biến cục bộ là một đối tượng (object) có chứa Constructor (hàm tạo) và Destructor (hàm hủy), việc khai báo nó bên trong một vòng lặp lớn sẽ khiến hàm tạo và hàm hủy bị gọi liên tục ở mỗi vòng lặp, gây lãng phí hiệu năng nghiêm trọng. Vì vậy nên đưa đối tượng đó ra ngoài vòng lặp.
+
+    ```c++
+    // ❌ TRƯỜNG HỢP KÉM HIỆU NĂNG (Inefficient)
+    for (int i = 0; i < 1000000; ++i) {
+        Foo f;              // ⚠️ Constructor và Destructor của Foo bị gọi 1.000.000 lần!
+        f.DoSomething(i);
+    }
+    ```
+
+    ```c++
+    // ✅ TRƯỜNG HỢP TỐI ƯU (Efficient)
+    Foo f;                  // ✅ Constructor và Destructor chỉ bị gọi đúng 1 lần duy nhất
+    for (int i = 0; i < 1000000; ++i) {
+        f.DoSomething(i);
+    }
+    ```
