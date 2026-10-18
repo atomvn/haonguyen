@@ -471,3 +471,121 @@ Quy tắc chi tiết và ví dụ:
         f.DoSomething(i);
     }
     ```
+
+#### 2.4. Static and global variables
+
+##### 2.4.1 Quy định về việc hủy biến
+Cấm tuyệt đối việc dùng các đối tượng phức tạp (như std::string, std::map, std::unique_ptr) làm biến toàn cục hoặc biến static ngoài hàm. Bạn chỉ được phép dùng các kiểu dữ liệu có khả năng hủy tầm thường (trivially destructible — nghĩa là khi hủy, nó chẳng cần làm gì phức tạp cả, như số nguyên int, con trỏ, hoặc mảng cơ bản).    
+:question: Tại sao lại có quy tắc trên?   
+Các đối tượng như std::map hay std::string khi hủy phải gọi code để giải phóng bộ nhớ động. Nếu chúng nằm ở biến toàn cục, ta không kiểm soát được lúc chương trình tắt cái nào hủy trước, dễ dẫn đến việc truy cập vào vùng nhớ đã bị giải phóng.
+
+```c++
+// ❌ NGUY HIỂM: std::string có destructor phức tạp (phải dọn dẹp heap)
+const std::string kFoo = "foo";  
+
+void bar() {
+    static std::map<int, int> kData; // ❌ CẤM: std::map static trong hàm
+}
+```
+
+```c++
+const int kNum = 10;                     // 🟢 An toàn (kiểu cơ bản)
+constexpr std::array<int, 3> kArray = {1, 2, 3}; // 🟢 An toàn (constexpr đảm bảo trivial)
+```
+
+##### 2.4.2. Quy định về việc khởi tạo biến
+
+Việc khởi tạo biến toàn cục bằng các biểu thức hằng (constexpr, constinit) luôn được hoan nghênh. Ngược lại, khởi tạo động (phải chạy một đoạn code hoặc hàm phức tạp lúc khởi động) bị hạn chế nghiêm ngặt vì không đoán trước được file nào chạy trước file nào.
+
+Biến toàn cục sinh ra tốt nhất là để chứa hằng số cố định, chứ không nên chứa kết quả của một hàm phức tạp tính toán lúc chương trình vừa bật lên.
+
+### 2.5. thread_local variables
+Chỉ biết thread_local var là biến riếng của thread, nhưng cách sử dụng và vai trò của nó thì chưa nắm rõ được, khi cần dùng tới thì nhớ fill lại mục này sau.
+
+### 3. Classes 
+#### 3.1. Doing work in constructors
+Constructor (hàm khởi tạo) là nơi để thiết lập trạng thái ban đầu cho đối tượng. Tuy nhiên, bạn không nên thực hiện các công việc phức tạp, dễ sinh lỗi, hoặc gọi các phương thức ảo (virtual methods) ngay bên trong constructor. Tránh thực hiện khởi tạo có khả năng thất bại (như mở tệp, kết nối mạng, cấp phát phức tạp) trừ khi bạn có cơ chế xử lý lỗi phù hợp (vì constructor không thể trả về mã lỗi như hàm thông thường).
+
+Nếu việc khởi tạo có thể thất bại hoặc cần logic phức tạp:
+- Giải pháp 1 (Ưu tiên): Sử dụng Factory Function (hàm tĩnh tạo đối tượng, có thể trả về lỗi hoặc std::optional/std::expected).
+- Giải pháp 2: Sử dụng phương thức Init() riêng biệt (tuy nhiên, hãy tránh dùng Init() nếu đối tượng có thể rơi vào trạng thái "nửa vời" khó quản lý).
+
+```c++
+#include <iostream>
+
+class Base {
+public:
+    Base() {
+        // ❌ NGUY HIỂM: Gọi hàm ảo trong constructor!
+        // Nếu lớp Sub kế thừa từ Base, lúc này Base đang chạy thì phần Sub chưa tồn tại.
+        // Nó sẽ gọi hàm Log() của Base thay vì Sub::Log().
+        Log(); 
+    }
+
+    virtual void Log() {
+        std::cout << "Base log" << std::endl;
+    }
+};
+
+class Sub : public Base {
+public:
+    Sub() : Base() {}
+
+    void Log() override {
+        std::cout << "Sub log" << std::endl;
+    }
+};
+
+int main() {
+    Sub s; // Kết quả in ra sẽ là "Base log" thay vì "Sub log", gây hiểu lầm lớn!
+    return 0;
+}
+```
+
+```c++
+#include <iostream>
+#include <memory>
+#include <string>
+#include <optional>
+
+class NetworkConnection {
+private:
+    // Constructor để ở chế độ riêng tư (private) để ép người dùng phải qua Factory Function
+    NetworkConnection(const std::string& ip) {
+        std::cout << "Constructed object for IP: " << ip << std::endl;
+    }
+
+public:
+    // Factory Function: Nơi thực hiện các bước khởi tạo có thể thất bại
+    static std::optional<std::unique_ptr<NetworkConnection>> Create(const std::string& ip) {
+        // 1. Kiểm tra điều kiện/kết nối trước (có thể thất bại và trả về lỗi an toàn)
+        if (ip.empty() || ip == "invalid_ip") {
+            std::cerr << "Error: Invalid IP address, initialization failed!" << std::endl;
+            return std::nullopt; // Báo lỗi nhẹ nhàng mà không cần crash hay exception
+        }
+
+        // 2. Nếu mọi thứ OK, mới gọi constructor thông qua unique_ptr
+        return std::unique_ptr<NetworkConnection>(new NetworkConnection(ip));
+    }
+
+    void SendData() {
+        std::cout << "Sending data..." << std::endl;
+    }
+};
+
+int main() {
+    // Thử tạo kết nối với IP lỗi
+    auto conn_fail = NetworkConnection::Create("invalid_ip");
+    if (!conn_fail.has_value()) {
+        std::cout << "Khoi tao that bai duoc xu ly an toàn.\n" << std::endl;
+    }
+
+    // Thử tạo kết nối với IP chuẩn
+    auto conn_success = NetworkConnection::Create("192.168.1.1");
+    if (conn_success.has_value()) {
+        (*conn_success)->SendData(); // Sử dụng an toàn tuyệt đối
+    }
+
+    return 0;
+}
+```
