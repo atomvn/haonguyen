@@ -10,7 +10,7 @@ featured: false
 ---
 
 ### 1. Header files
-Trong hầu hết trường hợp, tất cả các file .cc đều phải có file header .h đi kèm. Một số trường hợp ngoại lệ có thể là các file unit test và các file nhỏ chỉ chứa ain function.
+Trong hầu hết trường hợp, tất cả các file .cc đều phải có file header .h đi kèm. Một số trường hợp ngoại lệ có thể là các file unit test và các file nhỏ chỉ chứa main function.
 #### 1.1. Self-contained headers
 ##### 1.1.1. Các quy chuẩn chung
 - Tất cả các file header phải mang tính tự chứa (self-contained), nghĩa là chúng có thể tự biên dịch một cách độc lập.
@@ -217,9 +217,9 @@ void Foo<T>::MethodWithHugeBody() {
 Khi viết code trong các file nguồn (như dir/foo.cc hoặc dir/foo_test.cc nhằm cài đặt/kiểm thử cho dir2/foo2.h), bạn phải sắp xếp các câu lệnh #include theo thứ tự từ trên xuống dưới như sau:
 1. Related header: File header liên quan trực tiếp (ví dụ: dir2/foo2.h) để đảm bảo file header này tự chứa (self-contained) và tự chịu trách nhiệm về các dependency của nó.
 2. Một dòng trống.
-3. C system headers và các hệ thống khác có đuôi .h trong dấu ngoặc nhọn (ví dụ: <unistd.h>, <stdlib.h>, <Python.h>).
+3. C system headers và các hệ thống khác có đuôi .h trong dấu ngoặc nhọn (ví dụ: `<unistd.h>`, `<stdlib.h>`, `<Python.h>`).
 4. Một dòng trống.
-5. C++ standard library headers (thường không có phần mở rộng file, ví dụ: <algorithm>, <cstddef>). Lưu ý các file header kiểu C như <stddef.h> có thể thay thế tương đương bằng bản C++ (cstddef), hãy giữ tính nhất quán với code hiện có.
+5. C++ standard library headers (thường không có phần mở rộng file, ví dụ: `<algorithm>`, `<cstddef>`). Lưu ý các file header kiểu C như `<stddef.h>` có thể thay thế tương đương bằng bản C++ (cstddef), hãy giữ tính nhất quán với code hiện có.
 6. Một dòng trống.
 7. Other libraries' headers (thư viện của bên thứ ba, ví dụ: thư viện Abseil).
 8. Một dòng trống.
@@ -235,9 +235,9 @@ Việc đặt file header liên quan trực tiếp lên dòng đầu tiên giúp
 Ví dụ: Thay vì viết `#include "./basictypes.h"` hoặc `#include "../base/basictypes.h"`, bạn bắt buộc phải viết: `#include "base/basictypes.h"`
 
 - Khi nào dùng dấu ngoặc nhọn góc (<>)?: Chỉ sử dụng đường dẫn đặt trong dấu ngoặc nhọn khi thư viện bắt buộc, bao gồm:
-    - Thư viện chuẩn C và C++ (ví dụ: <stdlib.h>, <string>).
-    - System headers của POSIX, Linux, và Windows (ví dụ: <unistd.h>, <windows.h>).
-    - Trong một số ít trường hợp là thư viện third_party (ví dụ: <Python.h>).
+    - Thư viện chuẩn C và C++ (ví dụ: `<stdlib.h>`, `<string>`).
+    - System headers của POSIX, Linux, và Windows (ví dụ: `<unistd.h>`, `<windows.h>`).
+    - Trong một số ít trường hợp là thư viện third_party (ví dụ: `<Python.h>`).
 
 ##### 1.6.3. Conditional includes
 Đôi khi mã nguồn đặc thù theo hệ điều hành (system-specific code) cần dùng các tiền xử lý điều kiện như #ifdef. Các include này có thể được đặt sau các include thông thường khác. Tuy nhiên, hãy cố gắng giữ phần code phụ thuộc hệ điều hành này thật nhỏ gọn vàcục bộ.
